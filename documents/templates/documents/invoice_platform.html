@@ -1,0 +1,45 @@
+{% extends 'documents/_invoice.html' %}
+
+{% block table_head%}
+<thead>
+<tr>
+    <th class="no-border"><span class="label">1</span></th>
+    <th class="no-border"><span class="label">2</span></th>
+    <th class="no-border"><span class="label">3</span></th>
+    <th class="no-border align-right"><span class="label">4</span></th>
+    <th class="no-border align-right"><span class="label">5</span></th>
+
+</tr>
+</thead>
+<thead>
+<tr>
+    <th>#</th>
+    <th>Artikel & -nr.</th>
+    <th>Erzeuger</th>
+    <th class="align-right">USt.</th>
+    <th class="align-right">Gesamt </th>
+</tr>
+</thead>
+{% endblock %}
+
+{% block table_rows %}
+    {% set index = [] %}
+
+    {% for lines in document.lines|groupby('category')|reverse %}
+        {% if lines.grouper %}
+            <tr>
+                <td colspan="5">{{lines.grouper|capitalize}}</td>
+            </tr>
+        {% endif %}
+        {% for line in lines.list %}
+            {% set __ = index.append(1) %}
+            <tr>
+                <td>{{ index|length }}</td>
+                <td><strong>{{ line.name }}</strong><br>{{ line.number }}</td>
+                <td>{{ line.producer }}</td>
+                <td class="align-right">{{ line.vat_rate|format_price }}%</td>
+                <td class="align-right">&euro; {{ (line|price_value).netto|format_price }}</td>
+            </tr>
+        {% endfor %}
+    {% endfor %}
+{% endblock %}

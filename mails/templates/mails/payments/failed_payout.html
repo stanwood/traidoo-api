@@ -1,0 +1,7 @@
+{% extends 'mails/_base.html' %}
+
+{% block body %}
+<p>Hallo, </p>
+<p>Dieser Betrag konnte nicht überwiesen werden: {{currency}} {{amount}}</p>
+<p>Grund: {{ result_message }}</p>
+{% endblock %}

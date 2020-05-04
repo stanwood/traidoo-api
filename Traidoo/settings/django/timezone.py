@@ -1,0 +1,3 @@
+TIME_ZONE = "UTC"
+USE_TZ = True
+USER_DEFAULT_TIME_ZONE = "Europe/Berlin"

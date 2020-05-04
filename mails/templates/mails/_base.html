@@ -1,0 +1,91 @@
+<!doctype html>
+<html class="no-js" lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <style>
+        html {
+            font-family: Lato, "Helvetica Neue", Helvetica, Roboto, sans-serif;
+            font-size: 16px;
+            line-height: 1.56;
+            letter-spacing: -0.1px;
+            color: #4c4c4c;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 13px;
+            font-weight: bold;
+            color: #96B400;
+        }
+        h2 {
+            font-size: 13px;
+            color: #634540;
+        }
+        h1, h2, p {
+            padding: 0;
+            margin: 0;
+        }
+
+        a {
+            color: #1078CD;
+        }
+        .logo {
+            height: 50px;
+            margin-top: 30px;
+        }
+        .slogan{
+            font-size: 12px;
+            color: #503531;
+            margin-bottom: 30px;
+        }
+        .content {
+            text-align: center;
+            width: 550px;
+            max-width: 100%;
+            background-color: #ffffff;
+            border: solid 1px #eaeaea;
+            display: inline-block;
+            padding: 50px;
+            text-align: left;
+        }
+        .footer {
+            max-width: 100%;
+            width: 550px;
+            background-color: #fafafa;
+            display: inline-block;
+            margin-top: 50px;
+            padding: 50px;
+            font-size: 13px;
+        }
+        .footer a {
+            text-decoration: none;
+        }
+        .content p a {
+            position: relative;
+            left: 25%;
+            width: 50%;
+            display: block;
+            text-align: center;
+        	border-radius: 100px;
+        	background-color: #96b400;
+            color: white;
+            text-decoration: none;
+            padding: 10px;
+            margin: 25px;
+        }
+    </style>
+</head>
+<body>
+    {% if logo_url %}
+      <img class="logo" src="{{ logo_url }}">
+    {% endif %}
+    <p class="slogan">{{ website_slogan }}</p>
+    <div class="content">
+        {% block body %}
+        {% endblock %}
+    </div>
+    {{ mail_footer|safe }}
+</body>
+</html>

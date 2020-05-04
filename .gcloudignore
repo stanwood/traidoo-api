@@ -1,0 +1,11 @@
+.editorconfig
+.git
+.gitignore
+.python-version
+docker-compose.yml
+Pipfile
+Pipfile.lock
+README.md
+tox.ini
+gcs-cors.json
+static

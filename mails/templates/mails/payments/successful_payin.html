@@ -1,0 +1,10 @@
+{% extends 'mails/_base.html' %}
+
+{% block body %}
+<p>Hallo, </p>
+
+Wir haben folgenden Betrag erhalten {{ currency }}{{ amount }} von {{ buyer_company_name }} für den Kauf # {{ order_number }}.
+
+Wir werden das Geld heute auf Ihr Bankkonto überweisen.
+
+{% endblock %}

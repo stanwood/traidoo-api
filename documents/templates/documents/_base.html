@@ -1,0 +1,259 @@
+<!doctype html>
+<html class="no-js" lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title></title>
+  <style>
+    html {
+      font-family: sans-serif;
+      font-size: 0.8rem;
+      font-weight: normal;
+      line-height: 1.0rem;
+    }
+
+    body {
+      margin: 20mm 20mm 20mm 20mm;
+    }
+
+    h2 {
+      font-size: 2rem;
+      font-weight: normal;
+      margin: 0;
+      line-height: 2.4rem;
+    }
+
+
+    h3 {
+      font-size: 1.4rem;
+      font-weight: normal;
+      margin: 0;
+      line-height: 1.6rem;
+    }
+
+
+    h5 {
+      font-size: 1rem;
+      font-weight: normal;
+      margin: 0;
+    }
+
+    h6 {
+      font-size: 1rem;
+      font-weight: normal;
+      margin: 0;
+    }
+
+    .parent-div {
+      background-color: transparent;
+      position: relative;
+      padding: 5px;
+    }
+
+    .child-div {
+      background-color: transparent;
+      position: relative;
+      float: left;
+      width: 100%;
+    }
+
+    .child {
+      position: relative;
+      float: left;
+    }
+
+    .align-left {
+      text-align: left;
+    }
+
+    .align-right {
+      text-align: right;
+    }
+
+    .align-center {
+      text-align: center;
+    }
+
+    .label {
+      font-size: 0.8rem;
+    }
+
+    table tfoot td,
+    table tfoot th,
+    table thead td,
+    table thead th {
+      padding: .5rem .625rem .625rem;
+      font-weight: 700;
+      text-align: left;
+    }
+
+    thead tr th {
+      border-bottom: 3px solid #0a0a0a;
+      border-top: 2px solid #0a0a0a;
+      border-collapse: separate;
+    }
+
+    table tbody td,
+    table tbody th {
+      padding: .5rem .625rem .625rem;
+    }
+
+    tbody tr#last td .lastest {
+      border-bottom: solid;
+      border-width: 1px;
+      margin-right: -.625rem;
+    }
+
+    tbody tr#last td {
+      border-top: 2px solid #0a0a0a;
+      border-collapse: separate;
+      border-spacing: 5px 5px;
+    }
+
+    .row:not(.expanded) .row {
+      max-width: none;
+    }
+
+    .footer {
+      color: gray;
+    }
+
+    .product-note {
+      color: gray;
+      font-size: 8px;
+      margin: 0;
+    }
+
+    .asterisk {
+      vertical-align: top;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="parent-div">
+    <div class="child-div">
+      <div class="child" style="width: 70%;">
+        <div class="child" style="width: 100%;">
+          <h3>{{ document.seller.company_name}}</h3>
+        </div>
+        <div class="child-div">
+          <div class="child" style="width: 100%;">
+            <h6>{{ document.seller.street }}</h6>
+          </div>
+          <div class="child" style="width: 100%;">
+            <h6>{{ document.seller.zip }} {{ document.seller.city }}</h6>
+          </div>
+          <div class="child" style="width: 100%;">
+            <h6>{{ document.seller.phone }}</h6>
+          </div>
+        </div>
+        <div class="child-div" style="margin-top: 4rem;">
+          <div class="child" style="width: 50%;">
+            <div class="child" style="width: 100%">
+              <h6>{{ document.buyer.company_name }}</h6>
+            </div>
+            <div class="child" style="width: 100%">
+              <h6>{{ document.buyer.street }}</h6>
+            </div>
+            <div class="child" style="width: 100%">
+              <h6>{{ document.buyer.zip }} {{ document.buyer.city }}</h6>
+            </div>
+            <div class="child" style="width: 100%">
+              <h6>{{ document.buyer.phone }}</h6>
+            </div>
+          </div>
+          <div class="child" style="width: 50%;">
+            <div class="child" style="width: 100%"><span class="label">Mitglieds-Nr: </span></div>
+            <div class="child" style="width: 100%"><span class="label">{{ document.buyer.user_id }}  </span></div>
+
+            {% if order %}
+            <div class="child" style="width: 100%"><span class="label">Auftragsnr.:</span></div>
+            <div class="child" style="width: 100%"><span class="label">{{ order.id }} </span></div>
+            <div class="child" style="width: 100%"><span class="label">Datum</span></div>
+            <div class="child" style="width: 100%"><span
+                class="label">{{ order.created_at.strftime('%d.%m.%Y') }}</span></div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+      <div class="child align-left" style="width: 30%;">
+      </div>
+    </div>
+    {% block body %}
+    {% endblock %}
+    <div class="child-div footer" style="margin-top: 3em;">
+      <div class="child" style="width: 100%">
+        <span class="label">{{ document.seller.company_name or ''}}</span>
+      </div>
+      {% if document.seller.tax_id %}
+      <div class="child" style="width: 100%">
+        <span class="label">Steuernummer: {{ document.seller.tax_id }}</span>
+      </div>
+      {% endif %}
+      {% if document.seller.vat_id %}
+      <div class="child" style="width: 100%">
+        <span class="label">Ust.-ID-Nr.: {{ document.seller.vat_id}}</span>
+      </div>
+      {% endif %}
+      {% if document.seller.company_registration_id %}
+      <div class="child" style="width: 100%">
+        <span class="label">Handelsregisternummer: {{ document.seller.company_registration_id}}</span>
+      </div>
+      {% endif %}
+      {% if document.seller.association_registration_id %}
+      <div class="child" style="width: 100%">
+        <span class="label">Vereinsregisternummer: {{ document.seller.association_registration_id}}</span>
+      </div>
+      {% endif %}
+      {% if document.seller.is_certified_organic_producer %}
+      <div class="child" style="width: 100%">
+        <span class="label">Bio Kontrollstellennummer: {{ document.seller.organic_control_body}}</span>
+      </div>
+      {% endif %}
+      {% if document.seller.iban %}
+      <div class="child" style="width: 100%">
+        <span class="label">
+          Kontodaten:
+          IBAN {{ document.seller.iban }}
+          {% if document.seller.bic %}
+          BIC {{ document.seller.bic }}
+          {% endif %}
+          {% if document.seller.bank %}
+          Bank "{{ document.seller.bank }}"
+          {% endif %}
+          {% if document.payment_reference %}
+          Reference: {{document.payment_reference}}
+          {% endif %}
+        </span>
+      </div>
+      <div class="child" style="width: 100%">
+        <span class="label">
+          Zahlungsbedingungen: 14 Tage
+        </span>
+      </div>
+      {% endif %}
+      {% if document.mangopay_payin_id %}
+      <div class="child" style="width: 100%">
+        <span class="label">
+          Payin id: {{document.mangopay_payin_id}}
+        </span>
+      </div>
+      {% endif %}
+      <div class="child" style="width: 100%">
+        <span class="label">
+          {{ document.seller.phone or ''}} {{ document.seller.email or '' }} {{ document.seller.website or '' }}
+        </span>
+      </div>
+    </div>
+
+    <div class="child-div footer" style="margin-top: 3em;">
+      {% block footnotes %}{% endblock %}
+    </div>
+
+  </div>
+</body>
+
+</html>

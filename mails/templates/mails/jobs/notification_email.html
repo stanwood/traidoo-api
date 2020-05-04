@@ -1,0 +1,40 @@
+{% extends 'mails/_base.html' %}
+{% load divide %}
+
+{% block body %}
+  <table>
+    <tr>
+      <th>Item</th>
+      <th>Addresses</th>
+      <th>Fee and Detour</th>
+      <th>Pickup</th>
+    </tr>
+
+    {% for job in jobs %}
+      <tr>
+        <td>
+          {{ job.order_item.quantity|floatformat }}x {{ job.order_item.product.container_type.size_class }}
+          <br>
+          {{ job.order_item.product.name }}
+          <br>
+          {{ job.order_item.product.seller.first_name }} {{ job.order_item.product.seller.last_name }}
+        </td>
+        <td>
+          {{ job.order_item.product.seller.city }}, {{ job.order_item.product.seller.street }}, {{ job.order_item.product.seller.zip }}
+          <br>
+          {{ job.order_item.order.buyer.city }}, {{ job.order_item.order.buyer.street }}, {{ job.order_item.order.buyer.zip }}
+        </td>
+        <td>
+          {{ job.detour | divide:1000 }} KM
+          <br>
+          {{ job.order_item.delivery_fee }} €
+        </td>
+        <td>
+          {{ job.order_item.order.earliest_delivery_date | date:"M d" }}
+          <br>
+          {{ job.order_item.latest_delivery_date | date:"M d" }}
+        </td>
+      </tr>
+    {% endfor %}
+  </table>
+{% endblock %}

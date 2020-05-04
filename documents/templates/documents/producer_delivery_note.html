@@ -1,0 +1,7 @@
+{% extends 'documents/_delivery_overview.html' %}
+
+{% block delivery_message %}
+<p>
+    Gem&auml;ß Auftragsnr. {{ order.id }} vom {{ order.created_at.strftime('%d.%m.%Y') }} müssen folgende Artikel geliefert werden/abgeholt werden:
+</p>
+{% endblock %}

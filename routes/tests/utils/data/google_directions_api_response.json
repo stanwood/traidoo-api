@@ -1,0 +1,162 @@
+[
+  {
+    "bounds": {
+      "northeast": { "lat": 52.40752579999999, "lng": 16.8960352 },
+      "southwest": { "lat": 52.39451589999999, "lng": 16.8767784 }
+    },
+    "copyrights": "Map data ©2019 Google",
+    "legs": [
+      {
+        "distance": { "text": "0.3 km", "value": 344 },
+        "duration": { "text": "2 mins", "value": 90 },
+        "end_address": "Brzask 27, 60-369 Poznań, Poland",
+        "end_location": { "lat": 52.4066037, "lng": 16.881801 },
+        "start_address": "Brzask 21, 60-369 Poznań, Poland",
+        "start_location": { "lat": 52.40689760000001, "lng": 16.8767784 },
+        "steps": [
+          {
+            "distance": { "text": "0.3 km", "value": 344 },
+            "duration": { "text": "2 mins", "value": 90 },
+            "end_location": { "lat": 52.4066037, "lng": 16.881801 },
+            "html_instructions": "Head <b>east</b> on <b>Brzask</b> toward <b>Międzychodzka</b><div style=\"font-size:0.9em\">Destination will be on the right</div>",
+            "polyline": {
+              "points": "cvz~H{f_fB?I?yC?S?WBuC?cA@yA@WB{@?W@WBe@Bo@d@mG"
+            },
+            "start_location": { "lat": 52.40689760000001, "lng": 16.8767784 },
+            "travel_mode": "DRIVING"
+          }
+        ],
+        "traffic_speed_entry": [],
+        "via_waypoint": []
+      },
+      {
+        "distance": { "text": "2.3 km", "value": 2313 },
+        "duration": { "text": "7 mins", "value": 396 },
+        "end_address": "Morawskiego 25, 60-239 Poznań, Poland",
+        "end_location": { "lat": 52.3945972, "lng": 16.8936683 },
+        "start_address": "Brzask 27, 60-369 Poznań, Poland",
+        "start_location": { "lat": 52.4066037, "lng": 16.881801 },
+        "steps": [
+          {
+            "distance": { "text": "17 m", "value": 17 },
+            "duration": { "text": "1 min", "value": 3 },
+            "end_location": { "lat": 52.40657110000001, "lng": 16.8820436 },
+            "html_instructions": "Head <b>east</b> on <b>Brzask</b> toward <b>Szamotulska</b>",
+            "polyline": { "points": "gtz~Hgf`fBDo@" },
+            "start_location": { "lat": 52.4066037, "lng": 16.881801 },
+            "travel_mode": "DRIVING"
+          },
+          {
+            "distance": { "text": "0.1 km", "value": 109 },
+            "duration": { "text": "1 min", "value": 17 },
+            "end_location": { "lat": 52.40752579999999, "lng": 16.8823941 },
+            "html_instructions": "Turn <b>left</b> onto <b>Szamotulska</b>",
+            "maneuver": "turn-left",
+            "polyline": { "points": "atz~Hwg`fB_EeA" },
+            "start_location": { "lat": 52.40657110000001, "lng": 16.8820436 },
+            "travel_mode": "DRIVING"
+          },
+          {
+            "distance": { "text": "0.4 km", "value": 393 },
+            "duration": { "text": "1 min", "value": 88 },
+            "end_location": { "lat": 52.406941, "lng": 16.8880704 },
+            "html_instructions": "Turn <b>right</b> onto <b>Opalenicka</b>",
+            "maneuver": "turn-right",
+            "polyline": {
+              "points": "azz~H}i`fBd@mGb@qF\\wEJeB@K?E?CAIAKAK?K@}ABoC"
+            },
+            "start_location": { "lat": 52.40752579999999, "lng": 16.8823941 },
+            "travel_mode": "DRIVING"
+          },
+          {
+            "distance": { "text": "0.5 km", "value": 465 },
+            "duration": { "text": "1 min", "value": 65 },
+            "end_location": { "lat": 52.4027817, "lng": 16.8887426 },
+            "html_instructions": "Turn <b>right</b> onto <b>Przybyszewskiego</b>/<b>DW433</b>",
+            "maneuver": "turn-right",
+            "polyline": {
+              "points": "kvz~HmmafBz@CdBEpFg@h@Ih@KXE`@Ix@Sf@EdAKn@CbAC"
+            },
+            "start_location": { "lat": 52.406941, "lng": 16.8880704 },
+            "travel_mode": "DRIVING"
+          },
+          {
+            "distance": { "text": "0.3 km", "value": 309 },
+            "duration": { "text": "1 min", "value": 39 },
+            "end_location": { "lat": 52.4000699, "lng": 16.8892532 },
+            "html_instructions": "At <b>rondo Nowaka-Jeziorańskiego</b>, take the <b>1st</b> exit onto <b>Reymonta</b>/<b>DW433</b>",
+            "maneuver": "roundabout-right",
+            "polyline": {
+              "points": "k|y~HsqafBDDBBDBFBD@D@D?D?HC^ODERGh@UNG|@[PGBADAH@nCQt@Ep@CRD"
+            },
+            "start_location": { "lat": 52.4027817, "lng": 16.8887426 },
+            "travel_mode": "DRIVING"
+          },
+          {
+            "distance": { "text": "0.5 km", "value": 478 },
+            "duration": { "text": "1 min", "value": 83 },
+            "end_location": { "lat": 52.3989272, "lng": 16.8960352 },
+            "html_instructions": "Turn <b>left</b> onto <b>Stanisława Wyspiańskiego</b>",
+            "maneuver": "turn-left",
+            "polyline": {
+              "points": "mky~HytafB@U@I?_@NsAZ{CT_CJeAFi@b@qE@KbBoQ"
+            },
+            "start_location": { "lat": 52.4000699, "lng": 16.8892532 },
+            "travel_mode": "DRIVING"
+          },
+          {
+            "distance": { "text": "0.5 km", "value": 505 },
+            "duration": { "text": "1 min", "value": 87 },
+            "end_location": { "lat": 52.3947363, "lng": 16.8931773 },
+            "html_instructions": "Turn <b>right</b> onto <b>Jarochowskiego</b>",
+            "maneuver": "turn-right",
+            "polyline": {
+              "points": "idy~Hg_cfBxCbBnGzDFDHFhAn@tAx@z@j@XPrCdB"
+            },
+            "start_location": { "lat": 52.3989272, "lng": 16.8960352 },
+            "travel_mode": "DRIVING"
+          },
+          {
+            "distance": { "text": "37 m", "value": 37 },
+            "duration": { "text": "1 min", "value": 14 },
+            "end_location": { "lat": 52.3945972, "lng": 16.8936683 },
+            "html_instructions": "Turn <b>left</b> onto <b>Morawskiego</b><div style=\"font-size:0.9em\">Destination will be on the right</div>",
+            "maneuver": "turn-left",
+            "polyline": { "points": "cjx~HkmbfBZaB" },
+            "start_location": { "lat": 52.3947363, "lng": 16.8931773 },
+            "travel_mode": "DRIVING"
+          }
+        ],
+        "traffic_speed_entry": [],
+        "via_waypoint": []
+      },
+      {
+        "distance": { "text": "21 m", "value": 21 },
+        "duration": { "text": "1 min", "value": 6 },
+        "end_address": "Morawskiego 12, 60-216 Poznań, Poland",
+        "end_location": { "lat": 52.39451589999999, "lng": 16.8939553 },
+        "start_address": "Morawskiego 25, 60-239 Poznań, Poland",
+        "start_location": { "lat": 52.3945972, "lng": 16.8936683 },
+        "steps": [
+          {
+            "distance": { "text": "21 m", "value": 21 },
+            "duration": { "text": "1 min", "value": 6 },
+            "end_location": { "lat": 52.39451589999999, "lng": 16.8939553 },
+            "html_instructions": "Head <b>southeast</b> on <b>Morawskiego</b> toward <b>Bogusławskiego</b>",
+            "polyline": { "points": "gix~HmpbfBNy@" },
+            "start_location": { "lat": 52.3945972, "lng": 16.8936683 },
+            "travel_mode": "DRIVING"
+          }
+        ],
+        "traffic_speed_entry": [],
+        "via_waypoint": []
+      }
+    ],
+    "overview_polyline": {
+      "points": "cvz~H{f_fB?oEFkIHqCh@}HDo@_EeAhA_Oh@}H?_@CW@iBBoCz@CdBEpFg@rAUz@Ox@Sf@EtBObACDDHFXFNCd@UjCaATIN?dEWp@CRDB_@NsBdAkKd@}EbBoQxCbBvG`ErAv@~H|Ej@{C"
+    },
+    "summary": "Brzask",
+    "warnings": [],
+    "waypoint_order": [0, 1]
+  }
+]

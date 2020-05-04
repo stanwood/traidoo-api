@@ -1,0 +1,18 @@
+{% extends 'mails/_base.html' %}
+
+{% block body %}
+<p>Hallo, </p>
+
+<p>
+    Ihr {{ document_name }} wurde abgelehnt.
+</p>
+
+<p>Bitte kontaktieren Sie die Meck-Schweizer.</p>
+
+{% if reason_message %}
+<p>
+    Details: {{ reason_message }}
+</p>
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,9 @@
+{% extends 'mails/_base.html' %}
+
+{% block body %}
+<p>Hallo,</p>
+<p>wir teilen Ihnen mit, dass Ihre alte E-Mail-Adresse {{old_email}} zu {{new_email}} geändert wurde.</p>
+<p>Diese Nachricht wurde an beide E-Mail-Adressen gesendet.</p>
+<p>Sollte etwas nicht stimmen, kontaktieren Sie uns bitte, indem Sie auf diese Mail antworten.</p>
+<p>Viele Grüße,</p>
+{% endblock %}

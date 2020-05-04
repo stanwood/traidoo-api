@@ -1,0 +1,104 @@
+{% extends 'documents/_base.html' %}
+
+{% block body %}
+<div class="child-div" style="margin-top: 4rem;">
+            <div class="child" style="width: 100%;">
+                <h2>Zahlungsbestätigung</h2>
+            </div>
+            <div class="child" style="width: 100%;">
+                <span>
+                    Wir haben Ihre Zahlung für folgende Artikel erhalten
+                </span>
+            </div>
+        </div>
+        <div class="child-div" style="margin-top: 2rem;">
+            <div class="child">
+                <table style="border-spacing: 0;">
+                    <thead>
+                    <tr>
+                        <th class="no-border"><span class="label">1</span></th>
+                        <th class="no-border"><span class="label">2</span></th>
+                        <th class="no-border align-right"><span class="label">3</span></th>
+                        <th class="no-border"><span class="label">4</span></th>
+                        <th class="no-border align-right"><span class="label">5</span></th>
+                        <th class="no-border align-right"><span class="label">6</span></th>
+                    </tr>
+                    </thead>
+                    <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Artikel, -nr. & Erzeuger</th>
+                        <th class="align-right">USt.</th>
+                        <th>Anzahl & Gebinde-gr&ouml;ße</th>
+                        <th class="align-right">Einzelpreis</th>
+                        <th class="align-right">Gesamt </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% set index = [] %}
+                    {% for lines in document.lines|groupby('category')|reverse %}
+                        {% if lines.grouper %}
+                            <tr>
+                                <td colspan="6">{{lines.grouper|capitalize}}</td>
+                            </tr>
+                        {% endif %}
+                        {% for line in lines.list %}
+                            {% set __ = index.append(1) %}
+                            <tr>
+                                <td>{{ index|length }}</td>
+                                <td>
+                                    <strong>{{ line.name }}</strong>
+                                    {% if line.organic_control_body %}
+                                        <p class="product-note">Kontrollstellennummer: {{ line.organic_control_body }}</p>
+                                    {% endif %}
+                                    <p>
+                                        {{ line.number }}<br>
+                                        {{ line.producer }}
+                                    </p>
+
+                                </td>
+                                <td class="align-right">{{ line.vat_rate|format_price }}%</td>
+                                <td>{{ line.count|int }} x {{ line.amount|format_price }} {{ line.unit }}</td>
+                                <td class="align-right">&euro; {{ line.price|format_price }} / {{ line.unit }}</td>
+                                <td class="align-right">&euro; {{ (line|price_value).netto|format_price }}</td>
+                            </tr>
+                        {% endfor %}
+                    {% endfor %}
+                    <tr id="last" class="align-right">
+                        <td colspan="1">
+                        </td>
+                        <td colspan="5">
+                            {% for category in document.lines|groupby('category')|reverse %}
+                                <div class="child-div lastest">
+                                    <div class="child" style="width: 50%">Summe {{ category.grouper }}</div>
+                                    <div class="child" style="width: 50%">&euro; {{ category.list|sum_lines_net_price|format_price }}</div>
+                                </div>
+                            {% endfor %}
+                            {% for group in document.lines|groupby('vat_rate') %}
+                                <div class="child-div lastest">
+                                    <div class="child" style="width: 50%">
+                                    <!-- sub of prices with vat -->
+                                        <span class="label">
+                                            {{ group.grouper|format_price }}% USt auf &euro;
+                                            {{ group.list|sum_lines_net_price|format_price }}
+                                        </span>
+                                    </div>
+                                    <!-- sum of vat value for all items -->
+                                    <div class="child" style="width: 50%">
+                                        <span class="label">&euro;
+                                            {{ group.list|sum_lines_vat|format_price }}
+                                        </span>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                            <div class="child-div lastest">
+                                <div class="child" style="width: 50%">Endsumme</div>
+                                <div class="child" style="width: 50%">&euro; {{ document.price_gross|format_price }}</div>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            </div>
+        </div>
+{% endblock %}}

@@ -1,0 +1,12 @@
+{% extends 'mails/_base.html' %}
+
+{% block body %}
+<p>Hallo, </p>
+<p>{{ document_name }} wurde akzeptiert.</p>
+{% if validation_complete %}
+    <p>
+        Ihr Bezahl-Account wurde freigeschaltet und ist Einsatzbereit.
+    </p>
+{% endif %}
+
+{% endblock %}

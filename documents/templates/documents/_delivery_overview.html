@@ -1,0 +1,92 @@
+{% extends 'documents/_base.html' %}
+
+{% block body %}
+    <div class="child-div" style="margin-top: 4rem;">
+        <div class="child" style="width: 100%;">
+            <h2>Lieferauftrag</h2>
+        </div>
+        <div class="child" style="width: 100%;">
+            <span>
+                {% block delivery_message %}
+                {% endblock %}
+            </span>
+        </div>
+    </div>
+    <div class="child-div" style="margin-top: 2rem;">
+        <div class="child">
+            <table style="border-spacing: 0;">
+                <thead>
+                <tr>
+                    <th class="no-border"><span class="label">1</span></th>
+                    <th class="no-border"><span class="label">2</span></th>
+                    <th class="no-border align-right"><span class="label">3</span></th>
+                    <th class="no-border"><span class="label">4</span></th>
+                    <th class="no-border align-right"><span class="label">5</span></th>
+                    <th class="no-border"><span class="label">6</span></th>
+                    {%  if delivery_date_feature_enabled %}
+                      <th class="no-border"><span class="label">7</span></th>
+                    {%  endif %}
+                </tr>
+                </thead>
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Artikel & -nr.</th>
+                    <th class="align-right">Gebinde-<br>gr&ouml;ße</th>
+                    <th>Trans.-<br>behälter</th>
+                    <th class="align-right">Anzahl Gebinde</th>
+                    <th>Transport</th>
+                    {%  if delivery_date_feature_enabled %}
+                      <th>Lieferdatum</th>
+                    {% endif %}
+                </tr>
+                </thead>
+                <tbody>
+                {% for line in document.lines %}
+                <tr>
+                    <td>{{ loop.index }}</td>
+                    <td>
+                        <strong>{{ line.name }}</strong>
+                        {% if line.organic_control_body %}
+                            <p class="product-note">Kontrollstellennummer: {{ line.organic_control_body }}</p>
+                        {% endif %}
+                        <p>{{ line.number }}</p>
+                        <p>von {{ line.pickup_address }}</p>
+                        <p>nach {{ line.delivery_address }}</p>
+                    </td>
+                    <td class="align-right">{{ line.amount|format_price }} {{ line.unit }}</td>
+                    <td>{{ line.container_name }}</td>
+                    <td class="align-right">{{ line.count|int }}</td>
+                    <td>{{ line.delivery_company }}</td>
+                    {%  if delivery_date_feature_enabled %}
+                      <td>
+                          <strong>{{ line.delivery_date }}</strong><span class="asterisk">*</span>
+                      </td>
+                    {%  endif %}
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="child-div" style="margin-top: 3rem;">
+        <div class="child">
+            <span class="label">
+                {% if document.seller.phone %}
+                    Sollten Sie Fragen zur Lieferung haben, stehen wir Ihnen unter der Telefonnummer {{ document.seller.phone }} gern zur Verfügung.
+                {% endif %}
+            </span>
+            <br>
+            <span class="label">
+                 Empfangsbest&auml;tigung: <br><br><br><br>Unterschrift
+            </span>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block footnotes %}
+    <span class="label">
+        * Zustellung an Feiertagen erfolgt am nächsten Werktag.
+    </span>
+{% endblock %}

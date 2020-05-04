@@ -1,0 +1,2 @@
+ADMIN_GROUP_NAME = "admin"
+SELLER_GROUP_NAME = "seller"

@@ -1,0 +1,88 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+env/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# PyInstaller
+#  Usually these files are written by a python script from a template
+#  before PyInstaller builds the exe, so as to inject date/other infos into it.
+*.manifest
+*.spec
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.coverage
+.cache
+nosetests.xml
+coverage.xml
+
+# Translations
+*.mo
+*.pot
+
+# Django stuff:
+*.log
+
+# Sphinx documentation
+docs/_build/
+
+# PyBuilder
+target/
+.idea/
+envs
+environment.sh
+
+# Firebase
+.firebaserc
+
+
+service_account.json
+
+ext
+app_dev.yaml
+firebase_service_key.json
+.DS_Store
+
+settings/local.py
+
+static
+
+# Django settings
+Traidoo/settings-local.py
+
+# Node
+node_modules
+cypress
+cypress.json
+package.json
+yarn.lock
+
+# pytest
+.pytest_cache
+.env.*.plain
+.env
+!.env.test
+/Traidoo/settings/environments/local.py

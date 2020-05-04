@@ -1,0 +1,7 @@
+{% extends 'mails/_base.html' %}
+
+{% block body %}
+<p>Hallo,</p>
+<p>bitte klicken Sie auf den Link um Ihre E-Mail-Adresse zu bestätigen.</p>
+<p><a href="https://{{ domain }}/{{ url }}">E-Mail bestätigen</a> </p>
+{% endblock %}

@@ -1,0 +1,29 @@
+{% extends 'mails/_base.html' %}
+
+{% block body %}
+<div class="child-div">
+  <h3>Gestern sind folgende Produkte abgelaufen:</h3>
+</div>
+<div class="child-div" style="margin-top: 2rem;">
+  <table style="border-spacing: 0;">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Produkt</th>
+        <th>Unverkaufte Gebinde</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for product_id, data in items_by_product.items %}
+      <tr>
+        <td>{{ forloop.counter }}</td>
+        <td>
+          <a href="{{ base_url }}/selling/products/{{ product_id }}" target="_blank">{{ data.name }}</a>
+        </td>
+        <td>{{ data.count }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}}

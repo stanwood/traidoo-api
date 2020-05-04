@@ -1,0 +1,24 @@
+cron:
+  - description: delete inactive carts
+    url: /carts/cron/delete-inactive-carts
+    schedule: every 5 minutes
+    timezone: Europe/Berlin
+
+  - description: set items as unsold
+    url: /orders/cron/find-unsold-items
+    schedule: every day 00:01
+    timezone: Europe/Berlin
+
+  - description: Send notification about available jobs
+    url: /jobs/cron/notifications
+    schedule: every day 12:00
+    timezone: Europe/Berlin
+
+  - description: Third party delivery orders
+    url: /orders/crons/third-party-delivery-orders
+    schedule: every day 18:00
+    timezone: Europe/Berlin
+  # - description: delete not verified users
+  #   url: /users/cron/delete-not-verified-users
+  #   schedule: every 168 hours
+  #   timezone: Europe/Berlin

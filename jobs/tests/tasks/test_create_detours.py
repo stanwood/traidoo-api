@@ -1,0 +1,78 @@
+from unittest import mock
+
+import pytest
+from model_mommy import mommy
+
+from ...models import Detour
+
+pytestmark = pytest.mark.django_db
+
+
+@mock.patch('jobs.tasks.create_detours.calculate_route_length')
+def test_create_detours_for_route(
+    calculate_route_length_mock, client_anonymous, settings
+):
+    settings.FEATURES['routes'] = True
+
+    default_route_length = 1200
+    calculate_route_length_mock.return_value = default_route_length
+
+    route = mommy.make('routes.Route')
+
+    product_1 = mommy.make('products.Product', third_party_delivery=False)
+    order_1 = mommy.make('orders.Order', processed=False)
+    order_item_1 = mommy.make_recipe(
+        'orders.orderitem', order=order_1, product=product_1
+    )
+
+    product_2 = mommy.make('products.Product', third_party_delivery=True)
+    order_2 = mommy.make('orders.Order', processed=True)
+    order_item_2 = mommy.make(
+        'orders.OrderItem', order=order_2, job=None, product=product_2
+    )
+
+    seller_1 = mommy.make_recipe('users.user')
+    product_3 = mommy.make(
+        'products.Product', third_party_delivery=True, seller=seller_1
+    )
+    order_3 = mommy.make('orders.Order', processed=False)
+    delivery_address_1 = mommy.make_recipe('delivery_addresses.delivery_address')
+    order_item_3 = mommy.make(
+        'orders.OrderItem',
+        order=order_3,
+        product=product_3,
+        delivery_address=delivery_address_1,
+    )
+    job_1 = mommy.make('jobs.Job', order_item=order_item_3, user=None)
+
+    seller_2 = mommy.make_recipe('users.user')
+    product_4 = mommy.make(
+        'products.Product', third_party_delivery=True, seller=seller_2
+    )
+    order_4 = mommy.make('orders.Order', processed=False)
+    delivery_address_2 = mommy.make_recipe('delivery_addresses.delivery_address')
+    order_item_4 = mommy.make(
+        'orders.OrderItem',
+        order=order_4,
+        product=product_4,
+        delivery_address=delivery_address_2,
+    )
+    user = mommy.make('users.User')
+    job_2 = mommy.make('jobs.Job', order_item=order_item_4, user=user)
+
+    assert not Detour.objects.first()
+
+    response = client_anonymous.post(
+        f'/detours/create/{route.id}', **{'HTTP_X_APPENGINE_QUEUENAME': 'queue'}
+    )
+
+    assert response.status_code == 200
+
+    assert Detour.objects.count() == 2
+
+    detour_1 = Detour.objects.filter(job=job_1).first()
+    assert detour_1.route == route
+    assert detour_1.length == default_route_length
+    detour_2 = Detour.objects.filter(job=job_2).first()
+    assert detour_2.route == route
+    assert detour_2.length == default_route_length
