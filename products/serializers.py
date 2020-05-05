@@ -196,9 +196,13 @@ class ProductSerializer(
 
 
 class ProductDetailsSerializer(
-    BaseProductSerializer, ImageFallbackMixin, serializers.ModelSerializer
+    BaseProductSerializer,
+    ImageFallbackMixin,
+    serializers.ModelSerializer,
+    TaggitSerializer,
 ):
     items_available = serializers.IntegerField(read_only=True)
+    tags = CustomTagListSerializerField(allow_null=True, required=False)
     seller = AnonymousUserSerializer(read_only=True)
     image = serializers.ImageField(required=False)
     delivery = serializers.SerializerMethodField()
@@ -240,6 +244,10 @@ class ProductDetailsSerializer(
             "region_ids",
             "region",
             "regions",
+            "ean8",
+            "ean13",
+            "sellers_product_identifier",
+            "tags",
         )
         read_only_fields = ("id",)
         depth = 2

@@ -70,7 +70,11 @@ def test_get_product(
         container_type=container,
         region=traidoo_region,
         delivery_options=delivery_options,
+        sellers_product_identifier="test123",
+        ean13="12345678",
+        ean8="12345678",
     )
+    product.tags.add("tag1")
 
     response = client_buyer.get(f"/products/{product.id}")
 
@@ -114,7 +118,11 @@ def test_get_product(
         "itemsAvailable": 0,
         "name": "Test Product",
         "price": 99.98,
-        "region": {"id": traidoo_region.id, "name": traidoo_region.name, "slug": traidoo_region.slug,},
+        "region": {
+            "id": traidoo_region.id,
+            "name": traidoo_region.name,
+            "slug": traidoo_region.slug,
+        },
         "regions": [],
         "seller": {
             "businessLicense": None,
@@ -129,6 +137,10 @@ def test_get_product(
         },
         "unit": None,
         "vat": 19.0,
+        "tags": [{"id": product.tags.first().id, "name": "tag1", "slug": "tag1",}],
+        "sellersProductIdentifier": "test123",
+        "ean13": "12345678",
+        "ean8": "12345678",
     }
 
 
