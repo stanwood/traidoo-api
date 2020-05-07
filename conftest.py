@@ -106,7 +106,7 @@ def logistics_user(traidoo_region):
 
 
 @pytest.fixture
-def platform_user(traidoo_region):
+def platform_user(traidoo_region, admin_group):
     yield mommy.make(
         "users.user",
         region=traidoo_region,
@@ -114,6 +114,8 @@ def platform_user(traidoo_region):
         mangopay_user_id="40",
         company_name="Traidoo",
         is_email_verified=True,
+        groups=[admin_group],
+        is_staff=True,
     )
 
 
@@ -126,6 +128,8 @@ def central_platform_user(db, traidoo_region):
         company_name="Traidoo",
         is_email_verified=True,
         region=traidoo_region,
+        is_superuser=True,
+        is_staff=True,
     )
 
 

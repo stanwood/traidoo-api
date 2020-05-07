@@ -22,7 +22,10 @@ class Document(OrderCalculatorMixin, BaseAbstractModel):
             "Buyer Platform Invoice",
             "documents/invoice_platform.html",
         )
-        platform_invoice = ("Platform Invoice", "documents/invoice_platform_producer.html")
+        platform_invoice = (
+            "Platform Invoice",
+            "documents/invoice_platform_producer.html",
+        )
         logistics_invoice = ("Logistics Invoice", "documents/invoice_logistics.html")
         producer_invoice = ("Producer Invoice", "documents/invoice_producer.html")
         order_confirmation_buyer = (
@@ -171,3 +174,15 @@ class Document(OrderCalculatorMixin, BaseAbstractModel):
                     f"Could not find logistics company of buyer {self.buyer['user_id']} in order {self.order_id}"
                 )
         return list(emails)
+
+    @property
+    def seller_company_name(self):
+        return self.seller["company_name"]
+
+    @property
+    def buyer_company_name(self):
+        return self.buyer["company_name"]
+
+    @property
+    def is_invoice(self):
+        return "Invoice" in self.document_type

@@ -8,6 +8,7 @@ from django.utils import timezone
 from model_mommy import mommy
 
 from documents import factories
+from mails.utils import get_admin_emails
 from orders.models import Order, OrderItem
 from payments.client.exceptions import MangopayError, MangopayTransferError
 
@@ -330,7 +331,7 @@ def test_transfer_to_global_platform_owner_if_local_does_not_have_mangopay_accou
         f"local platform owner `{platform_user.id}` does not have mangopay account. "
         f"Funds will be transfered to global platform owner"
     ) in mailoutbox[2].body
-    assert mailoutbox[2].to == [admin.email]
+    assert set(mailoutbox[2].to) == set(get_admin_emails())
 
 
 def test_mark_documents_and_invoice_as_paid_after_processing_payin(
@@ -560,7 +561,7 @@ def test_paid_too_much_bankwire_pay_in_to_wallet(
         f"{order_confirmation.id}. Expected (in cents) `18088`, but received "
         f"`20033`\n"
     ) in mailoutbox[0].body
-    assert mailoutbox[0].to == [admin.email]
+    assert set(mailoutbox[0].to) == set(get_admin_emails())
 
 
 def test_seller_does_not_have_mangopay_user(

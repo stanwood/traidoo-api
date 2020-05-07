@@ -83,3 +83,6 @@ class Product(BaseAbstractModel):
         return self.delivery_options.exclude(
             id=DeliveryOption.CENTRAL_LOGISTICS
         ).first()
+
+    def __str__(self):
+        return self.name

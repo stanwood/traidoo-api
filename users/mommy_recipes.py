@@ -1,3 +1,4 @@
+from django.contrib.auth.models import Group
 from faker import Faker
 from model_mommy.recipe import Recipe, seq
 

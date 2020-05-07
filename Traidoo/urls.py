@@ -1,6 +1,9 @@
 from django.conf.urls import include, url
+from django.conf.urls.i18n import i18n_patterns
 from django.contrib import admin
 from django.urls import path
+from django.utils.translation import gettext_lazy as _
+from rest_framework.authtoken.models import Token
 from rest_framework.documentation import include_docs_urls
 from rest_framework_nested import routers
 
@@ -70,6 +73,12 @@ order_items_router = routers.NestedSimpleRouter(router, r"orders", lookup="order
 order_items_router.register(r"items", OrderItemViewSet, basename="item")
 order_items_router.register(r"documents", OrderDocumentsView, basename="document")
 
+# Admin site translations
+admin.site.index_title = _('Traidoo')
+admin.site.site_header = _('Traidoo Administration')
+admin.site.site_title = _('Traidoo Administration')
+admin.site.unregister(Token)
+
 urlpatterns = [
     path("", include("carts.urls")),
     url(
@@ -87,7 +96,6 @@ urlpatterns = [
     url(r"^", include(order_items_router.urls)),
     url(r"^api-auth/", include("rest_framework.urls")),
     url(r"^checkout", CheckoutView.as_view()),
-    path("admin/", admin.site.urls),
     path(r"documents/", include("documents.urls")),
     url(r"^mangopay/", include("payments.urls")),
     url(r"^users/cron/delete-not-verified-users", DeleteNotVerifiedUsersView.as_view()),
@@ -136,3 +144,8 @@ urlpatterns = [
     url(r"^warmup", warmup),
     url(r"^tinymce/", include("tinymce.urls")),
 ]
+
+urlpatterns += i18n_patterns(
+    path("admin/", admin.site.urls),
+    url(r'^admin_tools/', include('admin_tools.urls')),
+)

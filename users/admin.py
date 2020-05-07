@@ -1,3 +1,5 @@
+from copy import copy
+
 from django import forms
 from django.contrib import admin
 from django.contrib.auth import get_user_model
@@ -33,21 +35,11 @@ class GroupsFilter(admin.SimpleListFilter):
 class UserAdminForm(forms.ModelForm):
     class Meta:
         model = User
-        fields = "__all__"
-
-    def clean(self):
-        cleaned_data = super().clean()
-
-        is_superuser = cleaned_data.get("is_superuser")
-        region = cleaned_data.get("region")
-
-        if not is_superuser and not region:
-            self.add_error("region", "Region is required")
-
-        return cleaned_data
+        exclude = ["date_joined"]
+        readonly_fields = ["is_superuser"]
 
 
-class ProductsInline(admin.TabularInline):
+class ProductsInline(BaseRegionalAdminMixin, admin.TabularInline):
     model = Product
     fields = ["name", "region", "regions"]
 
@@ -63,15 +55,14 @@ class UserAdmin(BaseRegionalAdminMixin, VersionAdmin):
                 "fields": (
                     "is_active",
                     "is_staff",
-                    "is_superuser",
                     "is_email_verified",
                     "is_cooperative_member",
                     "groups",
-                    "user_permissions",
+                    "is_superuser",
+                    "region",
                 )
             },
         ),
-        (_("Important dates"), {"fields": ("last_login", "date_joined")}),
     )
     add_fieldsets = (
         (None, {"classes": ("wide",), "fields": ("email", "password1", "password2")}),
@@ -92,7 +83,7 @@ class UserAdmin(BaseRegionalAdminMixin, VersionAdmin):
         "created_at",
     )
     list_filter = [GroupsFilter, "region"]
-    search_fields = ("email", "first_name", "last_name")
+    search_fields = ("email", "first_name", "last_name", "company_name")
     ordering = ("-created_at",)
 
     actions = ["approve_user"]
@@ -132,15 +123,8 @@ class UserAdmin(BaseRegionalAdminMixin, VersionAdmin):
 
     approve_user.short_description = "Approve user"
 
-    def get_fieldsets(self, request, obj=None):
-        """
-        In case of superuser override the fieldsets to show region of the user
-        """
-        fieldsets = super().get_fieldsets(request, obj)
-
-        if request.user.is_superuser:
-            fields = fieldsets[0][1]["fields"]
-            if "region" not in fields:
-                fieldsets[0][1]["fields"] = fields + ("region",)
-
-        return fieldsets
+    def get_readonly_fields(self, request, obj=None):
+        read_only_fields = super(UserAdmin, self).get_readonly_fields(request, obj)
+        if not request.user.is_superuser:
+             read_only_fields += ('is_superuser', 'region')
+        return read_only_fields
