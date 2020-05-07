@@ -102,6 +102,7 @@ def test_get_product(
             "volume": 456.78,
         },
         "delivery": {"logistics": 351.76, "pickup": 0.0, "seller": 0.0},
+        "deliveryCharge": 0.0,
         "deliveryOptions": [
             {"id": 0, "name": "traidoo"},
             {"id": 1, "name": "seller"},

@@ -15,7 +15,7 @@ def test_cannot_login_to_different_region(client_anonymous):
     user.save()
 
     successful_response = client_anonymous.post(
-        "/auth/login",
+        "/auth/token",
         {"email": user.email, "password": test_password},
         **{"HTTP_REGION": region_1.slug}
     )
@@ -23,7 +23,7 @@ def test_cannot_login_to_different_region(client_anonymous):
     assert successful_response.status_code == 200
 
     failed_response = client_anonymous.post(
-        "/auth/login",
+        "/auth/token",
         {"email": user.email, "password": test_password},
         **{"HTTP_REGION": region_2.slug}
     )

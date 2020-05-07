@@ -1,7 +1,6 @@
 from django.conf.urls import include, url
 from django.contrib import admin
 from django.urls import path
-from djoser.views import UserViewSet
 from rest_framework.documentation import include_docs_urls
 from rest_framework_nested import routers
 
@@ -40,7 +39,6 @@ from users.views.profile import (
 )
 from users.views.registration import RegistrationViewSet
 
-from .djoser_urls import urlpatterns_djoser, urlpatterns_jwt
 from .warmup import warmup
 
 router = routers.DefaultRouter(trailing_slash=False)
@@ -52,7 +50,6 @@ router.register(
 )
 router.register(r"settings", SettingViewSet)
 router.register(r"trucks", TruckViewSet)
-router.register(r"users", UserViewSet, basename="user")
 router.register(r"groups", GroupViewSet)
 router.register(r"jobs", JobsViewSet, basename="jobs")
 router.register(r"delivery_options", DeliveryOptionViewSet)
@@ -89,8 +86,6 @@ urlpatterns = [
     url(r"^", include(product_items_router.urls)),
     url(r"^", include(order_items_router.urls)),
     url(r"^api-auth/", include("rest_framework.urls")),
-    url(r"^auth/", include(urlpatterns_djoser)),
-    url(r"^auth/", include(urlpatterns_jwt)),
     url(r"^checkout", CheckoutView.as_view()),
     path("admin/", admin.site.urls),
     path(r"documents/", include("documents.urls")),
@@ -136,6 +131,7 @@ urlpatterns = [
     path(r"", include("features.urls")),
     path(r"", include("orders.urls")),
     path(r"sellers/", include("sellers.urls")),
+    path(r"auth/", include("users.urls")),
     url(r"^docs/", include_docs_urls(title="Traidoo Documentation", public=False)),
     url(r"^warmup", warmup),
     url(r"^tinymce/", include("tinymce.urls")),

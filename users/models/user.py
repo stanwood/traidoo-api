@@ -4,21 +4,21 @@ from decimal import Decimal
 
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.tokens import default_token_generator
 from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.utils.encoding import force_bytes
+from django.utils.http import urlsafe_base64_encode
 from django_countries.fields import CountryField
-from djoser.signals import user_activated, user_registered
 from model_utils import FieldTracker
-
-from mails.utils import send_mail
 
 from common.models import Region
 from core.db.base import BaseAbstractModel
 from core.storage.private_storage import private_storage
 from core.storage.utils import private_image_upload_to, public_image_upload_to
 from core.tasks.mixin import TasksMixin
-from payments.client.client import MangopayClient
+from mails.utils import send_mail
 from settings.models import get_setting
 from users.constants.company_types import COMPANY_TYPES
 
@@ -125,6 +125,12 @@ class User(TasksMixin, AbstractUser, BaseAbstractModel):
         "iban",
     ]
 
+    def generate_uid(self):
+        return urlsafe_base64_encode(force_bytes(self.pk))
+
+    def generate_token(self):
+        return default_token_generator.make_token(self)
+
     @property
     def is_seller(self) -> bool:
         return self.groups.filter(name="seller").exists()
@@ -196,38 +202,3 @@ def email_has_changed(sender, instance, created, **kwargs):
                 "new_email": instance.email,
             },
         )
-
-
-@receiver(user_activated)
-def user_email_verified(user, request, **kwargs):
-    # TODO: move it to view
-    user.is_email_verified = True
-    user.save()
-
-
-@receiver(user_activated)
-def create_wallet_and_banking_alias(user, request, **kwargs):
-    """
-    Create a new wallet and banking alias when new user activates its account
-    """
-    mangopay_client = MangopayClient(
-        settings.MANGOPAY_URL, settings.MANGOPAY_CLIENT_ID, settings.MANGOPAY_PASSWORD
-    )
-
-    mangopay_wallet = mangopay_client.create_wallet(user_id=user.mangopay_user_id)
-
-    wallet_id = mangopay_wallet.get("Id")
-    if not wallet_id:
-        # TODO Add log
-        return
-
-    mangopay_client.create_banking_alias_iban(
-        wallet_id=wallet_id, user_id=user.mangopay_user_id, name=user.get_full_name()
-    )
-
-
-@receiver(user_registered)
-# TODO: move it to view
-def activate_user(user, request, **kwargs):
-    user.is_active = True
-    user.save()

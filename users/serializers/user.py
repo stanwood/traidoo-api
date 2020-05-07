@@ -2,7 +2,6 @@ import itertools
 
 from django.contrib.auth import get_user_model
 from django_countries.serializers import CountryFieldMixin
-from djoser.serializers import UserSerializer as BaseUserSerializer
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
@@ -14,7 +13,7 @@ from .group import CustomGroupsSerializerField
 User = get_user_model()
 
 
-class UserSerializer(CountryFieldMixin, ImageFallbackMixin, BaseUserSerializer):
+class UserSerializer(CountryFieldMixin, ImageFallbackMixin):
     id = serializers.ReadOnlyField()
 
     groups = CustomGroupsSerializerField(

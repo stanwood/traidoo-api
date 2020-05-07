@@ -34,7 +34,7 @@ class Product(BaseAbstractModel):
         help_text="Region of origin",
     )
     regions = models.ManyToManyField(
-        Region, help_text="The associated regions the product should be available in"
+        Region, help_text="The associated regions the product should be available in",
     )
 
     category = models.ForeignKey(Category, on_delete=models.PROTECT)
