@@ -4,6 +4,7 @@ from distutils import util
 from django.db.models import BooleanField, Case, IntegerField, Q, Sum, Value, When
 from django.db.models.functions import Coalesce
 from rest_framework import viewsets
+from rest_framework.parsers import FormParser, MultiPartParser
 from rest_framework.permissions import AllowAny
 
 from common.utils import get_region
@@ -19,6 +20,7 @@ from products.serializers import (
 
 
 class ProductViewSet(GetPermissionsMixin, viewsets.ModelViewSet):
+    parser_classes = (MultiPartParser, FormParser)
     permission_classes_by_action = {
         "create": [IsSellerOrAdminUser],
         "update": [IsSellerOrAdminUser],

@@ -16,7 +16,9 @@ def test_update_product_with_valid_base_unit_options(
     response = client_admin.patch(
         f"/products/{product.id}",
         {"seller_id": seller.id, "base_unit": base_unit, "item_quantity": 1.2},
+        format="multipart",
     )
+
     parsed_response = response.json()
 
     assert response.status_code == 200
@@ -33,7 +35,9 @@ def test_update_product_with_invalid_base_unit_options(
     response = client_admin.patch(
         f"/products/{product.id}",
         {"seller_id": seller.id, "base_unit": "height", "item_quantity": 1.2},
+        format="multipart",
     )
+
     parsed_response = response.json()
 
     assert response.status_code == 400
