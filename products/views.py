@@ -112,6 +112,7 @@ class ProductViewSet(GetPermissionsMixin, viewsets.ModelViewSet):
 
     def get_serializer_class(self):
         if self.request.user.is_authenticated and self.request.user.approved:
+            # FIXME: Why ProductDetailsSerializer is only used to retrieve the data?
             if self.action == "retrieve":
                 return ProductDetailsSerializer
             return ProductSerializer

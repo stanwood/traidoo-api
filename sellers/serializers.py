@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model
 from rest_framework import exceptions, serializers
 
-from users.serializers.group import CustomGroupsSerializerField
+from users.serializers import CustomGroupsSerializerField
 
 User = get_user_model()
 

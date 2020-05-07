@@ -29,7 +29,7 @@ class Route(BaseAbstractModel):
     )
     origin = models.CharField(max_length=255)
     destination = models.CharField(max_length=255)
-    waypoints = ArrayField(models.CharField(max_length=255))
+    waypoints = ArrayField(models.CharField(max_length=255), default=list, blank=True)
 
     def calculate_route_length(self):
         self.length = calculate_route_length(

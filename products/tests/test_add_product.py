@@ -79,7 +79,7 @@ def test_add_product_permissions(
     product_user,
     response_status,
     response_message,
-    traidoo_region
+    traidoo_region,
 ):
     clients = {"admin": client_admin, "seller": client_seller, "buyer": client_buyer}
     users = {"admin": admin, "seller": seller, "buyer": buyer}
@@ -115,7 +115,7 @@ def test_add_product_permissions(
         "containerTypeId": container.id,
         "deliveryOptionsIds": [delivery_option.id],
         "price": 100,
-        "region_id": traidoo_region.id
+        "region_id": traidoo_region.id,
     }
 
     if product_user:
@@ -133,7 +133,12 @@ def test_add_product_permissions(
 
 @pytest.mark.django_db
 def test_add_product_seller(
-    seller, client_seller, image_file, cloud_storage_save, cloud_storage_url, traidoo_region
+    seller,
+    client_seller,
+    image_file,
+    cloud_storage_save,
+    cloud_storage_url,
+    traidoo_region,
 ):
     seller.is_active = True
     seller.is_email_verified = True
@@ -161,7 +166,7 @@ def test_add_product_seller(
             "price": 100,
             "delivery_requirements": "Temperature: -10",
             "third_party_delivery": True,
-            "region_id": traidoo_region.id
+            "region_id": traidoo_region.id,
         },
         format="multipart",
     )
@@ -175,7 +180,13 @@ def test_add_product_seller(
 
 @pytest.mark.django_db
 def test_add_product_as_admin_without_seller_id(
-    seller, admin, client_admin, image_file, cloud_storage_url, cloud_storage_save, traidoo_region
+    seller,
+    admin,
+    client_admin,
+    image_file,
+    cloud_storage_url,
+    cloud_storage_save,
+    traidoo_region,
 ):
     category = mommy.make(Category)
     container = mommy.make(Container)
@@ -191,7 +202,7 @@ def test_add_product_as_admin_without_seller_id(
         "containerTypeId": container.id,
         "deliveryOptionsIds": [delivery_option.id],
         "price": 100,
-        "region_id": traidoo_region.id
+        "region_id": traidoo_region.id,
     }
 
     admin.is_active = True
@@ -214,7 +225,7 @@ def test_add_product_as_admin_and_seller(
     image_file,
     cloud_storage_url,
     cloud_storage_save,
-    traidoo_region
+    traidoo_region,
 ):
     category = mommy.make(Category)
     container = mommy.make(Container)
@@ -230,7 +241,7 @@ def test_add_product_as_admin_and_seller(
         "containerTypeId": container.id,
         "deliveryOptionsIds": [delivery_option.id],
         "price": 100,
-        "region_id": traidoo_region.id
+        "region_id": traidoo_region.id,
     }
 
     admin.is_active = True
@@ -246,7 +257,13 @@ def test_add_product_as_admin_and_seller(
 
 @pytest.mark.django_db
 def test_admin_can_add_product_for_another_user(
-    seller, admin, client_admin, image_file, cloud_storage_url, cloud_storage_save, traidoo_region
+    seller,
+    admin,
+    client_admin,
+    image_file,
+    cloud_storage_url,
+    cloud_storage_save,
+    traidoo_region,
 ):
     category = mommy.make(Category)
     container = mommy.make(Container)
@@ -263,7 +280,7 @@ def test_admin_can_add_product_for_another_user(
         "deliveryOptionsIds": [delivery_option.id],
         "price": 100,
         "sellerId": seller.id,
-        "region_id": traidoo_region.id
+        "region_id": traidoo_region.id,
     }
 
     admin.is_active = True
@@ -289,7 +306,7 @@ def test_add_product_with_valid_base_unit_options(
     image_file,
     cloud_storage_url,
     cloud_storage_save,
-    traidoo_region
+    traidoo_region,
 ):
     category = mommy.make(Category)
     container = mommy.make(Container)
@@ -309,7 +326,7 @@ def test_add_product_with_valid_base_unit_options(
         "sellerId": seller.id,
         "item_quantity": 1.2,
         "base_unit": base_unit,
-        "region_id": traidoo_region.id
+        "region_id": traidoo_region.id,
     }
 
     admin.is_active = True
@@ -326,7 +343,13 @@ def test_add_product_with_valid_base_unit_options(
 
 @pytest.mark.django_db
 def test_add_product_with_invalid_base_unit_options(
-    seller, admin, client_admin, image_file, cloud_storage_url, cloud_storage_save, traidoo_region
+    seller,
+    admin,
+    client_admin,
+    image_file,
+    cloud_storage_url,
+    cloud_storage_save,
+    traidoo_region,
 ):
     category = mommy.make(Category)
     container = mommy.make(Container)
@@ -345,7 +368,7 @@ def test_add_product_with_invalid_base_unit_options(
         "sellerId": seller.id,
         "item_quantity": 1.2,
         "base_unit": "some-invalid-value",
-        "region_id": traidoo_region.id
+        "region_id": traidoo_region.id,
     }
 
     admin.is_active = True
@@ -368,7 +391,12 @@ def test_add_product_with_invalid_base_unit_options(
 
 @pytest.mark.django_db
 def test_add_product_with_container_description(
-    seller, client_seller, image_file, cloud_storage_url, cloud_storage_save, traidoo_region
+    seller,
+    client_seller,
+    image_file,
+    cloud_storage_url,
+    cloud_storage_save,
+    traidoo_region,
 ):
     seller.is_active = True
     seller.is_email_verified = True
@@ -393,7 +421,7 @@ def test_add_product_with_container_description(
             "price": 100,
             "delivery_requirements": "Temperature: -10",
             "third_party_delivery": True,
-            "region_id": traidoo_region.id
+            "region_id": traidoo_region.id,
         },
         format="multipart",
     )
@@ -407,7 +435,12 @@ def test_add_product_with_container_description(
 
 @pytest.mark.django_db
 def test_add_product_with_grazning_animal_and_gmo_free(
-    seller, client_seller, image_file, cloud_storage_url, cloud_storage_save, traidoo_region
+    seller,
+    client_seller,
+    image_file,
+    cloud_storage_url,
+    cloud_storage_save,
+    traidoo_region,
 ):
     seller.is_active = True
     seller.is_email_verified = True
@@ -431,7 +464,7 @@ def test_add_product_with_grazning_animal_and_gmo_free(
             "price": 100,
             "isGrazingAnimal": True,
             "isGmoFree": True,
-            "region_id": traidoo_region.id
+            "region_id": traidoo_region.id,
         },
         format="multipart",
     )
@@ -447,7 +480,12 @@ def test_add_product_with_grazning_animal_and_gmo_free(
 
 @pytest.mark.django_db
 def test_add_product_with_available_regions(
-    seller, client_seller, image_file, cloud_storage_url, cloud_storage_save, traidoo_region
+    seller,
+    client_seller,
+    image_file,
+    cloud_storage_url,
+    cloud_storage_save,
+    traidoo_region,
 ):
     seller.is_active = True
     seller.is_email_verified = True
@@ -476,9 +514,7 @@ def test_add_product_with_available_regions(
             "isGrazingAnimal": True,
             "isGmoFree": True,
             "region_id": traidoo_region.id,
-            "region_ids": [
-                region_1.id, region_2.id, region_3.id
-            ]
+            "regions": [region_1.id, region_2.id, region_3.id],
         },
         format="multipart",
     )
@@ -488,19 +524,7 @@ def test_add_product_with_available_regions(
     parsed_response = response.json()
 
     assert parsed_response["regions"] == [
-        {
-            "id": 1001,
-            "name": "Test 1",
-            "slug": "test-1"
-        },
-        {
-            "id": 1002,
-            "name": "Test 2",
-            "slug": "test-2"
-        },
-        {
-            "id": 1003,
-            "name": "Test 3",
-            "slug": "test-3"
-        },
+        {"id": 1001, "name": "Test 1", "slug": "test-1"},
+        {"id": 1002, "name": "Test 2", "slug": "test-2"},
+        {"id": 1003, "name": "Test 3", "slug": "test-3"},
     ]

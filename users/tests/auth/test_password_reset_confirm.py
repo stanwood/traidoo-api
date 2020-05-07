@@ -3,10 +3,7 @@ from unittest import mock
 import pytest
 from django.conf import settings
 from django.contrib.auth import get_user_model
-from django.contrib.auth.tokens import default_token_generator
 from model_mommy import mommy
-
-from users.views.auth.utils import encode_uid
 
 User = get_user_model()
 
@@ -21,12 +18,12 @@ def test_password_reset_confirm_incorrect_uid(client_anonymous, mailoutbox):
     assert len(emails) == 0
 
     data = {
-        "uid": f"incorrect-{encode_uid(user.pk)}",
-        "token": default_token_generator.make_token(user),
+        "uid": f"incorrect-{user.generate_uid()}",
+        "token": user.generate_token(),
         "new_password": "Traidoo123",
     }
 
-    response = client_anonymous.post("/auth/set_password/", data)
+    response = client_anonymous.post("/auth/password-set", data)
     assert response.json() == {"uid": ["Invalid user id or user doesn't exist."]}
     assert response.status_code == 400
 
@@ -46,12 +43,12 @@ def test_password_reset_confirm_incorrect_token(client_anonymous, mailoutbox):
     assert len(emails) == 0
 
     data = {
-        "uid": encode_uid(user.pk),
-        "token": f"incorrect-{default_token_generator.make_token(user)}",
+        "uid": user.generate_uid(),
+        "token": f"incorrect-{user.generate_token()}",
         "new_password": "Traidoo123",
     }
 
-    response = client_anonymous.post("/auth/set_password/", data)
+    response = client_anonymous.post("/auth/password-set", data)
     assert response.json() == {"token": ["Invalid token for given user."]}
     assert response.status_code == 400
 
@@ -71,12 +68,12 @@ def test_password_reset_confirm_incorrect_password_format(client_anonymous, mail
     assert len(emails) == 0
 
     data = {
-        "uid": encode_uid(user.pk),
-        "token": default_token_generator.make_token(user),
+        "uid": user.generate_uid(),
+        "token": user.generate_token(),
         "new_password": "Traidoo",
     }
 
-    response = client_anonymous.post("/auth/set_password/", data)
+    response = client_anonymous.post("/auth/password-set", data)
     assert response.json() == {"newPassword": ["Incorrect password format."]}
     assert response.status_code == 400
 
@@ -96,12 +93,12 @@ def test_password_reset_confirm(client_anonymous, mailoutbox, traidoo_region):
     assert len(emails) == 0
 
     data = {
-        "uid": encode_uid(user.pk),
-        "token": default_token_generator.make_token(user),
+        "uid": user.generate_uid(),
+        "token": user.generate_token(),
         "new_password": "Traidoo123",
     }
 
-    response = client_anonymous.post("/auth/set_password/", data)
+    response = client_anonymous.post("/auth/password-set", data)
     assert response.status_code == 204
 
     assert mailoutbox[-1].to == [user.email]
@@ -114,7 +111,7 @@ def test_password_reset_confirm(client_anonymous, mailoutbox, traidoo_region):
     user.save()
 
     response = client_anonymous.post(
-        "/auth/login", {"email": user.email, "password": "Traidoo123"}
+        "/auth/token", {"email": user.email, "password": "Traidoo123"}
     )
 
     assert response.status_code == 200

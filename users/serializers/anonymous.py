@@ -1,6 +1,5 @@
 from django.contrib.auth import get_user_model
 from django_countries.serializers import CountryFieldMixin
-from djoser.serializers import UserSerializer as BaseUserSerializer
 from rest_framework import serializers
 
 from core.serializers.image_fallback_mixin import ImageFallbackMixin
@@ -9,7 +8,7 @@ User = get_user_model()
 
 
 class AnonymousUserSerializer(
-    CountryFieldMixin, ImageFallbackMixin, BaseUserSerializer
+    CountryFieldMixin, ImageFallbackMixin, serializers.ModelSerializer
 ):
     id = serializers.ReadOnlyField()
 

@@ -16,6 +16,7 @@ from containers.serializers import ContainerSerializer
 from core.payments.transport_insurance import calculate_transport_insurance
 from core.serializers.blankable_decimal_field import BlankableDecimalField
 from core.serializers.image_fallback_mixin import ImageFallbackMixin
+from core.serializers.regions import CustomRegionsSerializerField
 from delivery_options.models import DeliveryOption
 from delivery_options.serializers import DeliveryOptionSerializer
 from products.models import Product
@@ -77,7 +78,6 @@ class CustomTagListSerializerField(TagListSerializerField):
 
     def to_representation(self, value):
         if type(value) is not list:
-            # return [tag.name for tag in value.all()]
             return [
                 {"id": tag.id, "name": tag.name, "slug": tag.slug}
                 for tag in value.all()
@@ -109,14 +109,8 @@ class ProductSerializer(
         required=False, allow_null=True, decimal_places=2, max_digits=10
     )
     region_id = serializers.IntegerField(write_only=True, required=False)
-    region_ids = serializers.ListField(
-        child=serializers.IntegerField(write_only=True),
-        write_only=True,
-        source="regions",
-        required=False,
-    )
     region = RegionSerializer(read_only=True)
-    regions = RegionSerializer(many=True, required=False, read_only=True)
+    regions = CustomRegionsSerializerField(allow_null=True, required=False)
 
     def validate(self, data):
         forced_seller_id = data.get("seller_id")
@@ -187,7 +181,6 @@ class ProductSerializer(
             "base_unit",
             "item_quantity",
             "region_id",
-            "region_ids",
             "region",
             "regions",
         )
@@ -209,14 +202,8 @@ class ProductDetailsSerializer(
     category = CategorySerializer()
     container_type = ContainerSerializer()
     region_id = serializers.IntegerField(write_only=True, required=False)
-    region_ids = serializers.ListField(
-        child=serializers.IntegerField(write_only=True),
-        write_only=True,
-        source="regions",
-        required=False,
-    )
+    regions = CustomRegionsSerializerField(allow_null=True, required=False)
     region = RegionSerializer(read_only=True)
-    regions = RegionSerializer(many=True, required=False, read_only=True)
 
     class Meta:
         model = Product
@@ -237,13 +224,13 @@ class ProductDetailsSerializer(
             "price",
             "vat",
             "container_type",
+            "delivery_charge",
             "delivery_options",
             "items_available",
             "delivery",
             "region_id",
-            "region_ids",
-            "region",
             "regions",
+            "region",
             "ean8",
             "ean13",
             "sellers_product_identifier",

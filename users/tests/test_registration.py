@@ -192,15 +192,15 @@ def test_registration_activate_user(
 
     soup = bs4.BeautifulSoup(mailoutbox[0].body, features="html.parser")
     links = [link["href"] for link in soup("a") if "href" in link.attrs]
-    activation_link = [link for link in links if "verify_email" in link][0]
+    activation_link = [link for link in links if "verify-email" in link][0]
     uid, token = activation_link.replace(
-        f"https://{Site.objects.get_current().domain}/auth/verify_email/", ""
+        f"https://{Site.objects.get_current().domain}/auth/verify-email/", ""
     ).split("/")
 
     user.mangopay_user_id = "mangopay-user-id"
     user.save()
 
-    response = client_anonymous.post("/auth/verify_email", {"uid": uid, "token": token})
+    response = client_anonymous.post("/auth/verify-email", {"uid": uid, "token": token})
     assert response.status_code == 204
 
     user.refresh_from_db()
@@ -285,4 +285,3 @@ def test_registration_unique_email(client_anonymous, user_data, buyer):
     assert response.json() == {
         "email": [{"message": "This field must be unique.", "code": "unique"}]
     }
-
