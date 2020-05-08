@@ -52,7 +52,7 @@ class ProductViewSet(GetPermissionsMixin, viewsets.ModelViewSet):
         "seller__id",
     )
 
-    ordering_fields = filterset_fields + ("category__id",)
+    ordering_fields = filterset_fields + ("category__id", "created_at")
 
     def get_queryset(self):
         region = get_region(self.request)
