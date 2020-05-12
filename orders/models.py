@@ -20,11 +20,9 @@ from core.calculators.item_calculator import ItemCalculatorMixin
 from core.calculators.order_calculator import OrderCalculatorMixin
 from core.calculators.value import Value
 from core.db.base import BaseAbstractModel
-from core.payments.transport_insurance import calculate_transport_insurance
 from delivery_addresses.models import DeliveryAddress
 from delivery_options.models import DeliveryOption
 from products.models import Product
-from settings.models import get_setting
 
 User = get_user_model()
 
@@ -248,7 +246,11 @@ class Order(OrderCalculatorMixin, BaseAbstractModel):
         return set([item.product.seller.region for item in self.items.all()])
 
     def __str__(self):
-        return f"{self.buyer.company_name} {self.total_price}"
+        try:
+            company_name = self.buyer.company_name
+        except AttributeError:
+            company_name = None
+        return f"{company_name} {self.total_price}"
 
 
 class OrderItem(ItemCalculatorMixin, BaseAbstractModel):

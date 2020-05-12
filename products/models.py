@@ -14,7 +14,10 @@ from core.db.base import BaseAbstractModel
 from core.storage.utils import public_image_upload_to
 from delivery_options.models import DeliveryOption
 
-BASE_UNITS = (("weight", "Weight (g) per item"), ("volume", "Volume (l) per item"))
+BASE_UNITS = (
+    ("weight", _("Weight (g) per item")),
+    ("volume", _("Volume (l) per item")),
+)
 
 
 class BigAutoFieldTaggedItem(CommonGenericTaggedItemBase, TaggedItemBase):
@@ -22,8 +25,8 @@ class BigAutoFieldTaggedItem(CommonGenericTaggedItemBase, TaggedItemBase):
 
 
 class Product(BaseAbstractModel):
-    name = models.CharField(max_length=255)
-    description = models.TextField()
+    name = models.CharField(max_length=255, verbose_name=_("Name"))
+    description = models.TextField(verbose_name=_("Description"))
     image_url = models.CharField(max_length=255, null=True, blank=True)
     image = models.ImageField(upload_to=public_image_upload_to, null=True, blank=True)
     region = models.ForeignKey(
@@ -31,25 +34,44 @@ class Product(BaseAbstractModel):
         on_delete=models.PROTECT,
         related_name="products",
         blank=False,
-        help_text="Region of origin",
+        help_text=_("Region of origin"),
+        verbose_name=_("Region of origin"),
     )
     regions = models.ManyToManyField(
-        Region, help_text="The associated regions the product should be available in",
+        Region,
+        help_text=_("The associated regions the product should be available in"),
+        verbose_name=_("Available in regions"),
     )
 
-    category = models.ForeignKey(Category, on_delete=models.PROTECT)
-    seller = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    category = models.ForeignKey(
+        Category, on_delete=models.PROTECT, verbose_name=_("Category")
+    )
+    seller = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name=_("Seller")
+    )
 
-    is_organic = models.BooleanField(default=False)
-    is_vegan = models.BooleanField(default=False)
-    is_gluten_free = models.BooleanField(default=False)
-    is_grazing_animal = models.BooleanField(default=False)
-    is_gmo_free = models.BooleanField(default=False)
+    is_organic = models.BooleanField(default=False, verbose_name=_("Is organic"))
+    is_vegan = models.BooleanField(default=False, verbose_name=_("Is vegan"))
+    is_gluten_free = models.BooleanField(
+        default=False, verbose_name=_("Is gluten free")
+    )
+    is_grazing_animal = models.BooleanField(
+        default=False, verbose_name=_("Is grazing animal")
+    )
+    is_gmo_free = models.BooleanField(default=False, verbose_name=_("Is gmo free"))
 
-    amount = models.DecimalField(max_digits=10, decimal_places=2)
-    unit = models.CharField(max_length=255, null=True, blank=True)
-    price = models.DecimalField(max_digits=10, decimal_places=2)
-    vat = models.DecimalField(max_digits=10, decimal_places=2)
+    amount = models.DecimalField(
+        max_digits=10, decimal_places=2, verbose_name=_("Amount in lot")
+    )
+    unit = models.CharField(
+        max_length=255, null=True, blank=True, verbose_name=_("Unit")
+    )
+    price = models.DecimalField(
+        max_digits=10, decimal_places=2, verbose_name=_("Price")
+    )
+    vat = models.DecimalField(
+        max_digits=10, decimal_places=2, verbose_name=_("VAT rate")
+    )
 
     container_type = models.ForeignKey(Container, on_delete=models.PROTECT)
     container_description = models.TextField(null=True, blank=True)

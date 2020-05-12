@@ -126,5 +126,5 @@ class UserAdmin(BaseRegionalAdminMixin, VersionAdmin):
     def get_readonly_fields(self, request, obj=None):
         read_only_fields = super(UserAdmin, self).get_readonly_fields(request, obj)
         if not request.user.is_superuser:
-             read_only_fields += ('is_superuser', 'region')
+            read_only_fields += ("is_superuser", "region")
         return read_only_fields

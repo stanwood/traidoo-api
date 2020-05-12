@@ -45,8 +45,9 @@ class BaseRegionalAdminMixin:
         if request.user.is_admin:
             return (
                 obj is None
-                or (request.user.region_id == obj.region_id)
                 or obj._meta.label_lower in self.GLOBAL_MODELS
+                or (request.user.region_id == obj.region_id)
+
             )
         else:
             return super(BaseRegionalAdminMixin, self).has_delete_permission(

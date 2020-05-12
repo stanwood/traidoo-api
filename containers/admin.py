@@ -17,3 +17,9 @@ class ContainerAdmin(BaseRegionalAdminMixin, VersionAdmin):
         "delivery_fee",
         "image_url",
     )
+
+    def has_change_permission(self, request, obj=None):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        return False
