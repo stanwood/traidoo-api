@@ -47,7 +47,6 @@ class BaseRegionalAdminMixin:
                 obj is None
                 or obj._meta.label_lower in self.GLOBAL_MODELS
                 or (request.user.region_id == obj.region_id)
-
             )
         else:
             return super(BaseRegionalAdminMixin, self).has_delete_permission(
@@ -70,3 +69,9 @@ class BaseRegionalAdminMixin:
 @admin.register(Region)
 class RegionAdmin(BaseRegionalAdminMixin, VersionAdmin):
     list_display = ("id", "name", "slug", "website_slogan")
+
+    def has_add_permission(self, request):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        return False
