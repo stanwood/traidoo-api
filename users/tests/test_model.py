@@ -2,6 +2,7 @@ from decimal import Decimal
 import django.contrib.admin
 import pytest
 from django.conf import settings
+from django.test import Client
 from django.urls import reverse
 from model_mommy import mommy
 
@@ -115,21 +116,24 @@ def test_email_change_mail_sent_to_user(mailoutbox, buyer, traidoo_region):
     assert mailoutbox[-1].to == ["foo@bal.com"]
 
 
-@pytest.mark.skip("Does not work but I do not know why")
 def test_send_mail_to_user_after_activation(
-    mailoutbox, traidoo_region, buyer_group, client_admin, admin
+    mailoutbox, traidoo_region, buyer_group, admin, seller_group
 ):
+    client = Client()
+    client.force_login(user=admin)
     new_user = mommy.make_recipe("users.user", region=traidoo_region)
 
-    response = client_admin.post(
+    client.post(
         reverse("admin:users_user_changelist"),
         {
             "action": "approve_user",
             django.contrib.admin.ACTION_CHECKBOX_NAME: new_user.id,
+            "index": 0,
+            "select_across": 0,
         },
         follow=True,
     )
 
     assert mailoutbox[-1].subject == "Ihr Account wurde aktiviert."
-    assert mailoutbox[-1].from_email == traidoo_region.setting.platform_user.email
+    assert mailoutbox[-1].from_email == settings.DEFAULT_FROM_EMAIL
     assert mailoutbox[-1].to == [new_user.email]

@@ -7,7 +7,7 @@ from settings.models import Setting
 
 @admin.register(Setting)
 class SettingAdmin(BaseRegionalAdminMixin, VersionAdmin):
-    ordering = ("id", )
+    ordering = ("id",)
     list_display = (
         "id",
         "charge",
@@ -20,3 +20,9 @@ class SettingAdmin(BaseRegionalAdminMixin, VersionAdmin):
         "central_logistics_company",
         "logistics_company",
     )
+
+    def has_add_permission(self, request):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        return False

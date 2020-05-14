@@ -11,6 +11,7 @@ click==7.1.2
 coverage==5.1
 decorator==4.4.2
 dictdiffer==0.8.1
+django-webtest==1.9.7
 dj-inmemorystorage==2.1.0
 django==2.2.10
 execnet==1.7.1

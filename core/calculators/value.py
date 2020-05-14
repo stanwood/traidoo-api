@@ -47,3 +47,6 @@ class Value(object):
     @property
     def brutto(self):
         return float(Decimal(str(self.netto)) + Decimal(str(self.vat)))
+
+    def __str__(self):
+        return f"{self.netto} net / {self.brutto} gross"

@@ -6,7 +6,9 @@ chardet==3.0.4
 coreapi==2.3.3
 coreschema==0.0.4
 dictdiffer==0.8.1
+django-admin-tools==0.9.0
 django-anymail[mailgun]==7.1.0
+django-admirarchy==1.2.0
 django-cacheops==4.2
 django-cors-headers==3.2.1
 django-countries==6.1.2

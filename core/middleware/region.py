@@ -1,3 +1,5 @@
+import re
+
 from django.urls import reverse
 
 from common.utils import get_region
@@ -11,10 +13,13 @@ def region_middleware(get_response):
         ):
             return get_response(request)
 
+        admin_request = bool(re.match(r"^/[a-z]{2}/admin", request.path))
+
         if not (
-            request.path.startswith(reverse("admin:index"))
+            admin_request
             or request.path.startswith(reverse("webhook"))
             or request.path.startswith("/_ah/warmup")
+            or request.path == "favicon.ico"
             or get_region(request)
         ):
             raise RegionHeaderMissingException()
