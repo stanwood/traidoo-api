@@ -38,7 +38,7 @@ def test_third_party_logistic_invoice(
     delivery_address,
     delivery_options,
     logistics_user,
-    mcs_settings,
+    traidoo_settings,
     order_items,
     buyer,
     products,
@@ -78,7 +78,7 @@ def test_third_party_logistic_invoice(
         "producer": user.company_name,
         "seller_user_id": user.id,
         "unit": "",
-        "vat_rate": mcs_settings.mc_swiss_delivery_fee_vat,
+        "vat_rate": traidoo_settings.mc_swiss_delivery_fee_vat,
         "category": "",
     }
 
@@ -201,7 +201,7 @@ def test_use_buyer_delivery_address_when_self_collect(
     delivery_options,
     buyer,
     traidoo_region,
-    mcs_settings,
+    traidoo_settings,
 ):
 
     order = mommy.make(

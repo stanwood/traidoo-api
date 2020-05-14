@@ -556,7 +556,7 @@ def test_include_deposit_cost_in_order_confirmation_buyer_and_merge_containers(
 
 
 def test_delivery_address_included_in_delivery_documents(
-    order, order_items, traidoo_region, seller, logistics_user, mcs_settings
+    order, order_items, traidoo_region, seller, logistics_user, traidoo_settings
 ):
     html = (
         factories.DeliveryOverviewSellerFactory(order, traidoo_region, seller=seller)

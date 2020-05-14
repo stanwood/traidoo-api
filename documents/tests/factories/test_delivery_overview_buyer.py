@@ -11,7 +11,7 @@ def test_create_delivery_overview_buyer(
     traidoo_region,
     delivery_address,
     delivery_options,
-    mcs_settings,
+    traidoo_settings,
     products,
 ):
     order.recalculate_items_delivery_fee()

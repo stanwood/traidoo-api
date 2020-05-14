@@ -134,7 +134,7 @@ def central_platform_user(db, traidoo_region):
 
 
 @pytest.fixture(autouse=True)
-def mcs_settings(traidoo_region, platform_user, logistics_user):
+def traidoo_settings(traidoo_region, platform_user, logistics_user):
     yield mommy.make(
         Setting,
         charge=10,

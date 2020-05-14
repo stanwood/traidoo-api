@@ -11,7 +11,7 @@ def test_order_confirmation_buyer(
     traidoo_region,
     delivery_address,
     delivery_options,
-    mcs_settings,
+    traidoo_settings,
     buyer,
 ):
 
@@ -90,7 +90,7 @@ def test_order_confirmation_buyer(
         "producer": products[1].seller.company_name,
         "seller_user_id": products[1].seller.id,
         "unit": "",
-        "vat_rate": mcs_settings.mc_swiss_delivery_fee_vat,
+        "vat_rate": traidoo_settings.mc_swiss_delivery_fee_vat,
     }
     assert document.lines[5] == {
         "amount": 1.0,

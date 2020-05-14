@@ -110,11 +110,11 @@ def test_documents_stored_in_storage_with_third_party_delivery(
 
 
 def test_do_not_render_credit_note_when_local_platform_not_defined(
-    order, order_items, client, mcs_settings
+    order, order_items, client, traidoo_settings
 ):
 
-    mcs_settings.platform_user = None
-    mcs_settings.save()
+    traidoo_settings.platform_user = None
+    traidoo_settings.save()
     response = client.post(
         reverse("task", kwargs={"order_id": order.id, "document_set": "all"})
     )
@@ -128,11 +128,11 @@ def test_do_not_render_credit_note_when_local_platform_not_defined(
 
 
 def test_do_not_render_credit_note_when_local_share_not_defined(
-    order, order_items, client, mcs_settings
+    order, order_items, client, traidoo_settings
 ):
 
-    mcs_settings.central_share = None
-    mcs_settings.save()
+    traidoo_settings.central_share = None
+    traidoo_settings.save()
     client.post(reverse("task", kwargs={"order_id": order.id, "document_set": "all"}))
     assert (
         Document.objects.filter(
@@ -143,11 +143,11 @@ def test_do_not_render_credit_note_when_local_share_not_defined(
 
 
 def test_do_not_render_credit_note_when_central_logistics_not_set(
-    order, order_items, client, mcs_settings
+    order, order_items, client, traidoo_settings
 ):
 
-    mcs_settings.enable_platform_fee_share = False
-    mcs_settings.save()
+    traidoo_settings.enable_platform_fee_share = False
+    traidoo_settings.save()
     client.post(reverse("task", kwargs={"order_id": order.id, "document_set": "all"}))
     assert (
         Document.objects.filter(
@@ -158,10 +158,10 @@ def test_do_not_render_credit_note_when_central_logistics_not_set(
 
 
 def test_do_not_render_credit_note_when_local_platform_share_zero(
-    order, order_items, client, mcs_settings
+    order, order_items, client, traidoo_settings
 ):
-    mcs_settings.central_share = Decimal("100")
-    mcs_settings.save()
+    traidoo_settings.central_share = Decimal("100")
+    traidoo_settings.save()
     client.post(reverse("task", kwargs={"order_id": order.id, "document_set": "all"}))
     assert (
         Document.objects.filter(
@@ -314,7 +314,9 @@ def test_send_delivery_documents_to_both_logistics_companies_for_cross_region_or
     assert logistics_company_of_buyer.email in mail_receivers
 
 
-def test_create_buyer_delivery_overview_only_for_buyer_logistics_company(order_with_neighbour_product, client):
+def test_create_buyer_delivery_overview_only_for_buyer_logistics_company(
+    order_with_neighbour_product, client
+):
     client.post(
         reverse(
             "task",
@@ -322,8 +324,13 @@ def test_create_buyer_delivery_overview_only_for_buyer_logistics_company(order_w
         )
     )
 
-    delivery_documents = Document.objects.filter(document_type=Document.TYPES.get_value('delivery_overview_buyer'))
+    delivery_documents = Document.objects.filter(
+        document_type=Document.TYPES.get_value("delivery_overview_buyer")
+    )
     assert delivery_documents.count() == 1
     document = delivery_documents.first()
 
-    assert document.seller['email'] == order_with_neighbour_product.region.setting.logistics_company.email
+    assert (
+        document.seller["email"]
+        == order_with_neighbour_product.region.setting.logistics_company.email
+    )

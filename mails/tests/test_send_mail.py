@@ -5,7 +5,7 @@ from mails.utils import send_mail
 
 
 def test_use_global_platform_mail_if_local_is_missing(
-    mcs_settings, mailoutbox, traidoo_region
+    traidoo_settings, mailoutbox, traidoo_region
 ):
     setting = traidoo_region.setting
     setting.platform_user = None

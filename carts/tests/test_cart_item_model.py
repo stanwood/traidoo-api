@@ -3,7 +3,7 @@ import pytest
 pytestmark = pytest.mark.django_db()
 
 
-def test_item_price(cart, buyer, mcs_settings):
+def test_item_price(cart, buyer, traidoo_settings):
     cart_item = cart.items.first()
     buyer.is_cooperative_member = False
     buyer.save()

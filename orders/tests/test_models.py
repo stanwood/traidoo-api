@@ -74,15 +74,17 @@ def test_delivery_address_as_str_when_delivery_address_is_not_available():
 
 
 def test_order_platform_fee_share_with_local_platform_owner(
-    db, order, order_items, buyer, mcs_settings
+    db, order, order_items, buyer, traidoo_settings
 ):
     assert order.sum_of_seller_platform_fees.netto == 13.6
     assert order.local_platform_owner_platform_fee.netto == 8.16
 
 
-def test_order_platform_fee_calculation_without_local_platform(db, order, mcs_settings, order_items):
+def test_order_platform_fee_calculation_without_local_platform(
+    db, order, traidoo_settings, order_items
+):
 
-    mcs_settings.platform_user = None
-    mcs_settings.save()
+    traidoo_settings.platform_user = None
+    traidoo_settings.save()
 
     assert order.price_gross == 197.06
