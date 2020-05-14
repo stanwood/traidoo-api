@@ -13,7 +13,7 @@ def test_fallback_to_image_url(client_admin, traidoo_region):
 
 
 def test_get_product(
-    buyer, client_buyer, traidoo_region, delivery_options, mcs_settings
+    buyer, client_buyer, traidoo_region, delivery_options, traidoo_settings
 ):
     seller = mommy.make(
         "users.user",
@@ -146,10 +146,10 @@ def test_get_product(
 
 
 def test_get_product_no_central_logistic_company(
-    buyer, client_buyer, traidoo_region, delivery_options, mcs_settings
+    buyer, client_buyer, traidoo_region, delivery_options, traidoo_settings
 ):
-    mcs_settings.central_logistics_company = False
-    mcs_settings.save()
+    traidoo_settings.central_logistics_company = False
+    traidoo_settings.save()
 
     seller = mommy.make(
         "users.user",

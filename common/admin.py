@@ -14,16 +14,16 @@ class BaseRegionalAdminMixin:
 
     @property
     def is_global_model(self):
-        return self.model._meta.label_lower not in self.GLOBAL_MODELS
+        return self.model._meta.label_lower in self.GLOBAL_MODELS
 
     def get_queryset(self, request):
         queryset = super().get_queryset(request)
 
         if request.user.is_admin:
-            if self.is_global_model:
-                queryset = queryset.filter(region_id=request.user.region_id)
-            elif self.model._meta.label_lower == "common.region":
+            if self.model._meta.label_lower == "common.region":
                 queryset = queryset.filter(id=request.user.region_id)
+            elif not self.is_global_model:
+                queryset = queryset.filter(region_id=request.user.region_id)
 
         return queryset
 

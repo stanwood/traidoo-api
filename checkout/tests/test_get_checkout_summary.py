@@ -87,12 +87,12 @@ def test_get_delivery_options(client_buyer, cart):
 
 
 def test_get_delivery_options_central_logistics_disabled(
-    client_buyer, cart, mcs_settings
+    client_buyer, cart, traidoo_settings
 ):
-    mcs_settings.central_logistics_company = False
-    mcs_settings.save()
+    traidoo_settings.central_logistics_company = False
+    traidoo_settings.save()
 
-    assert not mcs_settings.central_logistics_company
+    assert not traidoo_settings.central_logistics_company
 
     response = client_buyer.get("/checkout")
 

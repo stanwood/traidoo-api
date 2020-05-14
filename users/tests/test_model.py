@@ -39,10 +39,10 @@ def test_seller_platform_fee_rate(
     expected_value,
     seller_group,
     buyer_group,
-    mcs_settings,
+    traidoo_settings,
     traidoo_region,
 ):
-    assert mcs_settings.charge == Decimal("10.0")
+    assert traidoo_settings.charge == Decimal("10.0")
 
     groups = []
 
@@ -81,10 +81,10 @@ def test_buyer_platform_fee_rate(
     expected_value,
     seller_group,
     buyer_group,
-    mcs_settings,
+    traidoo_settings,
     traidoo_region,
 ):
-    assert mcs_settings.charge == Decimal("10.0")
+    assert traidoo_settings.charge == Decimal("10.0")
 
     groups = []
 

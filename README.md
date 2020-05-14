@@ -35,3 +35,12 @@ We assume user has one wallet. This command takes user first wallet and saves al
 This command updates mangopay settings with new webhook handler, for example:
 
 `python manage.py mangopay_webhooks https://api.example.com/mangopay/webhook`
+
+# Static files storage on Google Cloud Storage setup
+
+Create dedicated static files bucket with `uniform bucket-level access control`.
+
+Grant `Storage Object Viewer` role to `allUsers`.
+
+Set `STATIC_BUCKET` environment variable to the bucket name.
+

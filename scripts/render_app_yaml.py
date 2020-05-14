@@ -13,10 +13,11 @@ def render_yaml(file_name):
         try:
             environment_name = os.environ["ENVIRONMENT_NAME"]
             environment_value = os.environ[f"{environment_name}_{key}"]
-            app["env_variables"][key] = str(environment_value)
-            os.environ[key] = str(environment_value)  # required for deployment
         except KeyError:
-            pass
+            environment_value = os.environ.get(key, "")
+
+        app["env_variables"][key] = str(environment_value)
+        os.environ[key] = str(environment_value)  # required for deployment
 
     app = yaml.dump(app, default_flow_style=False)
     app = re.sub(r"\n([a-z])", r"\n\n\1", app)
