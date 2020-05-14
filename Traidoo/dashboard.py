@@ -16,7 +16,6 @@ from admin_tools.utils import get_admin_site_name
 
 
 class CustomIndexDashboard(Dashboard):
-
     def init_with_context(self, context):
         site_name = get_admin_site_name(context)
         # append a link list module for "quick links"

@@ -12,11 +12,15 @@ class BaseRegionalAdminMixin:
         "common.region",
     ]
 
+    @property
+    def is_global_model(self):
+        return self.model._meta.label_lower not in self.GLOBAL_MODELS
+
     def get_queryset(self, request):
         queryset = super().get_queryset(request)
 
         if request.user.is_admin:
-            if self.model._meta.label_lower not in self.GLOBAL_MODELS:
+            if self.is_global_model:
                 queryset = queryset.filter(region_id=request.user.region_id)
             elif self.model._meta.label_lower == "common.region":
                 queryset = queryset.filter(id=request.user.region_id)
@@ -24,17 +28,16 @@ class BaseRegionalAdminMixin:
         return queryset
 
     def has_view_permission(self, request, obj=None):
-        if request.user.is_admin:
-            return True
-        else:
+        if not request.user.is_admin:
             return super(BaseRegionalAdminMixin, self).has_view_permission(request, obj)
+        return True
 
     def has_change_permission(self, request, obj=None):
         if request.user.is_admin:
             return (
                 obj is None
+                or self.is_global_model
                 or (request.user.region_id == obj.region_id)
-                or obj._meta.label_lower in self.GLOBAL_MODELS
             )
         else:
             return super(BaseRegionalAdminMixin, self).has_change_permission(
@@ -45,7 +48,7 @@ class BaseRegionalAdminMixin:
         if request.user.is_admin:
             return (
                 obj is None
-                or obj._meta.label_lower in self.GLOBAL_MODELS
+                or self.is_global_model
                 or (request.user.region_id == obj.region_id)
             )
         else:

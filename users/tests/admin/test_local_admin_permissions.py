@@ -21,7 +21,9 @@ def test_regional_admin_can_read_own_user_only(
     user_from_traidoo, user_from_neighbour, traidoo_region, django_app, platform_user
 ):
 
-    response = django_app.get(reverse("admin:users_user_changelist"), user=platform_user)
+    response = django_app.get(
+        reverse("admin:users_user_changelist"), user=platform_user
+    )
     assert user_from_traidoo.email in response.testbody
     assert user_from_neighbour.email not in response.testbody
 

@@ -30,12 +30,3 @@ class Category(BaseAbstractModel):
     class Meta:
         verbose_name = _("Category")
         verbose_name_plural = _("Categories")
-
-    @property
-    def region_id(self):
-        return self.id
-
-    @region_id.setter
-    def region_id(self, region_id):
-        """ Dummy to keep admin code simpler and allow setting region id when editing region"""
-        pass

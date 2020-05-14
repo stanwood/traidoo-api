@@ -10,7 +10,6 @@ class CategoryAdmin(BaseRegionalAdminMixin, HierarchicalModelAdmin):
     hierarchy = True
     ordering = ("name",)
     list_display = ("name", "icon", "ordering", "default_vat", "parent")
-    list_display_links = ["parent"]
     list_display_links = ["name"]
 
     def has_delete_permission(self, request, obj=None):

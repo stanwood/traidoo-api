@@ -74,9 +74,9 @@ order_items_router.register(r"items", OrderItemViewSet, basename="item")
 order_items_router.register(r"documents", OrderDocumentsView, basename="document")
 
 # Admin site translations
-admin.site.index_title = _('Traidoo')
-admin.site.site_header = _('Traidoo Administration')
-admin.site.site_title = _('Traidoo Administration')
+admin.site.index_title = _("Traidoo")
+admin.site.site_header = _("Traidoo Administration")
+admin.site.site_title = _("Traidoo Administration")
 admin.site.unregister(Token)
 
 urlpatterns = [
@@ -146,6 +146,5 @@ urlpatterns = [
 ]
 
 urlpatterns += i18n_patterns(
-    path("admin/", admin.site.urls),
-    url(r'^admin_tools/', include('admin_tools.urls')),
+    path("admin/", admin.site.urls), url(r"^admin_tools/", include("admin_tools.urls")),
 )

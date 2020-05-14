@@ -27,12 +27,3 @@ class Region(BaseAbstractModel):
     @property
     def setting(self):
         return self.settings.first()
-
-    @property
-    def region_id(self):
-        return self.id
-
-    @region_id.setter
-    def region_id(self, region_id):
-        """ Dummy to keep admin code simpler and allow setting region id when editing region"""
-        pass

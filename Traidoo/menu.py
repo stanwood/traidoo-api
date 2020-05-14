@@ -14,7 +14,6 @@ from admin_tools.menu import items, Menu
 
 
 class CustomMenu(Menu):
-
     def __init__(self, **kwargs):
         Menu.__init__(self, **kwargs)
         self.children += [
