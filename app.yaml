@@ -1,48 +1,40 @@
-runtime: python37
-instance_class: F2
+env_variables:
+  DEBUG: ''
+  DEFAULT_FROM_EMAIL: ''
+  DISTANCE_MATRIX_API_KEY: ''
+  DJANGO_ADMINS: ''
+  FEATURE_DELIVERY_DATE: ''
+  FEATURE_ROUTE: ''
+  GOOGLE_CLOUD_PROJECT_LOCATION: ''
+  HTML2PDF_BACKEND: ''
+  INTERCOM_EMAIL: ''
+  LOGISTICS_EMAIL: ''
+  MAILGUN_API_KEY: ''
+  MAILGUN_API_URL: ''
+  MAILGUN_SENDER_DOMAIN: ''
+  MANGOPAY_CLIENT_ID: ''
+  MANGOPAY_PASSWORD: ''
+  MANGOPAY_URL: ''
+  PLATFORM_EMAIL: ''
+  POSTGRESQL_HOST: ''
+  POSTGRESQL_NAME: ''
+  POSTGRESQL_PASSWORD: ''
+  POSTGRESQL_PORT: ''
+  POSTGRESQL_USER: ''
+  REAL_ADMINS: ''
+  SECRET_KEY: ''
+  SENTRY_DSN: ''
+  STATIC_BUCKET: ''
 
 handlers:
-    - url: /static
-      static_dir: static/
-    - url: /.*
-      script: auto
+- static_dir: static/
+  url: /static
+- script: auto
+  url: /.*
 
 inbound_services:
-    - warmup
+- warmup
 
-env_variables:
-    SECRET_KEY: ""
+instance_class: F2
 
-    DEBUG: ""
-
-    MAILGUN_API_KEY: ""
-    MAILGUN_API_URL: ""
-    MAILGUN_SENDER_DOMAIN: ""
-
-    MANGOPAY_CLIENT_ID: ""
-    MANGOPAY_PASSWORD: ""
-    MANGOPAY_URL: ""
-
-    HTML2PDF_BACKEND: ""
-
-    SENTRY_DSN: ""
-
-    DJANGO_ADMINS: ""
-    REAL_ADMINS: ""
-
-    DEFAULT_FROM_EMAIL: ""
-    LOGISTICS_EMAIL: ""
-    PLATFORM_EMAIL: ""
-    INTERCOM_EMAIL: ""
-
-    GOOGLE_CLOUD_PROJECT_LOCATION: ""
-    DISTANCE_MATRIX_API_KEY: ""
-
-    FEATURE_ROUTE: ""
-    FEATURE_DELIVERY_DATE: ""
-
-    POSTGRESQL_PASSWORD: ""
-    POSTGRESQL_HOST: ""
-    POSTGRESQL_USER: ""
-    POSTGRESQL_PORT: ""
-    POSTGRESQL_NAME: ""
+runtime: python37
