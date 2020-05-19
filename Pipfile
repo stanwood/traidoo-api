@@ -60,6 +60,8 @@ pillow = "*"
 mangopaysdk = "==3.7.*"
 sentry-sdk = "*"
 django-tinymce = "*"
+django-admin-tools = "*"
+django-admirarchy = "*"
 
 [requires]
 python_version = "3.7"

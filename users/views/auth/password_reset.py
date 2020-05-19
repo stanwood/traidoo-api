@@ -21,14 +21,14 @@ class PasswordResetView(APIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
         try:
-            user = User.objects.get(email=serializer.email)
-        except User.DoesNotExits():
+            user = User.objects.get(email=serializer.validated_data["email"])
+        except User.DoesNotExist:
             pass
         else:
             send_mail(
                 region=get_region(self.request),
                 subject="Password reset",
-                recipient_list=user.email,
+                recipient_list=[user.email],
                 template="mails/users/password_reset.html",
                 context={
                     "domain": Site.objects.get_current().domain,
