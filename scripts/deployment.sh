@@ -20,6 +20,8 @@ python scripts/render_app_yaml.py
 python manage.py collectstatic --noinput
 gsutil -m cp -r static/* gs://$STATIC_BUCKET/
 
+python manage.py compilemessages
+
 export POSTGRESQL_PORT=2345
 export POSTGRESQL_HOST=localhost
 python manage.py migrate

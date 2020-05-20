@@ -15,13 +15,22 @@ from delivery_addresses.models import DeliveryAddress
 from delivery_options.models import DeliveryOption
 from items.models import Item
 from products.models import Product
+from django.utils.translation import gettext_lazy as _
 
 
 class Cart(OrderCalculatorMixin, BaseAbstractModel):
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    earliest_delivery_date = models.DateField(null=True, blank=True)
+    user = models.OneToOneField(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, verbose_name=_("User")
+    )
+    earliest_delivery_date = models.DateField(
+        null=True, blank=True, verbose_name=_("Earliest delivery date")
+    )
     delivery_address = models.ForeignKey(
-        DeliveryAddress, null=True, blank=True, on_delete=models.PROTECT
+        DeliveryAddress,
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT,
+        verbose_name=_("Delivery address"),
     )
 
     @property
@@ -41,19 +50,32 @@ class Cart(OrderCalculatorMixin, BaseAbstractModel):
     def total(self):
         return self.price
 
+    class Meta:
+        verbose_name = _("Cart")
+        verbose_name_plural = _("Carts")
+
 
 class CartItem(ItemCalculatorMixin, BaseAbstractModel):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    cart = models.ForeignKey(Cart, related_name="items", on_delete=models.CASCADE)
-    latest_delivery_date = models.DateField()
-    quantity = models.IntegerField(default=0)
+    product = models.ForeignKey(
+        Product, on_delete=models.CASCADE, verbose_name=_("Product")
+    )
+    cart = models.ForeignKey(
+        Cart, related_name="items", on_delete=models.CASCADE, verbose_name=_("Cart")
+    )
+    latest_delivery_date = models.DateField(verbose_name=_("Latest delivery date"))
+    quantity = models.IntegerField(default=0, verbose_name=_("Quantity"))
     delivery_option = models.ForeignKey(
-        DeliveryOption, on_delete=models.PROTECT, null=True, blank=True
+        DeliveryOption,
+        on_delete=models.PROTECT,
+        null=True,
+        blank=True,
+        verbose_name=_("Delivery option"),
     )
 
     class Meta:
         unique_together = (("cart", "product", "latest_delivery_date"),)
         ordering = ["created_at"]
+        verbose_name = _("Cart item")
 
     def release_product_item(
         self, product_id=None, quantity=None, latest_delivery_date=None
@@ -157,8 +179,6 @@ class CartItem(ItemCalculatorMixin, BaseAbstractModel):
         container_delivery_fee = self.product.container_type.delivery_fee
         if container_delivery_fee:
             logistics_net += container_delivery_fee * Decimal(self.quantity)
-
-        logistics_vat_rate = region_settings.mc_swiss_delivery_fee_vat
 
         return Value(
             logistics_net.quantize(Decimal(".01"), "ROUND_HALF_UP"),
