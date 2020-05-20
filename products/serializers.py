@@ -226,6 +226,7 @@ class ProductDetailsSerializer(
             "container_type",
             "delivery_charge",
             "delivery_options",
+            "third_party_delivery",
             "items_available",
             "delivery",
             "region_id",

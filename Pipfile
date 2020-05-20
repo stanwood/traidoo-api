@@ -20,6 +20,7 @@ dictdiffer = "*"
 pytest-dotenv = "*"
 pytest-icdiff = "*"
 dj-inmemorystorage = "*"
+django-webtest = "*"
 
 [packages]
 django = "==2.2.10"

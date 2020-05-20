@@ -140,6 +140,7 @@ def test_get_product(
         "vat": 19.0,
         "tags": [{"id": product.tags.first().id, "name": "tag1", "slug": "tag1",}],
         "sellersProductIdentifier": "test123",
+        "thirdPartyDelivery": False,
         "ean13": "12345678",
         "ean8": "12345678",
     }
