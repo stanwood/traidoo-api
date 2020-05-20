@@ -128,3 +128,6 @@ class UserAdmin(BaseRegionalAdminMixin, VersionAdmin):
         if not request.user.is_superuser:
             read_only_fields += ("is_superuser", "region")
         return read_only_fields
+
+    def has_add_permission(self, request):
+        return False

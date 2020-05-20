@@ -80,27 +80,8 @@ def test_regional_admin_can_delete_own_users_only(
     assert User.objects.filter(id=user_from_neighbour.id).exists()
 
 
-def test_regional_admin_can_crete_user_for_own_region_only(
-    traidoo_region, django_app, platform_user
-):
-    form = django_app.get(reverse("admin:users_user_add"), user=platform_user).form
-    user = mommy.prepare_recipe("users.user")
-    form["email"] = user.email
-    form["birthday"] = user.birthday
-    form["first_name"] = user.first_name
-    form["last_name"] = user.last_name
-    form["phone"] = user.phone
-    form["company_type"] = user.company_type
-    form["company_name"] = user.company_name
-    form["street"] = user.street
-    form["city"] = user.city
-    form["zip"] = user.zip
-    form["residence_country_code"] = user.residence_country_code.code
-    form["nationality_country_code"] = user.nationality_country_code.code
-    form.submit()
-    assert User.objects.filter(email=user.email).exists()
-    user = User.objects.get(email=user.email)
-    assert user.region_id == traidoo_region.id
+def test_regional_addmin_cannot_add_users(traidoo_region, django_app, platform_user):
+    django_app.get(reverse("admin:users_user_add"), user=platform_user, status=403)
 
 
 def test_cannot_change_user_region(
