@@ -1,6 +1,7 @@
 import json
 
 from django.conf import settings
+from django.core import validators
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from rest_framework.renderers import JSONRenderer
@@ -61,22 +62,47 @@ class Product(BaseAbstractModel):
     is_gmo_free = models.BooleanField(default=False, verbose_name=_("Is gmo free"))
 
     amount = models.DecimalField(
-        max_digits=10, decimal_places=2, verbose_name=_("Amount in lot")
+        max_digits=10,
+        decimal_places=2,
+        verbose_name=_("Amount in lot"),
+        validators=[
+            validators.MinValueValidator(0, message=_("Amount should not be negative"))
+        ],
     )
     unit = models.CharField(
         max_length=255, null=True, blank=True, verbose_name=_("Unit")
     )
     price = models.DecimalField(
-        max_digits=10, decimal_places=2, verbose_name=_("Price")
+        max_digits=10,
+        decimal_places=2,
+        verbose_name=_("Price"),
+        validators=[
+            validators.MinValueValidator(0, message=_("Price should not be negative"))
+        ],
     )
     vat = models.DecimalField(
-        max_digits=10, decimal_places=2, verbose_name=_("VAT rate")
+        max_digits=10,
+        decimal_places=2,
+        verbose_name=_("VAT rate"),
+        validators=[
+            validators.MaxValueValidator(100, _("VAT should not be more than 100%")),
+            validators.MinValueValidator(0, message=_("VAT should not be negative")),
+        ],
     )
 
     container_type = models.ForeignKey(Container, on_delete=models.PROTECT)
     container_description = models.TextField(null=True, blank=True)
 
-    delivery_charge = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    delivery_charge = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        default=0,
+        validators=[
+            validators.MinValueValidator(
+                0, message=_("Delivery charge should not be negative")
+            )
+        ],
+    )
     delivery_options = models.ManyToManyField(DeliveryOption)
     third_party_delivery = models.BooleanField(default=False)
     delivery_requirements = models.CharField(max_length=255, null=True, blank=True)
@@ -90,7 +116,15 @@ class Product(BaseAbstractModel):
 
     base_unit = models.CharField(max_length=16, choices=BASE_UNITS, blank=True)
     item_quantity = models.DecimalField(
-        max_digits=10, decimal_places=2, null=True, blank=True
+        max_digits=10,
+        decimal_places=2,
+        null=True,
+        blank=True,
+        validators=[
+            validators.MinValueValidator(
+                0, message=_("Items quantity should not be negative")
+            )
+        ],
     )
 
     def create_snapshot(self):
