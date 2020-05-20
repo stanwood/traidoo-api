@@ -11,6 +11,8 @@ class CategoryAdmin(BaseRegionalAdminMixin, HierarchicalModelAdmin):
     ordering = ("name",)
     list_display = ("name", "icon", "ordering", "default_vat", "parent")
     list_display_links = ["name"]
+    autocomplete_fields = ["parent"]
+    search_fields = ["name"]
 
     def has_delete_permission(self, request, obj=None):
         return False
