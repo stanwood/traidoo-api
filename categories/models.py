@@ -5,9 +5,9 @@ from core.db.base import BaseAbstractModel
 
 
 class Category(BaseAbstractModel):
-    icon = models.CharField(max_length=255)
+    icon = models.CharField(max_length=255, verbose_name=_("Icon"))
     name = models.CharField(max_length=255, verbose_name=_("Name"))
-    ordering = models.IntegerField(null=True, blank=True)
+    ordering = models.IntegerField(null=True, blank=True, verbose_name=_("Ordering"))
     default_vat = models.DecimalField(
         max_digits=10,
         decimal_places=2,

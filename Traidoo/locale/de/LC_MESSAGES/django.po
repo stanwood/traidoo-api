@@ -1,0 +1,722 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-05-20 15:41+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: Traidoo/dashboard.py:24
+msgid "Quick links"
+msgstr ""
+
+#: Traidoo/dashboard.py:30
+msgid "Change password"
+msgstr ""
+
+#: Traidoo/dashboard.py:31
+msgid "Log out"
+msgstr "Abmelden"
+
+#: Traidoo/dashboard.py:38
+msgid "Applications"
+msgstr ""
+
+#: Traidoo/dashboard.py:41 Traidoo/dashboard.py:56
+msgid "Recent Actions"
+msgstr ""
+
+#: Traidoo/menu.py:20
+msgid "Dashboard"
+msgstr ""
+
+#: Traidoo/menu.py:21
+msgid "Users"
+msgstr "Benutzer"
+
+#: Traidoo/menu.py:23 containers/models.py:60
+msgid "Containers"
+msgstr ""
+
+#: Traidoo/menu.py:26 categories/models.py:32
+msgid "Categories"
+msgstr ""
+
+#: Traidoo/menu.py:28 products/models.py:31
+msgid "Products"
+msgstr ""
+
+#: Traidoo/menu.py:29 orders/models.py:33
+msgid "Orders"
+msgstr ""
+
+#: Traidoo/menu.py:31 Traidoo/menu.py:34 settings/models.py:13
+msgid "Settings"
+msgstr ""
+
+#: Traidoo/menu.py:37 common/models.py:38 orders/models.py:75
+#: settings/models.py:38 users/models/user.py:44
+msgid "Region"
+msgstr ""
+
+#: Traidoo/settings/django/language.py:10
+msgid "German"
+msgstr ""
+
+#: Traidoo/settings/django/language.py:11
+msgid "English"
+msgstr ""
+
+#: Traidoo/urls.py:77
+msgid "Traidoo"
+msgstr ""
+
+#: Traidoo/urls.py:78 Traidoo/urls.py:79
+msgid "Traidoo Administration"
+msgstr ""
+
+#: carts/apps.py:7 carts/models.py:55
+msgid "Carts"
+msgstr ""
+
+#: carts/models.py:23 delivery_addresses/models.py:14 jobs/models.py:22
+#: routes/models.py:39 users/models/kyc.py:21
+msgid "User"
+msgstr ""
+
+#: carts/models.py:26 orders/models.py:66
+msgid "Earliest delivery date"
+msgstr ""
+
+#: carts/models.py:33 delivery_addresses/models.py:19 documents/models.py:71
+msgid "Delivery address"
+msgstr ""
+
+#: carts/models.py:54 carts/models.py:63 orders/models.py:36
+msgid "Cart"
+msgstr ""
+
+#: carts/models.py:60 items/models.py:14 products/models.py:30
+msgid "Product"
+msgstr ""
+
+#: carts/models.py:65 items/models.py:16
+msgid "Latest delivery date"
+msgstr ""
+
+#: carts/models.py:66 items/models.py:17
+msgid "Quantity"
+msgstr ""
+
+#: carts/models.py:72 delivery_options/models.py:23
+msgid "Delivery option"
+msgstr ""
+
+#: carts/models.py:78
+msgid "Cart item"
+msgstr ""
+
+#: categories/models.py:8
+msgid "Icon"
+msgstr ""
+
+#: categories/models.py:9 common/models.py:12 delivery_options/models.py:10
+#: products/models.py:33 users/models/kyc.py:26
+msgid "Name"
+msgstr ""
+
+#: categories/models.py:10
+msgid "Ordering"
+msgstr ""
+
+#: categories/models.py:16
+msgid "Default VAT Rate"
+msgstr ""
+
+#: categories/models.py:24
+msgid "Parent category"
+msgstr ""
+
+#: categories/models.py:31 products/models.py:56
+msgid "Category"
+msgstr ""
+
+#: common/models.py:14
+msgid "Slug"
+msgstr ""
+
+#: common/models.py:16
+msgid "Slogan used in emails"
+msgstr ""
+
+#: common/models.py:18
+msgid "Mail footer"
+msgstr ""
+
+#: common/models.py:23
+msgid "Mail logo"
+msgstr ""
+
+#: common/models.py:39
+msgid "Regions"
+msgstr ""
+
+#: containers/models.py:11
+msgid "Size class"
+msgstr ""
+
+#: containers/models.py:14
+msgid "Standard container"
+msgstr ""
+
+#: containers/models.py:19
+msgid "Container volume cannot be negative"
+msgstr ""
+
+#: containers/models.py:22
+msgid "Volume"
+msgstr ""
+
+#: containers/models.py:31
+msgid "Container deposit cannot be negative"
+msgstr ""
+
+#: containers/models.py:34
+msgid "Depoisit"
+msgstr ""
+
+#: containers/models.py:43
+msgid "Container delivery fee cannot be negative"
+msgstr ""
+
+#: containers/models.py:46
+msgid "Delivery fee"
+msgstr ""
+
+#: containers/models.py:49 products/models.py:36 users/models/user.py:93
+msgid "Image url"
+msgstr ""
+
+#: containers/models.py:52 products/models.py:39 users/models/user.py:96
+msgid "Image"
+msgstr ""
+
+#: containers/models.py:59
+msgid "Container"
+msgstr ""
+
+#: core/errors/exceptions.py:8
+msgid "Cannot be deleted due to protected related entities."
+msgstr ""
+
+#: core/errors/exceptions.py:14
+msgid "Could not satisfy the request Region header."
+msgstr ""
+
+#: core/validators/user_password.py:16
+msgid "Incorrect password format."
+msgstr ""
+
+#: delivery_addresses/models.py:9 users/models/user.py:114
+msgid "Company name"
+msgstr ""
+
+#: delivery_addresses/models.py:10 users/models/user.py:57
+msgid "Street"
+msgstr ""
+
+#: delivery_addresses/models.py:11 users/models/user.py:59
+msgid "Zip code"
+msgstr ""
+
+#: delivery_addresses/models.py:12 users/models/user.py:58
+msgid "City"
+msgstr ""
+
+#: delivery_addresses/models.py:20
+msgid "Delivery addresses"
+msgstr ""
+
+#: delivery_options/models.py:13
+msgid "Created at"
+msgstr ""
+
+#: delivery_options/models.py:16
+msgid "Last update at"
+msgstr ""
+
+#: delivery_options/models.py:24 products/models.py:120
+msgid "Delivery options"
+msgstr ""
+
+#: documents/models.py:21
+msgid "Document"
+msgstr ""
+
+#: documents/models.py:22
+msgid "Documents"
+msgstr ""
+
+#: documents/models.py:65
+msgid "Document type"
+msgstr ""
+
+#: documents/models.py:68 orders/models.py:57
+msgid "Buyer"
+msgstr ""
+
+#: documents/models.py:69 products/models.py:59
+msgid "Seller"
+msgstr ""
+
+#: documents/models.py:73
+msgid "Invoice lines"
+msgstr ""
+
+#: documents/models.py:78 orders/models.py:32
+msgid "Order"
+msgstr ""
+
+#: documents/models.py:81
+msgid "Blob name in storage"
+msgstr ""
+
+#: documents/models.py:84
+msgid "Payment reference"
+msgstr ""
+
+#: documents/models.py:87
+msgid "Mangopay payin id"
+msgstr ""
+
+#: documents/models.py:94
+msgid "Bank account owner"
+msgstr ""
+
+#: documents/models.py:96
+msgid "Is paid"
+msgstr ""
+
+#: items/models.py:19
+msgid "Date valid from"
+msgstr ""
+
+#: items/models.py:24
+msgid "Item"
+msgstr ""
+
+#: items/models.py:25
+msgid "Items"
+msgstr ""
+
+#: jobs/models.py:15
+msgid "Order item"
+msgstr ""
+
+#: jobs/models.py:26 jobs/models.py:32
+msgid "Job"
+msgstr ""
+
+#: jobs/models.py:27
+msgid "Jobs"
+msgstr ""
+
+#: jobs/models.py:34 routes/models.py:26
+msgid "Route"
+msgstr ""
+
+#: jobs/models.py:35
+msgid "Lenght"
+msgstr ""
+
+#: jobs/models.py:38
+msgid "Detour"
+msgstr ""
+
+#: jobs/models.py:39
+msgid "Detours"
+msgstr ""
+
+#: orders/models.py:37
+msgid "Paid"
+msgstr ""
+
+#: orders/models.py:38
+msgid "Ordered"
+msgstr ""
+
+#: orders/models.py:60
+msgid "Status"
+msgstr ""
+
+#: orders/models.py:63
+msgid "Total price"
+msgstr ""
+
+#: orders/models.py:68
+msgid "Processed"
+msgstr ""
+
+#: orders/models.py:74
+msgid "Region in which order took place"
+msgstr ""
+
+#: products/models.py:19
+msgid "Weight (g) per item"
+msgstr ""
+
+#: products/models.py:20
+msgid "Volume (l) per item"
+msgstr ""
+
+#: products/models.py:25
+msgid "Object id"
+msgstr ""
+
+#: products/models.py:34 users/models/user.py:55
+msgid "Description"
+msgstr ""
+
+#: products/models.py:46 products/models.py:47
+msgid "Region of origin"
+msgstr ""
+
+#: products/models.py:51
+msgid "The associated regions the product should be available in"
+msgstr ""
+
+#: products/models.py:52
+msgid "Available in regions"
+msgstr ""
+
+#: products/models.py:62
+msgid "Is organic"
+msgstr ""
+
+#: products/models.py:63
+msgid "Is vegan"
+msgstr ""
+
+#: products/models.py:65
+msgid "Is gluten free"
+msgstr ""
+
+#: products/models.py:68
+msgid "Is grazing animal"
+msgstr ""
+
+#: products/models.py:70
+msgid "Is GMO free"
+msgstr ""
+
+#: products/models.py:75
+msgid "Amount in a lot"
+msgstr ""
+
+#: products/models.py:77
+msgid "Amount should not be negative"
+msgstr ""
+
+#: products/models.py:81
+msgid "Unit"
+msgstr ""
+
+#: products/models.py:86
+msgid "Price"
+msgstr ""
+
+#: products/models.py:88
+msgid "Price should not be negative"
+msgstr ""
+
+#: products/models.py:94
+msgid "VAT rate"
+msgstr ""
+
+#: products/models.py:96
+msgid "VAT should not be more than 100%"
+msgstr ""
+
+#: products/models.py:97
+msgid "VAT should not be negative"
+msgstr ""
+
+#: products/models.py:102
+msgid "Container type"
+msgstr ""
+
+#: products/models.py:105
+msgid "Container description"
+msgstr ""
+
+#: products/models.py:114
+msgid "Delivery charge should not be negative"
+msgstr ""
+
+#: products/models.py:117
+msgid "Delivery charge"
+msgstr ""
+
+#: products/models.py:123
+msgid "Third party delivery possible"
+msgstr ""
+
+#: products/models.py:126
+msgid "Delivery requirements"
+msgstr ""
+
+#: products/models.py:129
+msgid "Tags"
+msgstr ""
+
+#: products/models.py:138
+msgid "Sellers product identifier"
+msgstr ""
+
+#: products/models.py:142
+msgid "Base unit"
+msgstr ""
+
+#: products/models.py:151
+msgid "Items quantity should not be negative"
+msgstr ""
+
+#: products/models.py:154
+msgid "Item quantity"
+msgstr ""
+
+#: routes/models.py:27
+msgid "Routes"
+msgstr ""
+
+#: routes/models.py:32
+msgid "Frequency"
+msgstr ""
+
+#: routes/models.py:34
+msgid "Length"
+msgstr ""
+
+#: routes/models.py:41
+msgid "Origin"
+msgstr ""
+
+#: routes/models.py:42
+msgid "Destination"
+msgstr ""
+
+#: routes/models.py:47
+msgid "Way points"
+msgstr ""
+
+#: settings/models.py:12
+msgid "Setting"
+msgstr ""
+
+#: settings/models.py:16
+msgid "Platform charge rate"
+msgstr ""
+
+#: settings/models.py:19
+msgid "Central delivery fee VAT rate"
+msgstr ""
+
+#: settings/models.py:22
+msgid "Platform fee VAT rate"
+msgstr ""
+
+#: settings/models.py:25
+msgid "Transport insurance rate"
+msgstr ""
+
+#: settings/models.py:28
+msgid "Deposit VAT rate"
+msgstr ""
+
+#: settings/models.py:31
+msgid "Min purchase value"
+msgstr ""
+
+#: settings/models.py:46
+msgid "Platform user account"
+msgstr ""
+
+#: settings/models.py:49
+msgid "Central logistic company available"
+msgstr ""
+
+#: settings/models.py:56
+msgid "Logistics company account"
+msgstr ""
+
+#: settings/models.py:64
+msgid "Enable platform fee share"
+msgstr ""
+
+#: settings/models.py:79
+msgid "Central platform share"
+msgstr ""
+
+#: trucks/models.py:9 trucks/models.py:12
+msgid "Truck"
+msgstr ""
+
+#: trucks/models.py:10
+msgid "Trucks"
+msgstr ""
+
+#: users/admin.py:16
+msgid "Groups filter"
+msgstr ""
+
+#: users/admin.py:20
+msgid "To approve"
+msgstr ""
+
+#: users/admin.py:51
+msgid "Permissions"
+msgstr ""
+
+#: users/admin.py:122
+msgid "Approve user"
+msgstr ""
+
+#: users/models/kyc.py:33
+msgid "File"
+msgstr ""
+
+#: users/models/kyc.py:38
+msgid "KYC document"
+msgstr ""
+
+#: users/models/kyc.py:39
+msgid "KYC documents"
+msgstr ""
+
+#: users/models/user.py:33
+msgid "Password"
+msgstr ""
+
+#: users/models/user.py:35
+msgid "Is email verified"
+msgstr ""
+
+#: users/models/user.py:48
+msgid "First name"
+msgstr ""
+
+#: users/models/user.py:49
+msgid "Last name"
+msgstr ""
+
+#: users/models/user.py:50
+msgid "Birth date"
+msgstr ""
+
+#: users/models/user.py:51
+msgid "Phone"
+msgstr ""
+
+#: users/models/user.py:53
+msgid "Website"
+msgstr ""
+
+#: users/models/user.py:60
+msgid "Residence country code"
+msgstr ""
+
+#: users/models/user.py:61
+msgid "Nationality country code"
+msgstr ""
+
+#: users/models/user.py:64
+msgid "Invoice email"
+msgstr ""
+
+#: users/models/user.py:68
+msgid "Tax id"
+msgstr ""
+
+#: users/models/user.py:71
+msgid "Bank name"
+msgstr ""
+
+#: users/models/user.py:74
+msgid "BIC account number"
+msgstr ""
+
+#: users/models/user.py:78
+msgid "Mangopay user id"
+msgstr ""
+
+#: users/models/user.py:81
+msgid "Mangopay user type"
+msgstr ""
+
+#: users/models/user.py:88
+msgid "Mangopay validation level"
+msgstr ""
+
+#: users/models/user.py:100
+msgid "Business license url"
+msgstr ""
+
+#: users/models/user.py:107
+msgid "Business license"
+msgstr ""
+
+#: users/models/user.py:111
+msgid "Declared as seller"
+msgstr ""
+
+#: users/models/user.py:118
+msgid "Company type"
+msgstr ""
+
+#: users/models/user.py:122
+msgid "VAT ID"
+msgstr ""
+
+#: users/models/user.py:124
+msgid "IBAN number"
+msgstr ""
+
+#: users/models/user.py:126
+msgid "Company registration id"
+msgstr ""
+
+#: users/models/user.py:132
+msgid "Association registration id"
+msgstr ""
+
+#: users/models/user.py:135
+msgid "Organic control body"
+msgstr ""
+
+#: users/models/user.py:141
+msgid "Is certified organic producer"
+msgstr ""
+
+#: users/models/user.py:145
+msgid "Is cooperative member"
+msgstr ""
+
+#: users/models/user.py:150
+msgid "Id photo url"
+msgstr ""
+
+#: users/models/user.py:157
+msgid "ID photo"
+msgstr ""

@@ -7,9 +7,9 @@ from django.conf import settings
 from django.contrib.postgres.fields import JSONField
 from django.db import models
 from django.utils.timezone import localdate
+from django.utils.translation import gettext_lazy as _
 from loguru import logger
 
-from common.models import Region
 from core.calculators.order_calculator import OrderCalculatorMixin
 from core.db.base import BaseAbstractModel
 from documents import jinja2_utils
@@ -17,6 +17,10 @@ from orders.models import Order
 
 
 class Document(OrderCalculatorMixin, BaseAbstractModel):
+    class Meta:
+        verbose_name = _("Document")
+        verbose_name_plural = _("Documents")
+
     class TYPES(Enum):
         buyer_platform_invoice = (
             "Buyer Platform Invoice",
@@ -57,20 +61,39 @@ class Document(OrderCalculatorMixin, BaseAbstractModel):
     JINJA = jinja2_utils.setup_env()
     PDF_BACKEND = settings.HTML2PDF_BACKEND
 
-    document_type = models.CharField(max_length=64, choices=[t.value for t in TYPES])
-
-    buyer = JSONField(null=True, blank=True)
-    seller = JSONField(null=True, blank=True)
-    delivery_address = JSONField(blank=True, null=True)
-    lines = JSONField(null=True, blank=True)
-    order = models.ForeignKey(Order, on_delete=models.PROTECT, related_name="documents")
-    blob_name = models.CharField(max_length=128, blank=True, null=True)
-    payment_reference = models.CharField(max_length=64, blank=True, null=True)
-    mangopay_payin_id = models.CharField(max_length=64, blank=True, null=True)
-    bank_account_owner = models.CharField(
-        max_length=128, blank=True, null=True, default="MANGOPAY SA"
+    document_type = models.CharField(
+        max_length=64, choices=[t.value for t in TYPES], verbose_name=_("Document type")
     )
-    paid = models.BooleanField(default=False)
+
+    buyer = JSONField(null=True, blank=True, verbose_name=_("Buyer"))
+    seller = JSONField(null=True, blank=True, verbose_name=_("Seller"))
+    delivery_address = JSONField(
+        blank=True, null=True, verbose_name=_("Delivery address")
+    )
+    lines = JSONField(null=True, blank=True, verbose_name=_("Invoice lines"))
+    order = models.ForeignKey(
+        Order,
+        on_delete=models.PROTECT,
+        related_name="documents",
+        verbose_name=_("Order"),
+    )
+    blob_name = models.CharField(
+        max_length=128, blank=True, null=True, verbose_name=_("Blob name in storage")
+    )
+    payment_reference = models.CharField(
+        max_length=64, blank=True, null=True, verbose_name=_("Payment reference")
+    )
+    mangopay_payin_id = models.CharField(
+        max_length=64, blank=True, null=True, verbose_name=_("Mangopay payin id")
+    )
+    bank_account_owner = models.CharField(
+        max_length=128,
+        blank=True,
+        null=True,
+        default="MANGOPAY SA",
+        verbose_name=_("Bank account owner"),
+    )
+    paid = models.BooleanField(default=False, verbose_name=_("Is paid"))
 
     @property
     def mangopay_tag(self):

@@ -12,6 +12,7 @@ from django.db import models
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
 from django.utils import timezone
+from django.utils.translation import gettext_lazy as _
 from loguru import logger
 
 from common.models import Region
@@ -27,10 +28,14 @@ User = get_user_model()
 
 
 class Order(OrderCalculatorMixin, BaseAbstractModel):
+    class Meta:
+        verbose_name = _("Order")
+        verbose_name_plural = _("Orders")
+
     class STATUSES(Enum):
-        cart = (0, "Cart")
-        paid = (1, "Paid")
-        ordered = (2, "Ordered")
+        cart = (0, _("Cart"))
+        paid = (1, _("Paid"))
+        ordered = (2, _("Ordered"))
 
         @classmethod
         def get_value(cls, member):
@@ -46,20 +51,28 @@ class Order(OrderCalculatorMixin, BaseAbstractModel):
         seller_user_id: int
 
     buyer = models.ForeignKey(
-        settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        verbose_name=_("Buyer"),
     )
-    status = models.IntegerField(default=0, choices=[s.value for s in STATUSES])
-    total_price = models.FloatField(blank=True, null=True)
+    status = models.IntegerField(
+        default=0, choices=[s.value for s in STATUSES], verbose_name=_("Status")
+    )
+    total_price = models.FloatField(
+        blank=True, null=True, verbose_name=_("Total price")
+    )
     earliest_delivery_date = models.DateTimeField(
-        blank=True, null=True
+        blank=True, null=True, verbose_name=_("Earliest delivery date")
     )  # TODO: why it's a datetime? why not date?
-    processed = models.BooleanField(default=False)
+    processed = models.BooleanField(default=False, verbose_name=_("Processed"))
     region = models.ForeignKey(
         Region,
         on_delete=models.PROTECT,
         related_name="orders",
         blank=False,
-        help_text="Region in which order took place",
+        help_text=_("Region in which order took place"),
+        verbose_name=_("Region"),
     )
 
     @property

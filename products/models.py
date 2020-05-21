@@ -1,6 +1,7 @@
 import json
 
 from django.conf import settings
+from django.core import validators
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from rest_framework.renderers import JSONRenderer
@@ -25,10 +26,18 @@ class BigAutoFieldTaggedItem(CommonGenericTaggedItemBase, TaggedItemBase):
 
 
 class Product(BaseAbstractModel):
+    class Meta:
+        verbose_name = _("Product")
+        verbose_name_plural = _("Products")
+
     name = models.CharField(max_length=255, verbose_name=_("Name"))
     description = models.TextField(verbose_name=_("Description"))
-    image_url = models.CharField(max_length=255, null=True, blank=True)
-    image = models.ImageField(upload_to=public_image_upload_to, null=True, blank=True)
+    image_url = models.CharField(
+        max_length=255, null=True, blank=True, verbose_name=_("Image url")
+    )
+    image = models.ImageField(
+        upload_to=public_image_upload_to, null=True, blank=True, verbose_name=_("Image")
+    )
     region = models.ForeignKey(
         Region,
         on_delete=models.PROTECT,
@@ -58,39 +67,91 @@ class Product(BaseAbstractModel):
     is_grazing_animal = models.BooleanField(
         default=False, verbose_name=_("Is grazing animal")
     )
-    is_gmo_free = models.BooleanField(default=False, verbose_name=_("Is gmo free"))
+    is_gmo_free = models.BooleanField(default=False, verbose_name=_("Is GMO free"))
 
     amount = models.DecimalField(
-        max_digits=10, decimal_places=2, verbose_name=_("Amount in lot")
+        max_digits=10,
+        decimal_places=2,
+        verbose_name=_("Amount in a lot"),
+        validators=[
+            validators.MinValueValidator(0, message=_("Amount should not be negative"))
+        ],
     )
     unit = models.CharField(
         max_length=255, null=True, blank=True, verbose_name=_("Unit")
     )
     price = models.DecimalField(
-        max_digits=10, decimal_places=2, verbose_name=_("Price")
+        max_digits=10,
+        decimal_places=2,
+        verbose_name=_("Price"),
+        validators=[
+            validators.MinValueValidator(0, message=_("Price should not be negative"))
+        ],
     )
     vat = models.DecimalField(
-        max_digits=10, decimal_places=2, verbose_name=_("VAT rate")
+        max_digits=10,
+        decimal_places=2,
+        verbose_name=_("VAT rate"),
+        validators=[
+            validators.MaxValueValidator(100, _("VAT should not be more than 100%")),
+            validators.MinValueValidator(0, message=_("VAT should not be negative")),
+        ],
     )
 
-    container_type = models.ForeignKey(Container, on_delete=models.PROTECT)
-    container_description = models.TextField(null=True, blank=True)
+    container_type = models.ForeignKey(
+        Container, on_delete=models.PROTECT, verbose_name=_("Container type")
+    )
+    container_description = models.TextField(
+        null=True, blank=True, verbose_name=_("Container description")
+    )
 
-    delivery_charge = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    delivery_options = models.ManyToManyField(DeliveryOption)
-    third_party_delivery = models.BooleanField(default=False)
-    delivery_requirements = models.CharField(max_length=255, null=True, blank=True)
+    delivery_charge = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        default=0,
+        validators=[
+            validators.MinValueValidator(
+                0, message=_("Delivery charge should not be negative")
+            )
+        ],
+        verbose_name=_("Delivery charge"),
+    )
+    delivery_options = models.ManyToManyField(
+        DeliveryOption, verbose_name=_("Delivery options")
+    )
+    third_party_delivery = models.BooleanField(
+        default=False, verbose_name=_("Third party delivery possible")
+    )
+    delivery_requirements = models.CharField(
+        max_length=255, null=True, blank=True, verbose_name=_("Delivery requirements")
+    )
 
-    tags = TaggableManager(through=BigAutoFieldTaggedItem)
+    tags = TaggableManager(through=BigAutoFieldTaggedItem, verbose_name=_("Tags"))
 
     ean8 = models.CharField(max_length=255, null=True, blank=True)
     ean13 = models.CharField(max_length=255, null=True, blank=True)
 
-    sellers_product_identifier = models.CharField(max_length=255, null=True, blank=True)
+    sellers_product_identifier = models.CharField(
+        max_length=255,
+        null=True,
+        blank=True,
+        verbose_name=_("Sellers product identifier"),
+    )
 
-    base_unit = models.CharField(max_length=16, choices=BASE_UNITS, blank=True)
+    base_unit = models.CharField(
+        max_length=16, choices=BASE_UNITS, blank=True, verbose_name=_("Base unit")
+    )
     item_quantity = models.DecimalField(
-        max_digits=10, decimal_places=2, null=True, blank=True
+        max_digits=10,
+        decimal_places=2,
+        null=True,
+        blank=True,
+        validators=[
+            validators.MinValueValidator(
+                0, message=_("Items quantity should not be negative")
+            )
+        ],
+        verbose_name=_("Item quantity"),
     )
 
     def create_snapshot(self):

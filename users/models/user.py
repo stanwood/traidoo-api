@@ -11,6 +11,7 @@ from django.dispatch import receiver
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
 from django_countries.fields import CountryField
+from django.utils.translation import ugettext_lazy as _
 from model_utils import FieldTracker
 
 from common.models import Region
@@ -29,78 +30,131 @@ class User(TasksMixin, AbstractUser, BaseAbstractModel):
     username = None  # Remove AbstractUser.username
 
     email = models.EmailField(unique=True, max_length=255)
-    password = models.CharField(max_length=255)
-    is_email_verified = models.BooleanField(default=False)
+    password = models.CharField(max_length=255, verbose_name=_("Password"))
+    is_email_verified = models.BooleanField(
+        default=False, verbose_name=_("Is email verified")
+    )
 
     region = models.ForeignKey(
-        Region, on_delete=models.PROTECT, related_name="users", blank=True, null=True
+        Region,
+        on_delete=models.PROTECT,
+        related_name="users",
+        blank=True,
+        null=True,
+        verbose_name=_("Region"),
     )
 
     # Personal data
-    first_name = models.CharField(max_length=255)
-    last_name = models.CharField(max_length=255)
-    birthday = models.DateField()
-    phone = models.CharField(max_length=255)
-    website = models.CharField(max_length=255, blank=True, null=True)
-    description = models.TextField(blank=True, null=True)
+    first_name = models.CharField(max_length=255, verbose_name=_("First name"))
+    last_name = models.CharField(max_length=255, verbose_name=_("Last name"))
+    birthday = models.DateField(verbose_name=_("Birth date"))
+    phone = models.CharField(max_length=255, verbose_name=_("Phone"))
+    website = models.CharField(
+        max_length=255, blank=True, null=True, verbose_name=_("Website")
+    )
+    description = models.TextField(blank=True, null=True, verbose_name=_("Description"))
 
-    street = models.CharField(max_length=255)
-    city = models.CharField(max_length=255)
-    zip = models.CharField(max_length=255)
-    residence_country_code = CountryField()
-    nationality_country_code = CountryField()
+    street = models.CharField(max_length=255, verbose_name=_("Street"))
+    city = models.CharField(max_length=255, verbose_name=_("City"))
+    zip = models.CharField(max_length=255, verbose_name=_("Zip code"))
+    residence_country_code = CountryField(verbose_name=_("Residence country code"))
+    nationality_country_code = CountryField(verbose_name=_("Nationality country code"))
 
-    invoice_email = models.EmailField(max_length=255, blank=True)
+    invoice_email = models.EmailField(
+        max_length=255, blank=True, verbose_name=_("Invoice email")
+    )
 
-    tax_id = models.CharField(max_length=255, blank=True, null=True)
-    bank = models.CharField(max_length=255, blank=True, null=True)
-    bic = models.CharField(max_length=255, blank=True, null=True)
+    tax_id = models.CharField(
+        max_length=255, blank=True, null=True, verbose_name=_("Tax id")
+    )
+    bank = models.CharField(
+        max_length=255, blank=True, null=True, verbose_name=_("Bank name")
+    )
+    bic = models.CharField(
+        max_length=255, blank=True, null=True, verbose_name=_("BIC account number")
+    )
 
-    mangopay_user_id = models.CharField(max_length=255, blank=True, null=True)
-    mangopay_user_type = models.CharField(max_length=255, blank=True, null=True)
+    mangopay_user_id = models.CharField(
+        max_length=255, blank=True, null=True, verbose_name=_("Mangopay user id")
+    )
+    mangopay_user_type = models.CharField(
+        max_length=255, blank=True, null=True, verbose_name=_("Mangopay user type")
+    )
     mangopay_validation_level = models.CharField(
-        max_length=255, blank=True, null=True, default="light"
+        max_length=255,
+        blank=True,
+        null=True,
+        default="light",
+        verbose_name=_("Mangopay validation level"),
     )
 
     # Comapny (seller) data
-    image_url = models.CharField(max_length=255, blank=True, null=True)
-    image = models.ImageField(blank=True, null=True, upload_to=public_image_upload_to)
+    image_url = models.CharField(
+        max_length=255, blank=True, null=True, verbose_name=_("Image url")
+    )
+    image = models.ImageField(
+        blank=True, null=True, upload_to=public_image_upload_to, verbose_name=_("Image")
+    )
 
-    business_license_url = models.CharField(max_length=255, blank=True, null=True)
+    business_license_url = models.CharField(
+        max_length=255, blank=True, null=True, verbose_name=_("Business license url")
+    )
     business_license = models.FileField(
         upload_to=private_image_upload_to,
         storage=private_storage,
         null=True,
         blank=True,
+        verbose_name=_("Business license"),
     )
 
-    declared_as_seller = models.BooleanField(blank=True, null=True, default=False)
+    declared_as_seller = models.BooleanField(
+        blank=True, null=True, default=False, verbose_name=_("Declared as seller")
+    )
 
-    company_name = models.CharField(max_length=255)
+    company_name = models.CharField(max_length=255, verbose_name=_("Company name"))
     company_type = models.CharField(
-        max_length=255, choices=list(itertools.chain(*COMPANY_TYPES.values()))
+        max_length=255,
+        choices=list(itertools.chain(*COMPANY_TYPES.values())),
+        verbose_name=_("Company type"),
     )
 
-    vat_id = models.CharField(max_length=255, blank=True, null=True)
-    iban = models.CharField(max_length=255, blank=True)
-    company_registration_id = models.CharField(max_length=255, blank=True, null=True)
+    vat_id = models.CharField(
+        max_length=255, blank=True, null=True, verbose_name=_("VAT ID")
+    )
+    iban = models.CharField(max_length=255, blank=True, verbose_name=_("IBAN number"))
+    company_registration_id = models.CharField(
+        max_length=255, blank=True, null=True, verbose_name=_("Company registration id")
+    )
     association_registration_id = models.CharField(
-        max_length=255, blank=True, null=True
+        max_length=255,
+        blank=True,
+        null=True,
+        verbose_name=_("Association registration id"),
     )
-    organic_control_body = models.CharField(max_length=255, blank=True, null=True)
+    organic_control_body = models.CharField(
+        max_length=255, blank=True, null=True, verbose_name=_("Organic control body")
+    )
     is_certified_organic_producer = models.BooleanField(
-        blank=True, null=True, default=False
+        blank=True,
+        null=True,
+        default=False,
+        verbose_name=_("Is certified organic producer"),
     )
 
-    is_cooperative_member = models.BooleanField(default=False)
+    is_cooperative_member = models.BooleanField(
+        default=False, verbose_name=_("Is cooperative member")
+    )
 
     # Seller KYC documents
-    id_photo_url = models.CharField(max_length=255, blank=True, null=True)
+    id_photo_url = models.CharField(
+        max_length=255, blank=True, null=True, verbose_name=_("Id photo url")
+    )
     id_photo = models.ImageField(  # identity_proof
         upload_to=private_image_upload_to,
         storage=private_storage,
         null=True,
         blank=True,
+        verbose_name=_("ID photo"),
     )
 
     objects = UserManager()

@@ -1,5 +1,3 @@
-from copy import copy
-
 from django import forms
 from django.contrib import admin
 from django.contrib.auth import get_user_model
@@ -15,11 +13,11 @@ User = get_user_model()
 
 
 class GroupsFilter(admin.SimpleListFilter):
-    title = "Groups filter"
+    title = _("Groups filter")
     parameter_name = "group_name"
 
     def lookups(self, request, model_admin):
-        return [("inactive", "To approve")] + [
+        return [("inactive", _("To approve"))] + [
             (group.name, group.name) for group in Group.objects.all()
         ]
 
@@ -121,10 +119,13 @@ class UserAdmin(BaseRegionalAdminMixin, VersionAdmin):
 
         self.message_user(request, f"{count} users activated")
 
-    approve_user.short_description = "Approve user"
+    approve_user.short_description = _("Approve user")
 
     def get_readonly_fields(self, request, obj=None):
         read_only_fields = super(UserAdmin, self).get_readonly_fields(request, obj)
         if not request.user.is_superuser:
             read_only_fields += ("is_superuser", "region")
         return read_only_fields
+
+    def has_add_permission(self, request):
+        return False

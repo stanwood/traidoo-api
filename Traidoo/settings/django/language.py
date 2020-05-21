@@ -2,7 +2,7 @@ from pathlib import Path
 
 from django.utils.translation import gettext_lazy as _
 
-BASE_DIR = Path(__file__).resolve().parent
+BASE_DIR = Path(__file__).resolve().parent.parent
 LANGUAGE_CODE = "en"
 USE_I18N = True
 USE_L10N = False
