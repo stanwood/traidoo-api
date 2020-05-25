@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-05-20 15:41+0000\n"
+"POT-Creation-Date: 2020-05-25 08:54+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -66,7 +66,7 @@ msgstr ""
 msgid "Settings"
 msgstr ""
 
-#: Traidoo/menu.py:37 common/models.py:38 orders/models.py:75
+#: Traidoo/menu.py:37 common/models.py:44 orders/models.py:75
 #: settings/models.py:38 users/models/user.py:44
 msgid "Region"
 msgstr ""
@@ -79,11 +79,11 @@ msgstr ""
 msgid "English"
 msgstr ""
 
-#: Traidoo/urls.py:77
+#: Traidoo/urls.py:78
 msgid "Traidoo"
 msgstr ""
 
-#: Traidoo/urls.py:78 Traidoo/urls.py:79
+#: Traidoo/urls.py:79 Traidoo/urls.py:80
 msgid "Traidoo Administration"
 msgstr ""
 
@@ -169,7 +169,27 @@ msgstr ""
 msgid "Mail logo"
 msgstr ""
 
-#: common/models.py:39
+#: common/models.py:26
+msgid "Terms of services"
+msgstr ""
+
+#: common/models.py:27
+msgid "Privacy policy"
+msgstr ""
+
+#: common/models.py:28
+msgid "Prices"
+msgstr ""
+
+#: common/models.py:29
+msgid "Contact"
+msgstr ""
+
+#: common/models.py:30
+msgid "Imprint"
+msgstr ""
+
+#: common/models.py:45
 msgid "Regions"
 msgstr ""
 
