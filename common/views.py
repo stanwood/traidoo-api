@@ -1,4 +1,7 @@
 from rest_framework import viewsets
+from rest_framework.decorators import action
+from rest_framework.permissions import AllowAny
+from rest_framework.response import Response
 
 from common.utils import get_region
 
@@ -12,3 +15,31 @@ class RegionViewSet(viewsets.ReadOnlyModelViewSet):
     def get_queryset(self):
         region = get_region(self.request)
         return Region.objects.exclude(slug=region.slug)
+
+
+class StaticViewSet(viewsets.ReadOnlyModelViewSet):
+    permission_classes = (AllowAny,)
+
+    def get_queryset(self):
+        region = get_region(self.request)
+        return Region.objects.get(slug=region.slug)
+
+    @action(detail=False, methods=["get"])
+    def terms_of_services(self, request):
+        return Response({"body": self.get_queryset().terms_of_services})
+
+    @action(detail=False, methods=["get"])
+    def privacy_policy(self, request):
+        return Response({"body": self.get_queryset().privacy_policy})
+
+    @action(detail=False, methods=["get"])
+    def prices(self, request):
+        return Response({"body": self.get_queryset().prices})
+
+    @action(detail=False, methods=["get"])
+    def contact(self, request):
+        return Response({"body": self.get_queryset().contact})
+
+    @action(detail=False, methods=["get"])
+    def imprint(self, request):
+        return Response({"body": self.get_queryset().imprint})
