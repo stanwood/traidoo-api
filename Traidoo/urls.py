@@ -10,7 +10,7 @@ from rest_framework_nested import routers
 from carts.views.delete_inactive_carts import DeleteInactiveCartsView
 from categories.views import CategoryViewSet
 from checkout.views import CheckoutView
-from common.views import RegionViewSet
+from common.views import RegionViewSet, StaticViewSet
 from containers.views import ContainerViewSet
 from delivery_addresses.views import DeliveryAddressViewSet
 from delivery_options.views import DeliveryOptionViewSet
@@ -59,6 +59,7 @@ router.register(r"delivery_options", DeliveryOptionViewSet)
 router.register(r"tags", TagViewSet)
 router.register(r"routes", RoutesViewSet, basename="routes")
 router.register(r"regions", RegionViewSet, basename="regions")
+router.register(r"regions/static", StaticViewSet, basename="regions-static")
 
 # Products & Items
 router.register(r"products", ProductViewSet, basename="product")
