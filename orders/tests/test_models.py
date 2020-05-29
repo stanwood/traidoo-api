@@ -20,7 +20,9 @@ def test_order_item_third_party_delivery_without_user(delivery_options):
 
 
 @pytest.mark.django_db
-def test_order_item_third_party_delivery(delivery_options):
+def test_order_item_third_party_delivery_12(delivery_options, settings):
+    settings.FEATURES["routes"] = True
+
     order_item = mommy.make_recipe(
         "orders.orderitem", delivery_option=delivery_options[1]
     )
