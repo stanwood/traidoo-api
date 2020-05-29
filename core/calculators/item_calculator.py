@@ -2,6 +2,7 @@ import abc
 import functools
 from decimal import Decimal
 
+from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
 
 from core.calculators.value import Value
@@ -76,10 +77,13 @@ class ItemCalculatorMixin:
 
     @property
     def is_third_party_delivery(self):
-        try:
-            return self.delivery_option.id == 1 and self.job.user
-        except (self.DoesNotExist, ObjectDoesNotExist):
+        if not settings.FEATURES["routes"]:
             return False
+
+        if not self.product.third_party_delivery:
+            return False
+
+        return self.delivery_option.id == 1
 
     @property
     def transport_insurance(self) -> Decimal:
@@ -98,9 +102,7 @@ class ItemCalculatorMixin:
 
     def _delivery_fee(self):
         if self.is_central_logistic_delivery or (
-            self.is_seller_delivery
-            and self.product.third_party_delivery
-            and self.is_third_party_delivery
+            self.is_seller_delivery and self.is_third_party_delivery
         ):
             value = self.transport_insurance
 
