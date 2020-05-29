@@ -20,14 +20,14 @@ def test_order_item_third_party_delivery_without_user(delivery_options):
 
 
 @pytest.mark.django_db
-def test_order_item_third_party_delivery_12(delivery_options, settings):
+def test_order_item_third_party_delivery(delivery_options, order_items, settings):
     settings.FEATURES["routes"] = True
 
-    order_item = mommy.make_recipe(
-        "orders.orderitem", delivery_option=delivery_options[1]
-    )
-    user = mommy.make("users.User")
-    mommy.make("jobs.Job", order_item=order_item, user=user)
+    order_item = order_items[1]
+    order_item.product.third_party_delivery = True
+    order_item.product.save()
+
+    mommy.make("jobs.Job", order_item=order_item, user=mommy.make("users.User"))
 
     assert order_item.is_third_party_delivery
 

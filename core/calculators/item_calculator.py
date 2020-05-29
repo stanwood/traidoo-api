@@ -83,7 +83,7 @@ class ItemCalculatorMixin:
         if not self.product.third_party_delivery:
             return False
 
-        return self.delivery_option.id == 1
+        return self.is_seller_delivery
 
     @property
     def transport_insurance(self) -> Decimal:
