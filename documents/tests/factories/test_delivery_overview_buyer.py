@@ -70,7 +70,9 @@ def test_create_delivery_overview_buyer_with_3rd_party_delivery(
     logistics_user,
     buyer,
     products,
+    settings,
 ):
+    settings.FEATURES["routes"] = True
 
     products[1].third_party_delivery = True
     products[1].save()
@@ -122,7 +124,7 @@ def test_create_delivery_overview_buyer_with_3rd_party_delivery(
         "name": products[1].name,
         "number": products[1].id,
         "organic_control_body": products[1].seller.organic_control_body,
-        "price": 14.28,
+        "price": 8.44,
         "producer": buyer.region.setting.logistics_company.company_name,
         "unit": products[1].unit,
         "vat_rate": 19.0,

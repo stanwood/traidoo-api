@@ -72,7 +72,9 @@ def test_create_delivery_overview_producer_3rd_party_delivery(
     order_items,
     seller,
     send_task,
+    settings,
 ):
+    settings.FEATURES["routes"] = True
 
     products[0].third_party_delivery = True
     products[0].save()
@@ -100,7 +102,7 @@ def test_create_delivery_overview_producer_3rd_party_delivery(
     assert document.order_id == order.id
     assert len(document.lines) == 2
     assert document.lines[0] == {
-        "amount": 3,
+        "amount": 3.0,
         "container_name": "Isolierbox",
         "count": 3.0,
         "delivery_company": supplier.company_name,
@@ -108,10 +110,10 @@ def test_create_delivery_overview_producer_3rd_party_delivery(
         "name": products[0].name,
         "number": products[0].id,
         "organic_control_body": seller.organic_control_body,
-        "price": 0.12,
+        "price": 18.81,
         "producer": "Traidoo",
         "unit": products[0].unit,
-        "vat_rate": products[0].vat,
+        "vat_rate": 19.0,
         "delivery_address": order_items[0].delivery_address_as_str,
         "pickup_address": seller.address_as_str,
     }
