@@ -3,7 +3,9 @@ from model_mommy import mommy
 
 
 @pytest.mark.django_db
-def test_order_item_third_party_delivery_without_job(delivery_options):
+def test_order_item_third_party_delivery_without_job(delivery_options, settings):
+    settings.FEATURES["routes"] = True
+
     order_item = mommy.make_recipe(
         "orders.orderitem", delivery_option=delivery_options[1]
     )
@@ -11,7 +13,9 @@ def test_order_item_third_party_delivery_without_job(delivery_options):
 
 
 @pytest.mark.django_db
-def test_order_item_third_party_delivery_without_user(delivery_options):
+def test_order_item_third_party_delivery_without_user(delivery_options, settings):
+    settings.FEATURES["routes"] = True
+
     order_item = mommy.make_recipe(
         "orders.orderitem", delivery_option=delivery_options[1]
     )
@@ -20,23 +24,25 @@ def test_order_item_third_party_delivery_without_user(delivery_options):
 
 
 @pytest.mark.django_db
-def test_order_item_third_party_delivery(delivery_options):
-    order_item = mommy.make_recipe(
-        "orders.orderitem", delivery_option=delivery_options[1]
-    )
-    user = mommy.make("users.User")
-    mommy.make("jobs.Job", order_item=order_item, user=user)
+def test_order_item_third_party_delivery(delivery_options, order_items, settings):
+    settings.FEATURES["routes"] = True
+
+    order_item = order_items[1]
+    order_item.product.third_party_delivery = True
+    order_item.product.save()
+
+    mommy.make("jobs.Job", order_item=order_item, user=mommy.make("users.User"))
 
     assert order_item.is_third_party_delivery
 
 
 @pytest.mark.django_db
-def test_order_item_third_party_delivery_without_correct_delivery_option(
-    delivery_options,
-):
-    order_item = mommy.make_recipe(
-        "orders.orderitem", delivery_option=delivery_options[0]
-    )
+def test_order_item_third_party_delivery_without_correct_delivery_option(settings):
+    settings.FEATURES["routes"] = True
+
+    delivery_option = mommy.make_recipe("delivery_options.seller", id=1)
+
+    order_item = mommy.make_recipe("orders.orderitem", delivery_option=delivery_option)
     user = mommy.make("users.User")
     mommy.make("jobs.Job", order_item=order_item, user=user)
 
