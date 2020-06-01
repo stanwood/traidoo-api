@@ -31,7 +31,7 @@ class JobsViewSet(viewsets.ModelViewSet):
             "order_item__product__seller",
         ).filter(
             detours__route__user=self.request.user,
-            order_item__latest_delivery_date__gt=tomorrow,
+            order_item__latest_delivery_date__gte=tomorrow,
         )
 
         if self.action == "list":

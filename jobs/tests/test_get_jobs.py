@@ -93,7 +93,7 @@ def _create_test_data():
         OrderItem,
         delivery_address=delivery_address_2,
         product=product_2,
-        latest_delivery_date=datetime.date.today() + datetime.timedelta(days=2),
+        latest_delivery_date=datetime.date.today() + datetime.timedelta(days=1),
         order=order,
     )
     order_item_3 = mommy.make(
