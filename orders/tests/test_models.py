@@ -94,3 +94,31 @@ def test_order_platform_fee_calculation_without_local_platform(
     traidoo_settings.save()
 
     assert order.price_gross == 197.06
+
+
+@pytest.mark.django_db
+def test_get_delivery_company_third_party_withut_created_job(
+    delivery_options, order_items, settings
+):
+    settings.FEATURES["routes"] = True
+
+    order_item = order_items[1]
+    order_item.product.third_party_delivery = True
+    order_item.product.save()
+
+    assert order_item.delivery_company == order_item.product.seller
+
+
+@pytest.mark.django_db
+def test_get_delivery_company_third_party_withut_assigned_job(
+    delivery_options, order_items, settings
+):
+    settings.FEATURES["routes"] = True
+
+    order_item = order_items[1]
+    order_item.product.third_party_delivery = True
+    order_item.product.save()
+
+    mommy.make("jobs.Job", order_item=order_item, user=None)
+
+    assert order_item.delivery_company == order_item.product.seller
