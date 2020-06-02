@@ -361,22 +361,33 @@ class OrderItem(ItemCalculatorMixin, BaseAbstractModel):
 
     @property
     def delivery_company(self):
+        # TODO: Is it possible that there is no delivery company? What then?
+        delivery_company = None
+
         if self.is_central_logistic_delivery:
-            return self.product.region.setting.logistics_company
+            delivery_company = self.product.region.setting.logistics_company
+        elif self.is_seller_delivery and self.product.third_party_delivery:
+            try:
+                delivery_company = self.job.user or User.objects.get(
+                    id=self.product_snapshot["seller"]["id"]
+                )
+            except (AttributeError, TypeError):
+                delivery_company = User.objects.get(
+                    id=self.product_snapshot["seller"]["id"]
+                )
         elif self.is_seller_delivery:
             delivery_company = User.objects.get(
                 id=self.product_snapshot["seller"]["id"]
             )
-            if self.product.third_party_delivery:
-                try:
-                    delivery_company = self.job.user
-                except (AttributeError, TypeError):
-                    pass
-            return delivery_company
         elif self.is_self_collect_delivery:
-            return self.order.buyer
-        logger.error(f"Could not determine user for delivery of order item {self.id}")
-        return None
+            delivery_company = self.order.buyer
+
+        if not delivery_company:
+            logger.exception(
+                f"Could not determine user for delivery of order item {self.id}."
+            )
+
+        return delivery_company
 
     @property
     def delivery_company_user_id(self):
