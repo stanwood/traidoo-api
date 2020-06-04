@@ -2,7 +2,9 @@ from faker import Faker
 from model_mommy.recipe import Recipe, foreign_key, related
 
 from common.mommy_recipes import region
+from containers.mommy_recipes import container
 from delivery_options.mommy_recipes import buyer, central_logistic, seller
+
 from .models import Product
 
 fake = Faker()
@@ -17,4 +19,5 @@ product = Recipe(
     delivery_charge=fake.pydecimal(left_digits=2, right_digits=2, positive=True),
     region=foreign_key(region),
     delivery_options=related(buyer, central_logistic, seller),
+    container_type=foreign_key(container),
 )

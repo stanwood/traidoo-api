@@ -266,6 +266,7 @@ class Order(OrderCalculatorMixin, BaseAbstractModel):
 
 
 class OrderItem(ItemCalculatorMixin, BaseAbstractModel):
+    # TODO: Do we need the product? We have the product snapshot.
     product = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True)
     order = models.ForeignKey(Order, related_name="items", on_delete=models.PROTECT)
     latest_delivery_date = models.DateField()
