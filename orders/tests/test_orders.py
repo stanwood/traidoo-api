@@ -2,6 +2,7 @@ import pytest
 from django.contrib.auth import get_user_model
 from model_mommy import mommy
 
+from documents import factories
 from items.models import Item
 from orders.models import Order, OrderItem
 from products.models import Product
@@ -30,13 +31,6 @@ def _create_test_data(buyer, seller, seller_group, buyer_group, traidoo_region):
 
 
 @pytest.mark.django_db
-def test_get_orders_admin(client_admin, _create_test_data):
-    response = client_admin.get("/orders")
-    assert Order.objects.count() == 2
-    assert response.json()["count"] == 2
-
-
-@pytest.mark.django_db
 def test_get_orders_buyer(client_buyer, _create_test_data):
     response = client_buyer.get("/orders")
     assert Order.objects.count() == 2
@@ -52,27 +46,29 @@ def test_seller_cannot_see_other_orders(client_seller, _create_test_data, seller
 
 
 @pytest.mark.django_db
-def test_seller_can_get_own_order(client_seller, seller):
-    order = mommy.make(Order, buyer=seller)
-    response = client_seller.get(f"/orders/{order.id}")
-    assert response.json()["id"] == order.id
+def test_seller_can_get_own_order_with_multiple_items(api_client):
+    region = mommy.make_recipe("common.region")
+    mommy.make_recipe("settings.setting", region=region)
+    seller = mommy.make_recipe("users.user", region=region)
+    buyer = mommy.make_recipe("users.user", region=region)
+    product_1 = mommy.make_recipe("products.product", seller=seller, region=region)
+    product_2 = mommy.make_recipe("products.product", seller=seller, region=region)
+    order = mommy.make_recipe("orders.order", buyer=buyer, region=region, total_price=1)
+    order_item_1 = mommy.make_recipe("orders.orderitem", order=order, product=product_1)
+    order_item_2 = mommy.make_recipe("orders.orderitem", order=order, product=product_2)
 
+    factory = factories.OrderConfirmationBuyerFactory(order, region, seller)
+    document = factory.compose()
+    document.save()
 
-@pytest.mark.django_db
-def test_seller_can_get_own_order_with_multiple_items(client_seller, seller):
-    order = mommy.make(Order, buyer=seller)
-    mommy.make_recipe("orders.orderitem", order=order)
-    mommy.make_recipe("orders.orderitem", order=order)
-    response = client_seller.get(f"/orders/{order.id}")
-    assert response.json()["id"] == order.id
-    assert len(response.json()["items"]) == 2
+    api_client.force_authenticate(buyer)
 
+    response = api_client.get(f"/orders/{order.id}")
 
-@pytest.mark.django_db
-def test_admin_can_get_order(client_admin, seller):
-    order = mommy.make(Order, buyer=seller)
-    mommy.make_recipe("orders.orderitem", order=order)
-    mommy.make_recipe("orders.orderitem", order=order)
-    response = client_admin.get(f"/orders/{order.id}")
-    assert response.json()["id"] == order.id
-    assert len(response.json()["items"]) == 2
+    response_json = response.json()
+    assert response_json["id"] == order.id
+    assert response_json["status"] == order.status
+    assert len(response.json()["products"]) == 2
+    assert len(response.json()["deposits"]) == 2
+    assert len(response.json()["platforms"]) == 1
+    assert len(response.json()["logistics"]) == 0
