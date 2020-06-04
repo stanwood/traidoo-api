@@ -39,7 +39,7 @@ class OrderViewSet(viewsets.ModelViewSet):
 
     def retrieve(self, request, pk=None):
         document = Document.objects.get(
-            document_type="Order Confirmation Buyer", order_id=pk
+            document_type=Document.TYPES.order_confirmation_buyer[0], order_id=pk
         )
 
         products = [
