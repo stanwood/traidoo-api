@@ -10,8 +10,8 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
-from django_countries.fields import CountryField
 from django.utils.translation import ugettext_lazy as _
+from django_countries.fields import CountryField
 from model_utils import FieldTracker
 
 from common.models import Region

@@ -18,12 +18,9 @@ from groups.views import GroupViewSet
 from items.views.items import ItemViewSet, ProductsItemViewSet
 from items.views.stats import ItemsStatsView
 from jobs.views import JobsViewSet
-from orders.views.admin_stats import AdminStatsHandler
 from orders.views.documents import OrderDocumentsView
 from orders.views.find_unsold_items import FindUnsoldItemsView
 from orders.views.orders import OrderViewSet
-from orders.views.ordersitems import OrderItemViewSet
-from orders.views.seller_stats import SellerStatsView
 from products.views import ProductViewSet
 from routes.tasks.calculate_route_length import CalculateRouteLengthView
 from routes.views import RoutesViewSet
@@ -69,9 +66,7 @@ product_items_router.register(r"items", ProductsItemViewSet, basename="item")
 
 # Orders & Items
 router.register(r"orders", OrderViewSet, basename="order")
-router.register(r"ordersitems", OrderItemViewSet, basename="orderitem")
 order_items_router = routers.NestedSimpleRouter(router, r"orders", lookup="order")
-order_items_router.register(r"items", OrderItemViewSet, basename="item")
 order_items_router.register(r"documents", OrderDocumentsView, basename="document")
 
 # Admin site translations
@@ -87,8 +82,6 @@ urlpatterns = [
         FindUnsoldItemsView.as_view(),
     ),
     url(r"^orders/cron/find-unsold-items", FindUnsoldItemsView.as_view()),
-    url(r"^items/stats/seller", SellerStatsView.as_view()),
-    url(r"^items/stats/admin", AdminStatsHandler.as_view()),
     url(r"^items/stats", ItemsStatsView.as_view()),
     url(r"^carts/cron/delete-inactive-carts", DeleteInactiveCartsView.as_view()),
     url(r"^users/(?P<user_id>.+)/mangopay/create", CreateMangopayAccountView.as_view()),
