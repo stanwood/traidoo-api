@@ -1,7 +1,12 @@
+import datetime
+import os
 from itertools import groupby
 
+import google.cloud.storage
+from django.conf import settings
 from django.db.models import Prefetch, Q
 from rest_framework import viewsets
+from rest_framework.decorators import action
 from rest_framework.response import Response
 
 from core.permissions.owner import IsOwner
@@ -13,7 +18,7 @@ from orders.serializers import OrderSerializer
 from products.models import Product
 
 
-class OrderViewSet(viewsets.ModelViewSet):
+class BuyerOrderViewSet(viewsets.ModelViewSet):
     OWNER_FIELD = "buyer"
 
     serializer_class = OrderSerializer
@@ -21,7 +26,6 @@ class OrderViewSet(viewsets.ModelViewSet):
     http_method_names = ["get"]
 
     filterset_fields = {
-        "id": ["exact", "gt", "gte", "lt", "lte", "contains"],
         "created_at": ["exact", "gt", "gte", "lt", "lte", "contains"],
         "updated_at": ["exact", "gt", "gte", "lt", "lte", "contains"],
         "status": ["exact", "gt", "gte", "lt", "lte", "contains"],
@@ -89,4 +93,29 @@ class OrderViewSet(viewsets.ModelViewSet):
                     "totalGross": format_price(totalNet + totalVat),
                 },
             },
+        )
+
+    @action(detail=True)
+    def download(self, request, pk):
+        document = Document.objects.get(
+            document_type=Document.TYPES.order_confirmation_buyer.value[0], order_id=pk,
+        )
+
+        storage_client = google.cloud.storage.Client.from_service_account_json(
+            settings.BASE_DIR.joinpath("service_account.json")
+        )
+
+        bucket = storage_client.get_bucket(settings.DEFAULT_BUCKET)
+        blob = bucket.blob(document.blob_name)
+
+        filename = os.path.basename(document.blob_name)
+
+        return Response(
+            {
+                "url": blob.generate_signed_url(
+                    datetime.timedelta(minutes=settings.DOCUMENTS_EXPIRATION_TIME),
+                    response_disposition=f"attachment; filename={filename}",
+                ),
+                "filename": filename,
+            }
         )

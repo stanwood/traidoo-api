@@ -20,7 +20,7 @@ from items.views.stats import ItemsStatsView
 from jobs.views import JobsViewSet
 from orders.views.documents import OrderDocumentsView
 from orders.views.find_unsold_items import FindUnsoldItemsView
-from orders.views.orders import OrderViewSet
+from orders.views.orders import BuyerOrderViewSet
 from products.views import ProductViewSet
 from routes.tasks.calculate_route_length import CalculateRouteLengthView
 from routes.views import RoutesViewSet
@@ -65,7 +65,7 @@ product_items_router = routers.NestedSimpleRouter(router, r"products", lookup="p
 product_items_router.register(r"items", ProductsItemViewSet, basename="item")
 
 # Orders & Items
-router.register(r"orders", OrderViewSet, basename="order")
+router.register(r"orders", BuyerOrderViewSet, basename="order")
 order_items_router = routers.NestedSimpleRouter(router, r"orders", lookup="order")
 order_items_router.register(r"documents", OrderDocumentsView, basename="document")
 
