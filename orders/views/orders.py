@@ -1,9 +1,11 @@
+from itertools import groupby
+
 from django.db.models import Prefetch, Q
 from rest_framework import viewsets
 from rest_framework.response import Response
 
 from core.permissions.owner import IsOwner
-from documents.jinja2_utils import format_price
+from documents.jinja2_utils import format_price, get_price_value
 from documents.models import Document
 from items.models import Item
 from orders.models import Order, OrderItem
@@ -42,39 +44,33 @@ class OrderViewSet(viewsets.ModelViewSet):
             document_type=Document.TYPES.order_confirmation_buyer.value[0], order_id=pk
         )
 
-        products = [
-            product for product in document.lines if product["category"] == "Produkte"
-        ]
-        deposits = [
-            deposit for deposit in document.lines if deposit["category"] == "Pfand"
-        ]
-        platforms = [
-            platform
-            for platform in document.lines
-            if platform["category"] == "Plattform"
-        ]
-        logistics = [
-            logistic
-            for logistic in document.lines
-            if logistic["category"] == "Logistik"
-        ]
+        def totalSum(item):
+            return item["count"] * item["amount"] * item["price"]
 
-        productsPrice = sum([product["price"] for product in products])
-        depositsPrice = sum([deposit["price"] for deposit in deposits])
-        platformsPrice = sum([platform["price"] for platform in platforms])
-        logisticsPrice = sum([logistic["price"] for logistic in logistics])
+        products = [item for item in document.lines if item["category"] == "Produkte"]
+        deposits = [item for item in document.lines if item["category"] == "Pfand"]
+        platforms = [item for item in document.lines if item["category"] == "Plattform"]
+        logistics = [item for item in document.lines if item["category"] == "Logistik"]
 
-        productsVat = sum([product["vat_rate"] for product in products])
-        depositsVat = sum([deposit["vat_rate"] for deposit in deposits])
-        platformsVat = sum([platform["vat_rate"] for platform in platforms])
-        logisticsVat = sum([logistic["vat_rate"] for logistic in logistics])
+        productsPrice = sum([totalSum(product) for product in products])
+        depositsPrice = sum([totalSum(deposit) for deposit in deposits])
+        platformsPrice = sum([totalSum(platform) for platform in platforms])
+        logisticsPrice = sum([totalSum(logistic) for logistic in logistics])
+
+        vat = {}
+        totalVat = 0
+        document.lines.sort(key=lambda item: item["vat_rate"])
+        for key, value in groupby(document.lines, key=lambda item: item["vat_rate"]):
+            vatSum = sum([get_price_value(item).vat for item in value])
+            vat[int(key)] = format_price(vatSum)
+            totalVat += vatSum
 
         totalNet = productsPrice + depositsPrice + platformsPrice + logisticsPrice
-        totalVat = productsVat + depositsVat + platformsVat + logisticsVat
 
         return Response(
             {
                 "id": document.order.id,
+                "documentId": document.id,
                 "date": document.order.earliest_delivery_date,
                 "status": document.order.status,
                 "totalPrice": format_price(document.order.total_price),
@@ -87,10 +83,7 @@ class OrderViewSet(viewsets.ModelViewSet):
                     "depositsPrice": format_price(depositsPrice),
                     "platformsPrice": format_price(platformsPrice),
                     "logisticsPrice": format_price(logisticsPrice),
-                    "productsVat": format_price(productsVat),
-                    "depositsVat": format_price(depositsVat),
-                    "platformsVat": format_price(platformsVat),
-                    "logisticsVat": format_price(logisticsVat),
+                    "vat": vat,
                     "totalNet": format_price(totalNet),
                     "totalVat": format_price(totalVat),
                     "totalGross": format_price(totalNet + totalVat),
