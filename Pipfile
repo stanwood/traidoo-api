@@ -27,7 +27,6 @@ django = "==2.2.10"
 django-filter = "*"
 djangorestframework = "==3.11.0"
 markdown = "*"
-djangorestframework-jwt = "*"
 django-anymail = {extras = ["mailgun"],version = "*"}
 django-taggit = "*"
 django-taggit-serializer = "*"

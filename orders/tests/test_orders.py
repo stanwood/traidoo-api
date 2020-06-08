@@ -46,7 +46,13 @@ def test_seller_cannot_see_other_orders(client_seller, _create_test_data, seller
 
 
 @pytest.mark.django_db
-def test_seller_can_get_own_order_with_multiple_items(api_client):
+def test_get_order_anonymous(api_client):
+    response = api_client.get("/orders/1")
+    assert response.status_code == 401
+
+
+@pytest.mark.django_db
+def test_buyer_can_get_own_order_with_multiple_items(api_client):
     region = mommy.make_recipe("common.region")
     mommy.make_recipe("settings.setting", region=region)
     seller = mommy.make_recipe("users.user", region=region)

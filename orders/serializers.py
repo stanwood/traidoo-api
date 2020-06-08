@@ -44,18 +44,3 @@ class OrderItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = OrderItem
         fields = "__all__"
-
-
-class OrderDocumentSerializer(serializers.ModelSerializer):
-    id = serializers.ReadOnlyField()
-    filename = serializers.SerializerMethodField()
-
-    def get_filename(self, obj):
-        if obj.blob_name:
-            return os.path.basename(obj.blob_name)
-        else:
-            return None
-
-    class Meta:
-        model = Document
-        fields = ("id", "document_type", "filename")
