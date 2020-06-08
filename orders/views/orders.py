@@ -5,11 +5,11 @@ from itertools import groupby
 import google.cloud.storage
 from django.conf import settings
 from django.db.models import Prefetch, Q
-from rest_framework import viewsets
+from rest_framework import status, viewsets
 from rest_framework.decorators import action
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from core.permissions.owner import IsOwner
 from documents.jinja2_utils import format_price, get_price_value
 from documents.models import Document
 from items.models import Item
@@ -19,10 +19,8 @@ from products.models import Product
 
 
 class BuyerOrderViewSet(viewsets.ModelViewSet):
-    OWNER_FIELD = "buyer"
-
     serializer_class = OrderSerializer
-    permission_classes = (IsOwner,)
+    permission_classes = [IsAuthenticated]
     http_method_names = ["get"]
 
     filterset_fields = {
@@ -44,9 +42,14 @@ class BuyerOrderViewSet(viewsets.ModelViewSet):
         return queryset
 
     def retrieve(self, request, pk=None):
-        document = Document.objects.get(
-            document_type=Document.TYPES.order_confirmation_buyer.value[0], order_id=pk
-        )
+        try:
+            document = Document.objects.get(
+                document_type=Document.TYPES.order_confirmation_buyer.value[0],
+                order_id=pk,
+                buyer__user_id=request.user.id,
+            )
+        except Document.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
 
         def totalSum(item):
             return item["count"] * item["amount"] * item["price"]
@@ -97,9 +100,14 @@ class BuyerOrderViewSet(viewsets.ModelViewSet):
 
     @action(detail=True)
     def download(self, request, pk):
-        document = Document.objects.get(
-            document_type=Document.TYPES.order_confirmation_buyer.value[0], order_id=pk,
-        )
+        try:
+            document = Document.objects.get(
+                document_type=Document.TYPES.order_confirmation_buyer.value[0],
+                order_id=pk,
+                buyer__user_id=request.user.id,
+            )
+        except Document.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
 
         storage_client = google.cloud.storage.Client.from_service_account_json(
             settings.BASE_DIR.joinpath("service_account.json")
