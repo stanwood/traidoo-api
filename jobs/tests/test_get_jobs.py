@@ -6,10 +6,7 @@ from django.contrib.auth import get_user_model
 from django.utils import timezone
 from model_mommy import mommy
 
-from delivery_addresses.models import DeliveryAddress
 from orders.models import Order, OrderItem
-from products.models import Product
-from routes.models import Route
 
 from ..models import Detour, Job
 
@@ -72,9 +69,17 @@ def _create_test_data():
     delivery_address_1 = mommy.make_recipe("delivery_addresses.delivery_address")
     delivery_address_2 = mommy.make_recipe("delivery_addresses.delivery_address")
 
-    product_1 = mommy.make_recipe("products.product", seller=user_2)
-    product_2 = mommy.make_recipe("products.product", seller=user_2)
-    product_3 = mommy.make_recipe("products.product", seller=user_2)
+    seller_delivery_option = mommy.make_recipe("delivery_options.seller")
+
+    product_1 = mommy.make_recipe(
+        "products.product", seller=user_2, delivery_options=[seller_delivery_option]
+    )
+    product_2 = mommy.make_recipe(
+        "products.product", seller=user_2, delivery_options=[seller_delivery_option]
+    )
+    product_3 = mommy.make_recipe(
+        "products.product", seller=user_2, delivery_options=[seller_delivery_option]
+    )
 
     order = mommy.make(
         Order,
@@ -88,6 +93,7 @@ def _create_test_data():
         product=product_1,
         latest_delivery_date=datetime.date.today() + datetime.timedelta(days=6),
         order=order,
+        delivery_option=seller_delivery_option,
     )
     order_item_2 = mommy.make(
         OrderItem,
@@ -95,6 +101,7 @@ def _create_test_data():
         product=product_2,
         latest_delivery_date=datetime.date.today() + datetime.timedelta(days=1),
         order=order,
+        delivery_option=seller_delivery_option,
     )
     order_item_3 = mommy.make(
         OrderItem,
@@ -102,6 +109,7 @@ def _create_test_data():
         product=product_2,
         latest_delivery_date=datetime.date.today() + datetime.timedelta(hours=23),
         order=order,
+        delivery_option=seller_delivery_option,
     )
     order_item_4 = mommy.make(
         OrderItem,
@@ -109,6 +117,7 @@ def _create_test_data():
         product=product_3,
         latest_delivery_date=datetime.datetime.today() + datetime.timedelta(days=6),
         order=order,
+        delivery_option=seller_delivery_option,
     )
 
     job_1 = mommy.make(Job, order_item=order_item_1, user=None)
@@ -252,20 +261,29 @@ def test_order_jobs_by_delivery_fee(
     route_1 = mommy.make_recipe("routes.route", user=seller)
     route_2 = mommy.make_recipe("routes.route", user=seller)
 
+    seller_delivery_option = mommy.make_recipe("delivery_options.seller")
+    product = mommy.make_recipe(
+        "products.product", delivery_options=[seller_delivery_option]
+    )
+
     order_item_1 = mommy.make_recipe(
         "orders.orderitem",
         latest_delivery_date=datetime.date.today() + datetime.timedelta(days=6),
+        delivery_option=seller_delivery_option,
+        product=product,
     )
     order_item_2 = mommy.make_recipe(
         "orders.orderitem",
         latest_delivery_date=datetime.date.today() + datetime.timedelta(days=6),
+        delivery_option=seller_delivery_option,
+        product=product,
     )
 
     job_1 = mommy.make(Job, order_item=order_item_1, user=None)
     job_2 = mommy.make(Job, order_item=order_item_2, user=None)
 
-    detour_1 = mommy.make(Detour, job=job_1, route=route_1, length=100)
-    detour_2 = mommy.make(Detour, job=job_2, route=route_2, length=200)
+    mommy.make(Detour, job=job_1, route=route_1, length=100)
+    mommy.make(Detour, job=job_2, route=route_2, length=200)
 
     with django_assert_num_queries(5):
         response_json = client_seller.get(
