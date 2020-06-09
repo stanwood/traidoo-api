@@ -80,7 +80,7 @@ class RegistrationViewSet(generics.CreateAPIView, TasksMixin):
             template="mails/users/verify_email.html",
             context={
                 "domain": Site.objects.get_current().domain,
-                "url": f"auth/verify-email/{uid}/{token}",
+                "url": f"registration/{uid}/{token}",
             },
         )
 

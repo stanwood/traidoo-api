@@ -192,9 +192,9 @@ def test_registration_activate_user(
 
     soup = bs4.BeautifulSoup(mailoutbox[0].body, features="html.parser")
     links = [link["href"] for link in soup("a") if "href" in link.attrs]
-    activation_link = [link for link in links if "verify-email" in link][0]
+    activation_link = [link for link in links if "registration" in link][0]
     uid, token = activation_link.replace(
-        f"https://{Site.objects.get_current().domain}/auth/verify-email/", ""
+        f"https://{Site.objects.get_current().domain}/registration/", ""
     ).split("/")
 
     user.mangopay_user_id = "mangopay-user-id"
