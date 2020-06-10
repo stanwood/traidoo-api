@@ -59,22 +59,35 @@ class CartItemSerializer(serializers.ModelSerializer):
         """
         request = self.context.get("request")
         region = get_region(request)
-
-        options = [
-            {"id": DeliveryOption.SELLER, "value": obj.seller_delivery.netto},
-            {"id": DeliveryOption.BUYER, "value": Decimal("0.0")},
-        ]
-
         region_settings = region.settings.first()
-        if region_settings.central_logistics_company:
-            options.append(
-                {
-                    "id": DeliveryOption.CENTRAL_LOGISTICS,
-                    "value": obj.central_logistic_delivery(region).netto,
-                }
-            )
 
-        return options
+        delivery_options = []
+
+        for product_delivery_option in obj.product.delivery_options.all():
+            if product_delivery_option.id == DeliveryOption.BUYER:
+                delivery_options.append(
+                    {"id": product_delivery_option.id, "value": Decimal("0.0")}
+                )
+            if product_delivery_option.id == DeliveryOption.SELLER:
+                delivery_options.append(
+                    {
+                        "id": product_delivery_option.id,
+                        "value": obj.seller_delivery.netto,
+                    }
+                )
+
+            if (
+                product_delivery_option.id == DeliveryOption.CENTRAL_LOGISTICS
+                and region_settings.central_logistics_company
+            ):
+                delivery_options.append(
+                    {
+                        "id": DeliveryOption.CENTRAL_LOGISTICS,
+                        "value": obj.central_logistic_delivery(region).netto,
+                    }
+                )
+
+        return delivery_options
 
 
 class CartSerializer(serializers.ModelSerializer):

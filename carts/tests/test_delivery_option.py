@@ -1,13 +1,9 @@
-import datetime
-
 import pytest
 from model_mommy import mommy
 
 
 @pytest.mark.django_db
-def test_cart_item_delivery_option(
-    buyer, client_buyer, traidoo_region, delivery_options
-):
+def test_cart_item_delivery_option(buyer, client_buyer, traidoo_region):
     cart = mommy.make_recipe("carts.cart", user=buyer)
     cart_item = mommy.make_recipe(
         "carts.cartitem", cart=cart, quantity=1, delivery_option_id=0

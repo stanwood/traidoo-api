@@ -11,7 +11,10 @@ def _prepare_test_data():
     user_2 = mommy.make_recipe("users.user")
     route = mommy.make_recipe("routes.route", user=user_1)
     delivery_address = mommy.make_recipe("delivery_addresses.delivery_address")
-    product = mommy.make_recipe("products.product", seller=user_2)
+    delivery_option_seller = mommy.make_recipe("delivery_options.seller")
+    product = mommy.make_recipe(
+        "products.product", seller=user_2, delivery_options=[delivery_option_seller]
+    )
     order = mommy.make("orders.Order")
     order_item = mommy.make(
         "orders.OrderItem",
@@ -19,6 +22,7 @@ def _prepare_test_data():
         product=product,
         latest_delivery_date=datetime.date.today() + datetime.timedelta(days=6),
         order=order,
+        delivery_option=delivery_option_seller,
     )
     job = mommy.make("jobs.Job", order_item=order_item, user=None)
     mommy.make("jobs.Detour", job=job, route=route)

@@ -58,10 +58,26 @@ def test_buyer_can_get_own_order_with_multiple_items(api_client):
     seller = mommy.make_recipe("users.user", region=region)
     buyer = mommy.make_recipe("users.user", region=region)
     product_1 = mommy.make_recipe("products.product", seller=seller, region=region)
-    product_2 = mommy.make_recipe("products.product", seller=seller, region=region)
+    product_2 = mommy.make_recipe(
+        "products.product",
+        seller=seller,
+        region=region,
+        # weird that mommy tries to make an update on existing delivery options without this line
+        delivery_options=product_1.delivery_options.all(),
+    )
     order = mommy.make_recipe("orders.order", buyer=buyer, region=region, total_price=1)
-    order_item_1 = mommy.make_recipe("orders.orderitem", order=order, product=product_1)
-    order_item_2 = mommy.make_recipe("orders.orderitem", order=order, product=product_2)
+    mommy.make_recipe(
+        "orders.orderitem",
+        order=order,
+        product=product_1,
+        delivery_option=product_1.delivery_options.first(),
+    )
+    mommy.make_recipe(
+        "orders.orderitem",
+        order=order,
+        product=product_2,
+        delivery_option=product_2.delivery_options.first(),
+    )
 
     factory = factories.OrderConfirmationBuyerFactory(order, region, seller)
     document = factory.compose()

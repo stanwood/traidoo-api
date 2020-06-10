@@ -2,12 +2,11 @@ import pytest
 from model_mommy import mommy
 
 
-@pytest.mark.django_db
-def test_order_item_third_party_delivery_without_job(delivery_options, settings):
+def test_order_item_third_party_delivery_without_job(db, delivery_options, settings):
     settings.FEATURES["routes"] = True
-
+    product = mommy.make_recipe("products.product", delivery_options=delivery_options)
     order_item = mommy.make_recipe(
-        "orders.orderitem", delivery_option=delivery_options[1]
+        "orders.orderitem", delivery_option=delivery_options[1], product=product
     )
     assert not order_item.is_third_party_delivery
 
@@ -15,9 +14,9 @@ def test_order_item_third_party_delivery_without_job(delivery_options, settings)
 @pytest.mark.django_db
 def test_order_item_third_party_delivery_without_user(delivery_options, settings):
     settings.FEATURES["routes"] = True
-
+    product = mommy.make_recipe("products.product", delivery_options=delivery_options)
     order_item = mommy.make_recipe(
-        "orders.orderitem", delivery_option=delivery_options[1]
+        "orders.orderitem", delivery_option=delivery_options[1], product=product
     )
     mommy.make("jobs.Job", order_item=order_item)
     assert not order_item.is_third_party_delivery
@@ -41,8 +40,10 @@ def test_order_item_third_party_delivery_without_correct_delivery_option(setting
     settings.FEATURES["routes"] = True
 
     delivery_option = mommy.make_recipe("delivery_options.seller", id=1)
-
-    order_item = mommy.make_recipe("orders.orderitem", delivery_option=delivery_option)
+    product = mommy.make_recipe("products.product", delivery_options=[delivery_option])
+    order_item = mommy.make_recipe(
+        "orders.orderitem", delivery_option=delivery_option, product=product
+    )
     user = mommy.make("users.User")
     mommy.make("jobs.Job", order_item=order_item, user=user)
 
@@ -52,9 +53,13 @@ def test_order_item_third_party_delivery_without_correct_delivery_option(setting
 @pytest.mark.django_db
 def test_delivery_address_as_str_when_delivery_address_is_available():
     delivery_address = mommy.make_recipe("delivery_addresses.delivery_address")
-    product = mommy.make_recipe("products.product")
+    delivery_option = mommy.make_recipe("delivery_options.seller")
+    product = mommy.make_recipe("products.product", delivery_options=[delivery_option])
     order_item = mommy.make(
-        "orders.OrderItem", delivery_address=delivery_address, product=product
+        "orders.OrderItem",
+        delivery_address=delivery_address,
+        product=product,
+        delivery_option=delivery_option,
     )
 
     assert (
@@ -69,7 +74,11 @@ def test_delivery_address_as_str_when_delivery_address_is_not_available():
     order = mommy.make("orders.Order", buyer=user)
     product = mommy.make_recipe("products.product")
     order_item = mommy.make(
-        "orders.OrderItem", delivery_address=None, order=order, product=product
+        "orders.OrderItem",
+        delivery_address=None,
+        order=order,
+        product=product,
+        delivery_option=product.delivery_options.first(),
     )
 
     assert not order_item.delivery_address
