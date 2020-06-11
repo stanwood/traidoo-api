@@ -1,6 +1,6 @@
 import datetime
 
-from django.db.models import F, Sum
+from django.db.models import F, Sum, Window
 from django.db.models.functions import Coalesce
 from rest_framework import status
 from rest_framework.exceptions import NotFound
@@ -98,23 +98,25 @@ class CartView(APIView):
         except Cart.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
-        response = {"earliestDeliveryDate": cart.earliest_delivery_date, "items": {}}
+        items = (
+            cart.items.annotate(total_quantity=Window(expression=Sum("quantity")))
+            .order_by("product", "created_at")
+            .distinct("product")
+        )
 
-        for item in cart.items.order_by("created_at").all():
-            try:
-                response["items"][item.product.id]
-            except KeyError:
-                response["items"][item.product.id] = {
-                    "quantity": item.quantity,
-                    "product": {
-                        "name": item.product.name,
-                        "price": item.product.price,
-                        "unit": item.product.unit,
-                        "amount": item.product.amount,
-                    },
+        response = {
+            "products": [
+                {
+                    "id": item.product.id,
+                    "name": item.product.name,
+                    "price": item.product.price,
+                    "unit": item.product.unit,
+                    "amount": item.product.amount,
+                    "quantity": item.total_quantity,
                 }
-            else:
-                response["items"][item.product.id]["quantity"] += item.quantity
+                for item in items
+            ],
+        }
 
         return Response(response)
 
@@ -153,6 +155,8 @@ class CartView(APIView):
                     )
                 }
             )
+
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
     def delete(self, request: Request, pk: int = None, format: str = None):
         try:
