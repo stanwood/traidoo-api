@@ -78,6 +78,7 @@ class BuyerOrderViewSet(viewsets.ModelViewSet):
             {
                 "id": document.order.id,
                 "documentId": document.id,
+                "createdAt": document.order.created_at,
                 "date": document.order.earliest_delivery_date,
                 "status": document.order.status,
                 "totalPrice": format_price(document.order.total_price),
