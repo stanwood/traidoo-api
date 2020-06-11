@@ -104,13 +104,7 @@ class CartView(APIView):
             .distinct("product")
         )
 
-        delivery_address_id = (
-            cart.delivery_address.id if cart.delivery_address else None
-        )
-
         response = {
-            "earliestDeliveryDate": cart.earliest_delivery_date,
-            "deliveryAddress": delivery_address_id,
             "products": [
                 {
                     "id": item.product.id,

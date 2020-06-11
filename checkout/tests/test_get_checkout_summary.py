@@ -40,7 +40,7 @@ def test_try_to_get_the_latest_cart(seller, client_seller):
     }
 
 
-def test_get_cart_with_delivery_address(buyer, client_buyer, delivery_address):
+def test_get_checkout_with_delivery_address(buyer, client_buyer, delivery_address):
     cart = mommy.make("carts.Cart", user=buyer, delivery_address=delivery_address)
     response = client_buyer.get("/checkout")
     assert response.json()["deliveryAddress"] == delivery_address.id

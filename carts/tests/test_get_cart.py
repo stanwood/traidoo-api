@@ -45,8 +45,6 @@ def test_get_cart(buyer, client_buyer, traidoo_region):
     response = client_buyer.get("/cart")
 
     assert response.json() == {
-        "earliestDeliveryDate": cart.earliest_delivery_date,
-        "deliveryAddress": cart.delivery_address.id,
         "products": [
             {
                 "id": product_item_1.product.id,
