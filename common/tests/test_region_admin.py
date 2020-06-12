@@ -41,3 +41,11 @@ def test_superuser_can_delete_region(django_app, traidoo_region):
         user=superuser,
     )
     assert response.status_code == 200
+
+
+def test_superuser_can_see_all_regions(django_app, admin_group):
+    superuser = mommy.make_recipe(
+        "users.user", is_superuser=True, is_staff=True, groups=[admin_group]
+    )
+    response = django_app.get(reverse("admin:common_region_changelist"), user=superuser)
+    assert len(response.html.find_all("th", attrs={"class": "field-id"})) == 3
