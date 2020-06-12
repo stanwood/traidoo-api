@@ -22,7 +22,7 @@ class SettingAdmin(BaseRegionalAdminMixin, VersionAdmin):
     )
 
     def has_add_permission(self, request):
-        return False
+        return request.user.is_superuser
 
     def has_delete_permission(self, request, obj=None):
-        return False
+        return request.user.is_superuser
