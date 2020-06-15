@@ -71,7 +71,6 @@ order_items_router = routers.NestedSimpleRouter(router, r"orders", lookup="order
 admin.site.index_title = _("Traidoo")
 admin.site.site_header = _("Traidoo Administration")
 admin.site.site_title = _("Traidoo Administration")
-admin.site.unregister(Token)
 
 urlpatterns = [
     path("", include("carts.urls")),

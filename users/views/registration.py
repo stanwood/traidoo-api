@@ -96,7 +96,7 @@ class RegistrationViewSet(generics.CreateAPIView, TasksMixin):
             f"/users/{user.id}/mangopay/create",
             queue_name="mangopay-create-account",
             http_method="POST",
-            schedule_time=30,
+            schedule_time=10,
         )
 
         return response.Response(status=status.HTTP_201_CREATED)

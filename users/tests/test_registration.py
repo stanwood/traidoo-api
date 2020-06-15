@@ -95,7 +95,7 @@ def test_register_user(client_anonymous, send_task, user_data, mailoutbox):
         f"/users/{user.id}/mangopay/create",
         http_method="POST",
         queue_name="mangopay-create-account",
-        schedule_time=30,
+        schedule_time=10,
     )
     assert mailoutbox[-2].subject == "Bitte bestätigen Sie Ihre E-Mail-Adresse"
     assert mailoutbox[-2].to == [user.email]
@@ -162,20 +162,7 @@ def test_registration_validation(client_anonymous, send_task, mailoutbox, user_d
 
 
 @pytest.mark.django_db
-@mock.patch("payments.client.client.MangopayClient.post")
-def test_registration_activate_user(
-    mocked_post, client_anonymous, send_task, user_data, mailoutbox
-):
-    mocked_post.side_effect = [
-        {"Id": "wallet-1", "Currency": "EUR", "Description": "Default"},
-        {
-            "IBAN": "FR7618829754160173622224251",
-            "BIC": "CMBRFR2BCME",
-            "Id": "234514543",
-            "OwnerName": "Test Test",
-        },
-    ]
-
+def test_registration_activate_user(client_anonymous, send_task, user_data, mailoutbox):
     client_anonymous.post("/registration", user_data, format="multipart")
 
     user = User.objects.get(email=user_data["email"])
@@ -207,30 +194,13 @@ def test_registration_activate_user(
     assert user.is_active
     assert user.is_email_verified
 
-    assert mocked_post.call_args_list == [
-        mock.call(
-            "/wallets",
-            {
-                "Owners": ["mangopay-user-id"],
-                "Description": "Default",
-                "Currency": "EUR",
-            },
-        ),
-        mock.call(
-            "/wallets/wallet-1/bankingaliases/iban",
-            {
-                "CreditedUserId": "mangopay-user-id",
-                "OwnerName": "Test Trofimiuk",
-                "Country": "FR",
-            },
-        ),
-    ]
-
-    send_task.assert_called_once_with(
-        f"/users/{user.id}/mangopay/create",
+    send_task.assert_called_with(
+        "/mangopay/tasks/create-wallet",
+        headers={"Region": "traidoo"},
         http_method="POST",
-        queue_name="mangopay-create-account",
-        schedule_time=30,
+        payload={"user_id": user.id},
+        queue_name="mangopay-create-wallet",
+        schedule_time=5,
     )
 
 
