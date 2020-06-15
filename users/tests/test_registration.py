@@ -97,6 +97,7 @@ def test_register_user(client_anonymous, send_task, user_data, mailoutbox):
         http_method="POST",
         queue_name="mangopay-create-account",
         schedule_time=10,
+        headers={"Region": user.region.slug, "Content-Type": "application/json",},
     )
     assert mailoutbox[-2].subject == "Bitte bestätigen Sie Ihre E-Mail-Adresse"
     assert mailoutbox[-2].to == [user.email]

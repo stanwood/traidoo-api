@@ -37,7 +37,7 @@ class CreateWalletView(views.APIView, TasksMixin):
             queue_name="mangopay-banking-alias-iban",
             http_method="POST",
             schedule_time=5,
-            headers={"Region": region.slug},
+            headers={"Region": region.slug, "Content-Type": "application/json",},
         )
 
         return Response()

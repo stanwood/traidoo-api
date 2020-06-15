@@ -37,5 +37,5 @@ def test_create_wallet(mocked_post, client_anonymous, send_task, traidoo_region)
         http_method="POST",
         queue_name="mangopay-banking-alias-iban",
         schedule_time=5,
-        headers={"Region": traidoo_region.slug},
+        headers={"Region": traidoo_region.slug, "Content-Type": "application/json"},
     )
