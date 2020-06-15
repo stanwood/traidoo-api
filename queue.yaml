@@ -22,6 +22,14 @@ queue:
       rate: 10/s
       bucket_size: 200
 
+    - name: mangopay-create-wallet
+      rate: 10/s
+      bucket_size: 200
+
+    - name: mangopay-banking-alias-iban
+      rate: 10/s
+      bucket_size: 200
+
     - name: routes
       rate: 50/s
       bucket_size: 200
