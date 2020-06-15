@@ -5,6 +5,7 @@ import bs4
 import pytest
 from django.contrib.auth import get_user_model
 from django.contrib.sites.models import Site
+from django.urls import reverse
 from model_mommy import mommy
 
 from delivery_addresses.models import DeliveryAddress
@@ -255,3 +256,12 @@ def test_registration_unique_email(client_anonymous, user_data, buyer):
     assert response.json() == {
         "email": [{"message": "This field must be unique.", "code": "unique"}]
     }
+
+
+def test_send_new_user_email_to_admins(db, client_anonymous, user_data, mailoutbox):
+    client_anonymous.post("/registration", data=user_data, format="multipart")
+
+    users_edit_admin_url = reverse("admin:users_user_changelist")
+    assert f"https://testserver{users_edit_admin_url}" in mailoutbox[1].body
+    assert "test1@example.com" in mailoutbox[1].to
+    assert "test2@example.com" in mailoutbox[1].to

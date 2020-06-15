@@ -3,6 +3,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.tokens import default_token_generator
 from django.contrib.sites.models import Site
 from django.template.loader import render_to_string
+from django.urls import reverse
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
 from rest_framework import generics, response, status
@@ -84,12 +85,18 @@ class RegistrationViewSet(generics.CreateAPIView, TasksMixin):
             },
         )
 
+        location = reverse("admin:users_user_changelist")
+
         send_mail(
             region=region,
             subject="Neuer Nutzer registriert",
             recipient_list=settings.REAL_ADMINS,
             template="mails/users/new_user_registered.html",
-            context={"domain": Site.objects.get_current().domain, "email": user.email},
+            context={
+                "domain": self.request.get_host(),
+                "location": location,
+                "email": user.email,
+            },
         )
 
         self.send_task(
