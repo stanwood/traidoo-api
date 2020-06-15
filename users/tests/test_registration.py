@@ -198,7 +198,7 @@ def test_registration_activate_user(client_anonymous, send_task, user_data, mail
 
     send_task.assert_called_with(
         "/mangopay/tasks/create-wallet",
-        headers={"Region": "traidoo"},
+        headers={"Region": "traidoo", "Content-Type": "application/json"},
         http_method="POST",
         payload={"user_id": user.id},
         queue_name="mangopay-create-wallet",
