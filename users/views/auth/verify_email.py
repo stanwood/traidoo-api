@@ -28,7 +28,7 @@ class VerifyEmailView(APIView, TasksMixin):
             queue_name="mangopay-create-wallet",
             http_method="POST",
             schedule_time=5,
-            headers={"Region": region.slug},
+            headers={"Region": region.slug, "Content-Type": "application/json"},
         )
 
         return Response(status=status.HTTP_204_NO_CONTENT)
