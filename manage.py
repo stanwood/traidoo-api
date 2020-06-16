@@ -2,12 +2,17 @@
 import os
 import sys
 
+from google.auth.exceptions import DefaultCredentialsError
+from loguru import logger
+
 try:
     import googleclouddebugger
 
     googleclouddebugger.enable()
 except ImportError:
     pass
+except DefaultCredentialsError as error:
+    logger.warning(error)
 
 
 def main():
