@@ -2,6 +2,13 @@
 import os
 import sys
 
+try:
+    import googleclouddebugger
+
+    googleclouddebugger.enable()
+except ImportError:
+    pass
+
 
 def main():
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "Traidoo.settings")
