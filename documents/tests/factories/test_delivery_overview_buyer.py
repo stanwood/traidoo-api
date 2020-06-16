@@ -124,7 +124,7 @@ def test_create_delivery_overview_buyer_with_3rd_party_delivery(
         "name": products[1].name,
         "number": products[1].id,
         "organic_control_body": products[1].seller.organic_control_body,
-        "price": 8.44,
+        "price": 14.28,
         "producer": buyer.region.setting.logistics_company.company_name,
         "unit": products[1].unit,
         "vat_rate": 19.0,

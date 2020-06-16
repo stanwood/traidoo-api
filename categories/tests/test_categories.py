@@ -18,10 +18,10 @@ def test_return_category_with_products(client_anonymous, traidoo_region):
 
     mommy.make(Item, product=product_1, quantity=2, latest_delivery_date=tomorrow)
 
-    response = client_anonymous.get(f'/categories')
+    response = client_anonymous.get(f"/categories")
 
     assert len(response.json()) == 1
-    assert response.json()[0]['id'] == category_1.id
+    assert response.json()[0]["id"] == category_1.id
 
 
 @pytest.mark.django_db
@@ -34,7 +34,7 @@ def test_do_not_return_category_with_quantity_0(client_anonymous, traidoo_region
 
     mommy.make(Item, product=product_1, quantity=0, latest_delivery_date=tomorrow)
 
-    response = client_anonymous.get(f'/categories?has_products=true')
+    response = client_anonymous.get(f"/categories?has_products=true")
 
     assert len(response.json()) == 0
 
@@ -49,7 +49,7 @@ def test_do_not_return_category_with_expired_item(client_anonymous, traidoo_regi
 
     mommy.make(Item, product=product_1, quantity=5, latest_delivery_date=today)
 
-    response = client_anonymous.get(f'/categories?has_products=true')
+    response = client_anonymous.get(f"/categories?has_products=true")
 
     assert len(response.json()) == 0
 
@@ -64,13 +64,15 @@ def test_return_all_categories(client_anonymous, traidoo_region):
 
     mommy.make(Item, product=product_1, quantity=5, latest_delivery_date=today)
 
-    response = client_anonymous.get(f'/categories')
+    response = client_anonymous.get(f"/categories")
 
     assert len(response.json()) == 1
 
 
 @pytest.mark.django_db
-def test_return_category_when_subcategory_has_products(client_anonymous, traidoo_region):
+def test_return_category_when_subcategory_has_products(
+    client_anonymous, traidoo_region
+):
     category_1 = mommy.make(Category)
     category_2 = mommy.make(Category, parent=category_1)
 
@@ -80,13 +82,15 @@ def test_return_category_when_subcategory_has_products(client_anonymous, traidoo
 
     mommy.make(Item, product=product_1, quantity=5, latest_delivery_date=tomorrow)
 
-    response = client_anonymous.get(f'/categories?has_products=true')
+    response = client_anonymous.get(f"/categories?has_products=true")
 
     assert len(response.json()) == 2
 
 
 @pytest.mark.django_db
-def test_return_categories_when_subcategory_has_products(client_anonymous, traidoo_region):
+def test_return_categories_when_subcategory_has_products(
+    client_anonymous, traidoo_region
+):
     category_1 = mommy.make(Category)
     category_2 = mommy.make(Category, parent=category_1)
     category_3 = mommy.make(Category, parent=category_2)
@@ -98,6 +102,6 @@ def test_return_categories_when_subcategory_has_products(client_anonymous, traid
 
     mommy.make(Item, product=product_1, quantity=5, latest_delivery_date=tomorrow)
 
-    response = client_anonymous.get(f'/categories?has_products=true')
+    response = client_anonymous.get(f"/categories?has_products=true")
 
     assert len(response.json()) == 4
