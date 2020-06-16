@@ -26,3 +26,18 @@ def test_can_edit_own_region(traidoo_region, platform_user, django_app):
     )
 
     assert response.status_code == 302
+
+
+def test_superuser_can_add_region(django_app):
+    superuser = mommy.make_recipe("users.user", is_superuser=True, is_staff=True)
+    response = django_app.get(reverse("admin:common_region_add"), user=superuser)
+    assert response.status_code == 200
+
+
+def test_superuser_can_delete_region(django_app, traidoo_region):
+    superuser = mommy.make_recipe("users.user", is_superuser=True, is_staff=True)
+    response = django_app.get(
+        reverse("admin:common_region_delete", kwargs={"object_id": traidoo_region.id}),
+        user=superuser,
+    )
+    assert response.status_code == 200
