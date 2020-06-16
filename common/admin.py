@@ -19,6 +19,9 @@ class BaseRegionalAdminMixin:
     def get_queryset(self, request):
         queryset = super().get_queryset(request)
 
+        if request.user.is_superuser:
+            return queryset
+
         if request.user.is_admin:
             if self.model._meta.label_lower == "common.region":
                 queryset = queryset.filter(id=request.user.region_id)
