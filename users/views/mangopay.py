@@ -20,16 +20,16 @@ class CreateMangopayAccountView(MangopayMixin, TasksMixin, views.APIView):
             user = User.objects.get(id=user_id)
         except User.DoesNotExist:
             logger.error(f"User {user_id} does not exist.")
+        else:
+            self.create_mangopay_account_for_user(user)
 
-        self.create_mangopay_account_for_user(user)
-
-        for document in KycDocument.objects.filter(user=user):
-            self.send_task(
-                f"/users/mangopay/documents/{document.id}",
-                queue_name="documents",
-                http_method="POST",
-                schedule_time=20,
-                headers={"Region": user.region.slug},
-            )
+            for document in KycDocument.objects.filter(user=user):
+                self.send_task(
+                    f"/users/mangopay/documents/{document.id}",
+                    queue_name="documents",
+                    http_method="POST",
+                    schedule_time=20,
+                    headers={"Region": user.region.slug},
+                )
 
         return Response()
