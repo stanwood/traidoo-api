@@ -101,9 +101,7 @@ class ItemCalculatorMixin:
         )
 
     def _delivery_fee(self):
-        if self.is_central_logistic_delivery or (
-            self.is_seller_delivery and self.is_third_party_delivery
-        ):
+        if self.is_central_logistic_delivery:
             value = self.transport_insurance
 
             if self.container_delivery_fee:

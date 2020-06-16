@@ -16,29 +16,29 @@ from core.permissions.get_permissions import GetPermissionsMixin
 class CategoryViewSet(GetPermissionsMixin, viewsets.ModelViewSet):
 
     permission_classes_by_action = {
-        'create': [IsAdminUser],
-        'update': [IsAdminUser],
-        'partial_update': [IsAdminUser],
-        'destroy': [IsAdminUser],
-        'default': [AllowAny],
+        "create": [IsAdminUser],
+        "update": [IsAdminUser],
+        "partial_update": [IsAdminUser],
+        "destroy": [IsAdminUser],
+        "default": [AllowAny],
     }
 
     serializer_class = CategorySerializer
     pagination_class = None
 
     filterset_fields = search_fields = (
-        'id',
-        'created_at',
-        'updated_at',
-        'icon',
-        'name',
-        'default_vat',
+        "id",
+        "created_at",
+        "updated_at",
+        "icon",
+        "name",
+        "default_vat",
     )
 
-    ordering_fields = search_fields + ('ordering',)
+    ordering_fields = search_fields + ("ordering",)
 
     def get_queryset(self):
-        if self.request.query_params.get('has_products', None) is None:
+        if self.request.query_params.get("has_products", None) is None:
             queryset = Category.objects.all()
         else:
             queryset = (
