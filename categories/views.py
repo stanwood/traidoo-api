@@ -2,9 +2,9 @@ import datetime
 
 from django.db.models import Q
 from django.db.models.deletion import ProtectedError
-from loguru import logger
 from rest_framework import viewsets
-from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.fields import BooleanField
+from rest_framework.permissions import AllowAny
 
 from categories.models import Category
 from categories.serializers import CategorySerializer
@@ -38,7 +38,10 @@ class CategoryViewSet(GetPermissionsMixin, viewsets.ModelViewSet):
     ordering_fields = search_fields + ("ordering",)
 
     def get_queryset(self):
-        if self.request.query_params.get("has_products", None) is None:
+        if (
+            self.request.query_params.get("has_products")
+            not in BooleanField.TRUE_VALUES
+        ):
             queryset = Category.objects.all()
         else:
             queryset = (

@@ -11,15 +11,10 @@ from products.models import Product
 @pytest.mark.django_db
 def test_return_category_with_products(client_anonymous, traidoo_region):
     category_1 = mommy.make(Category)
-
     product_1 = mommy.make(Product, category=category_1, region=traidoo_region)
-
     tomorrow = datetime.datetime.utcnow().date() + datetime.timedelta(days=1)
-
     mommy.make(Item, product=product_1, quantity=2, latest_delivery_date=tomorrow)
-
     response = client_anonymous.get(f"/categories")
-
     assert len(response.json()) == 1
     assert response.json()[0]["id"] == category_1.id
 
@@ -27,15 +22,10 @@ def test_return_category_with_products(client_anonymous, traidoo_region):
 @pytest.mark.django_db
 def test_do_not_return_category_with_quantity_0(client_anonymous, traidoo_region):
     category_1 = mommy.make(Category)
-
     product_1 = mommy.make(Product, category=category_1, region=traidoo_region)
-
     tomorrow = datetime.datetime.utcnow().date() + datetime.timedelta(days=1)
-
     mommy.make(Item, product=product_1, quantity=0, latest_delivery_date=tomorrow)
-
     response = client_anonymous.get(f"/categories?has_products=true")
-
     assert len(response.json()) == 0
 
 
@@ -56,17 +46,16 @@ def test_do_not_return_category_with_expired_item(client_anonymous, traidoo_regi
 
 @pytest.mark.django_db
 def test_return_all_categories(client_anonymous, traidoo_region):
-    category_1 = mommy.make(Category)
-
-    product_1 = mommy.make(Product, category=category_1, region=traidoo_region)
-
+    category = mommy.make(Category)
+    product = mommy.make(Product, category=category, region=traidoo_region)
     today = datetime.datetime.utcnow().date()
+    mommy.make(Item, product=product, quantity=5, latest_delivery_date=today)
 
-    mommy.make(Item, product=product_1, quantity=5, latest_delivery_date=today)
-
+    mommy.make(Category, _quantity=4)
     response = client_anonymous.get(f"/categories")
-
-    assert len(response.json()) == 1
+    assert len(response.json()) == 5
+    response = client_anonymous.get(f"/categories?has_products=false")
+    assert len(response.json()) == 5
 
 
 @pytest.mark.django_db
