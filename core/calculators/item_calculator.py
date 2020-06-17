@@ -54,6 +54,10 @@ class ItemCalculatorMixin:
         return self.price.brutto
 
     @property
+    def price_net(self) -> float:
+        return self.price.netto
+
+    @property
     def buyer_platform_fee(self) -> Value:
         value = (
             Decimal(str(self.price.netto))

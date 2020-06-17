@@ -29,3 +29,18 @@ def test_cart_item_delivery_options(db, buyer):
     }
 
     assert cart_delivery_options_ids == product_delivery_options_ids
+
+
+def test_include_price_net(db, buyer):
+    product = mommy.make_recipe("products.product", price=10, amount=2)
+    cart = mommy.make_recipe("carts.cart", user=buyer)
+    cart_item = mommy.make_recipe(
+        "carts.cartitem", cart=cart, quantity=1, product=product
+    )
+
+    fake_request = mock.MagicMock(headers={"Region": cart_item.product.region.slug})
+    serializer = CartItemSerializer(
+        instance=cart_item, context={"request": fake_request}
+    )
+
+    assert serializer.data["price_net"] == product.price * product.amount

@@ -18,6 +18,7 @@ class CartItemSerializer(serializers.ModelSerializer):
     product_id = serializers.IntegerField(write_only=True)
     product = ProductSerializer(read_only=True)
     price_gross = serializers.FloatField(read_only=True)
+    price_net = serializers.FloatField(read_only=True)
     platform_fee_gross = serializers.FloatField(read_only=True)
     delivery_fee_gross = serializers.FloatField(read_only=True)
     delivery_option = DeliveryOptionSerializer(read_only=True)
@@ -35,6 +36,7 @@ class CartItemSerializer(serializers.ModelSerializer):
             "quantity",
             "latest_delivery_date",
             "price_gross",
+            "price_net",
             "platform_fee_gross",
             "delivery_fee_gross",
             "delivery_option",
