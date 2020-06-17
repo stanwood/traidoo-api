@@ -81,7 +81,7 @@ class Order(OrderCalculatorMixin, BaseAbstractModel):
 
     def recalculate_items_delivery_fee(self):
         for item in self.items.all():
-            item.delivery_fee = item._delivery_fee().brutto
+            item.delivery_fee = item._delivery_fee().netto
             item.save()
 
     @property
