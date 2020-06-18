@@ -20,6 +20,7 @@ pytest-dotenv = "*"
 pytest-icdiff = "*"
 dj-inmemorystorage = "*"
 django-webtest = "*"
+model-bakery = "*"
 
 [packages]
 django = "==2.2.10"
