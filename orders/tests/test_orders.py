@@ -36,7 +36,7 @@ def _create_test_data(buyer, seller, seller_group, buyer_group, traidoo_region):
 
     document_2 = baker.make(
         Document,
-        document_type=Document.TYPES.delivery_overview_seller[0],
+        document_type=Document.TYPES.delivery_overview_seller.value[0],
         order=order_1,
     )
 
