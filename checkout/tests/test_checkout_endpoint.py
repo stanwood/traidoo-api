@@ -4,7 +4,7 @@ from unittest import mock
 
 import pytest
 from django.utils import timezone
-from model_mommy import mommy
+from model_bakery import baker
 
 from carts.models import Cart, CartItem
 from delivery_addresses.models import DeliveryAddress

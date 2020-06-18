@@ -1,8 +1,8 @@
 from faker import Faker
-from model_mommy.recipe import Recipe, foreign_key
+from model_bakery.recipe import Recipe, foreign_key
 
-from products.mommy_recipes import product
-from users.mommy_recipes import user
+from products.baker_recipes import product
+from users.baker_recipes import user
 from .models import Cart, CartItem
 
 

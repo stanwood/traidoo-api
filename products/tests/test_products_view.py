@@ -1,5 +1,5 @@
 import pytest
-from model_mommy import mommy
+from model_bakery import baker
 
 from products.models import Product
 
@@ -7,7 +7,7 @@ pytestmark = pytest.mark.django_db()
 
 
 def test_fallback_to_image_url(client_admin, traidoo_region):
-    product = mommy.make("products.product", image_url="foo.png", region=traidoo_region)
+    product = baker.make("products.product", image_url="foo.png", region=traidoo_region)
     response = client_admin.get("/products/{}".format(product.id))
     assert response.data["image"] == "foo.png"
 
@@ -15,7 +15,7 @@ def test_fallback_to_image_url(client_admin, traidoo_region):
 def test_get_product(
     buyer, client_buyer, traidoo_region, delivery_options, traidoo_settings
 ):
-    seller = mommy.make(
+    seller = baker.make(
         "users.user",
         business_license=None,
         city="Test City",
@@ -28,7 +28,7 @@ def test_get_product(
         last_name="Test last name",
     )
 
-    category = mommy.make(
+    category = baker.make(
         "categories.category",
         default_vat=None,
         icon="Category icon",
@@ -38,7 +38,7 @@ def test_get_product(
         parent=None,
     )
 
-    container = mommy.make(
+    container = baker.make(
         "containers.container",
         delivery_fee=None,
         deposit=None,
@@ -50,7 +50,7 @@ def test_get_product(
         volume=456.78,
     )
 
-    product = mommy.make(
+    product = baker.make(
         "products.product",
         amount=123.45,
         description="Test description of the test product",
@@ -152,7 +152,7 @@ def test_get_product_no_central_logistic_company(
     traidoo_settings.central_logistics_company = False
     traidoo_settings.save()
 
-    seller = mommy.make(
+    seller = baker.make(
         "users.user",
         business_license=None,
         city="Test City",
@@ -165,7 +165,7 @@ def test_get_product_no_central_logistic_company(
         last_name="Test last name",
     )
 
-    category = mommy.make(
+    category = baker.make(
         "categories.category",
         default_vat=None,
         icon="Category icon",
@@ -175,7 +175,7 @@ def test_get_product_no_central_logistic_company(
         parent=None,
     )
 
-    container = mommy.make(
+    container = baker.make(
         "containers.container",
         delivery_fee=None,
         deposit=None,
@@ -187,7 +187,7 @@ def test_get_product_no_central_logistic_company(
         volume=456.78,
     )
 
-    product = mommy.make(
+    product = baker.make(
         "products.product",
         amount=123.45,
         description="Test description of the test product",
@@ -232,22 +232,22 @@ def test_get_product_no_central_logistic_company(
 
 
 def test_get_products(client_buyer, traidoo_region):
-    region_1 = mommy.make("common.region", name="Test 1")
-    region_2 = mommy.make("common.region", name="Test 2")
-    region_3 = mommy.make("common.region", name="Test 3")
+    region_1 = baker.make("common.region", name="Test 1")
+    region_2 = baker.make("common.region", name="Test 2")
+    region_3 = baker.make("common.region", name="Test 3")
 
     # Products from regions other than current
     for _ in range(20):
-        mommy.make("products.product", region=region_3, regions=[traidoo_region])
-        mommy.make("products.product", region=region_2, regions=[traidoo_region])
-        mommy.make("products.product", region=region_1, regions=[traidoo_region])
+        baker.make("products.product", region=region_3, regions=[traidoo_region])
+        baker.make("products.product", region=region_2, regions=[traidoo_region])
+        baker.make("products.product", region=region_1, regions=[traidoo_region])
 
         # Products form region "Test 3" but not available in traidoo region
-        mommy.make("products.product", region=region_1, regions=[])
+        baker.make("products.product", region=region_1, regions=[])
 
     # Products from MsSwiss region
     for _ in range(100):
-        mommy.make("products.product", region=traidoo_region)
+        baker.make("products.product", region=traidoo_region)
 
     assert Product.objects.count() == 180
 

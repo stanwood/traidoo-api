@@ -6,7 +6,7 @@ import pytest
 from django.contrib.auth import get_user_model
 from django.contrib.sites.models import Site
 from django.urls import reverse
-from model_mommy import mommy
+from model_bakery import baker
 
 from delivery_addresses.models import DeliveryAddress
 
@@ -208,7 +208,7 @@ def test_registration_activate_user(client_anonymous, send_task, user_data, mail
 
 @pytest.mark.django_db
 def test_registration_set_a_proper_region(client_anonymous, user_data):
-    region = mommy.make_recipe("common.region", name="Test Region")
+    region = baker.make_recipe("common.region", name="Test Region")
     response = client_anonymous.post(
         "/registration",
         data=user_data,
@@ -224,7 +224,7 @@ def test_registration_set_a_proper_region(client_anonymous, user_data):
 def test_registration_create_delivery_address(client_anonymous, user_data):
     assert DeliveryAddress.objects.count() == 0
 
-    region = mommy.make_recipe("common.region", name="Test Region")
+    region = baker.make_recipe("common.region", name="Test Region")
     response = client_anonymous.post(
         "/registration",
         data=user_data,
@@ -245,7 +245,7 @@ def test_registration_create_delivery_address(client_anonymous, user_data):
 def test_registration_unique_email(client_anonymous, user_data, buyer):
     user_data["email"] = buyer.email
 
-    region = mommy.make_recipe("common.region", name="Test Region")
+    region = baker.make_recipe("common.region", name="Test Region")
     response = client_anonymous.post(
         "/registration",
         data=user_data,

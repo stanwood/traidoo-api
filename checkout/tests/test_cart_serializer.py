@@ -1,7 +1,7 @@
 from decimal import Decimal
 from unittest import mock
 
-from model_mommy import mommy
+from model_bakery import baker
 
 from checkout.serializers import CartSerializer
 from delivery_options.models import DeliveryOption
@@ -9,9 +9,9 @@ from delivery_options.models import DeliveryOption
 
 def test_seller_delivery_fee_calculation(client_buyer, buyer, settings):
     settings.FEATURES["routes"] = True
-    product = mommy.make_recipe("products.product", third_party_delivery=True)
-    cart = mommy.make_recipe("carts.cart", user=buyer)
-    cart_item = mommy.make_recipe(
+    product = baker.make_recipe("products.product", third_party_delivery=True)
+    cart = baker.make_recipe("carts.cart", user=buyer)
+    cart_item = baker.make_recipe(
         "carts.cartitem",
         delivery_option_id=DeliveryOption.SELLER,
         quantity=1,

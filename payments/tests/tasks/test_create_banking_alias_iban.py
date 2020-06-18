@@ -1,7 +1,7 @@
 from unittest import mock
 
 import pytest
-from model_mommy import mommy
+from model_bakery import baker
 
 
 @pytest.mark.django_db
@@ -10,7 +10,7 @@ def test_create_banking_alias_iban(
     mocked_post, client_anonymous, send_task, traidoo_region
 ):
     wallet_id = "wallet-1"
-    user = mommy.make_recipe("users.user", mangopay_user_id=123, region=traidoo_region)
+    user = baker.make_recipe("users.user", mangopay_user_id=123, region=traidoo_region)
 
     mocked_post.side_effect = [
         {

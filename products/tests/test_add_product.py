@@ -1,7 +1,7 @@
 import json
 
 import pytest
-from model_mommy import mommy
+from model_bakery import baker
 from taggit.models import Tag
 
 from categories.models import Category
@@ -101,9 +101,9 @@ def test_add_product_permissions(
     client_user.groups.set(groups.get(request_user_groups))
     client_user.save()
 
-    category = mommy.make(Category)
-    container = mommy.make(Container)
-    delivery_option = mommy.make(DeliveryOption, id=1)
+    category = baker.make(Category)
+    container = baker.make(Container)
+    delivery_option = baker.make(DeliveryOption, id=1)
 
     payload = {
         "name": "Test",
@@ -144,12 +144,12 @@ def test_add_product_seller(
     seller.is_email_verified = True
     seller.save()
 
-    category = mommy.make(Category)
-    container = mommy.make(Container)
-    delivery_option_1 = mommy.make(DeliveryOption, id=1)
-    delivery_option_2 = mommy.make(DeliveryOption, id=2)
-    tag_1 = mommy.make(Tag)
-    tag_2 = mommy.make(Tag)
+    category = baker.make(Category)
+    container = baker.make(Container)
+    delivery_option_1 = baker.make(DeliveryOption, id=1)
+    delivery_option_2 = baker.make(DeliveryOption, id=2)
+    tag_1 = baker.make(Tag)
+    tag_2 = baker.make(Tag)
 
     response = client_seller.post(
         "/products",
@@ -188,9 +188,9 @@ def test_add_product_as_admin_without_seller_id(
     cloud_storage_save,
     traidoo_region,
 ):
-    category = mommy.make(Category)
-    container = mommy.make(Container)
-    delivery_option = mommy.make(DeliveryOption, id=1)
+    category = baker.make(Category)
+    container = baker.make(Container)
+    delivery_option = baker.make(DeliveryOption, id=1)
 
     product_data = {
         "name": "Test",
@@ -227,9 +227,9 @@ def test_add_product_as_admin_and_seller(
     cloud_storage_save,
     traidoo_region,
 ):
-    category = mommy.make(Category)
-    container = mommy.make(Container)
-    delivery_option = mommy.make(DeliveryOption, id=1)
+    category = baker.make(Category)
+    container = baker.make(Container)
+    delivery_option = baker.make(DeliveryOption, id=1)
 
     product_data = {
         "name": "Test",
@@ -265,9 +265,9 @@ def test_admin_can_add_product_for_another_user(
     cloud_storage_save,
     traidoo_region,
 ):
-    category = mommy.make(Category)
-    container = mommy.make(Container)
-    delivery_option = mommy.make(DeliveryOption, id=1)
+    category = baker.make(Category)
+    container = baker.make(Container)
+    delivery_option = baker.make(DeliveryOption, id=1)
 
     product_data = {
         "name": "Test",
@@ -308,10 +308,10 @@ def test_add_product_with_valid_base_unit_options(
     cloud_storage_save,
     traidoo_region,
 ):
-    category = mommy.make(Category)
-    container = mommy.make(Container)
-    delivery_option = mommy.make(DeliveryOption, id=1)
-    tag = mommy.make(Tag)
+    category = baker.make(Category)
+    container = baker.make(Container)
+    delivery_option = baker.make(DeliveryOption, id=1)
+    tag = baker.make(Tag)
 
     product_data = {
         "name": "Test",
@@ -351,9 +351,9 @@ def test_add_product_with_invalid_base_unit_options(
     cloud_storage_save,
     traidoo_region,
 ):
-    category = mommy.make(Category)
-    container = mommy.make(Container)
-    delivery_option = mommy.make(DeliveryOption, id=1)
+    category = baker.make(Category)
+    container = baker.make(Container)
+    delivery_option = baker.make(DeliveryOption, id=1)
 
     product_data = {
         "name": "Test",
@@ -402,9 +402,9 @@ def test_add_product_with_container_description(
     seller.is_email_verified = True
     seller.save()
 
-    category = mommy.make(Category)
-    container = mommy.make(Container)
-    delivery_option = mommy.make(DeliveryOption, id=1)
+    category = baker.make(Category)
+    container = baker.make(Container)
+    delivery_option = baker.make(DeliveryOption, id=1)
 
     response = client_seller.post(
         "/products",
@@ -446,9 +446,9 @@ def test_add_product_with_grazning_animal_and_gmo_free(
     seller.is_email_verified = True
     seller.save()
 
-    category = mommy.make(Category)
-    container = mommy.make(Container)
-    delivery_option = mommy.make(DeliveryOption, id=1)
+    category = baker.make(Category)
+    container = baker.make(Container)
+    delivery_option = baker.make(DeliveryOption, id=1)
 
     response = client_seller.post(
         "/products",
@@ -491,13 +491,13 @@ def test_add_product_with_available_regions(
     seller.is_email_verified = True
     seller.save()
 
-    category = mommy.make(Category)
-    container = mommy.make(Container)
-    delivery_option = mommy.make(DeliveryOption, id=1)
+    category = baker.make(Category)
+    container = baker.make(Container)
+    delivery_option = baker.make(DeliveryOption, id=1)
 
-    region_1 = mommy.make("common.region", id=1001, name="Test 1")
-    region_2 = mommy.make("common.region", id=1002, name="Test 2")
-    region_3 = mommy.make("common.region", id=1003, name="Test 3")
+    region_1 = baker.make("common.region", id=1001, name="Test 1")
+    region_2 = baker.make("common.region", id=1002, name="Test 2")
+    region_3 = baker.make("common.region", id=1003, name="Test 3")
 
     response = client_seller.post(
         "/products",

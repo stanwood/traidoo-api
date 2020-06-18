@@ -1,5 +1,5 @@
 from django.urls import reverse
-from model_mommy import mommy
+from model_bakery import baker
 
 
 def test_allow_adding_products(django_app, platform_user):
@@ -14,7 +14,7 @@ def test_allow_adding_products(django_app, platform_user):
 
 
 def test_allow_deleting_product(django_app, platform_user):
-    product = mommy.make_recipe("products.product", region=platform_user.region)
+    product = baker.make_recipe("products.product", region=platform_user.region)
     response = django_app.get(
         reverse("admin:products_product_delete", kwargs={"object_id": product.id}),
         user=platform_user,
@@ -24,7 +24,7 @@ def test_allow_deleting_product(django_app, platform_user):
 
 
 def test_allow_edit_product_and_items(django_app, platform_user):
-    product = mommy.make_recipe("products.product", region=platform_user.region)
+    product = baker.make_recipe("products.product", region=platform_user.region)
     form = django_app.get(
         reverse("admin:products_product_change", kwargs={"object_id": product.id}),
         user=platform_user,

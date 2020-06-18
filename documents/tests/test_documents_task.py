@@ -5,7 +5,7 @@ from unittest import mock
 import pytest
 from django.urls import reverse
 from django.test import override_settings
-from model_mommy import mommy
+from model_bakery import baker
 
 from documents.models import Document
 from Traidoo import errors
@@ -93,8 +93,8 @@ def test_documents_stored_in_storage_with_third_party_delivery(
     order.recalculate_items_delivery_fee()
     order_items[0].refresh_from_db()
 
-    user = mommy.make_recipe("users.user", region=traidoo_region)
-    mommy.make("jobs.Job", user=user, order_item=order_items[0])
+    user = baker.make_recipe("users.user", region=traidoo_region)
+    baker.make("jobs.Job", user=user, order_item=order_items[0])
 
     client.post(reverse("task", kwargs={"order_id": order.id, "document_set": "all"}))
 

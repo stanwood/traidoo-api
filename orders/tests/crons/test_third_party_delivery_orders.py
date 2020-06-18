@@ -3,7 +3,7 @@ from unittest import mock
 
 import pytest
 from django.conf import settings
-from model_mommy import mommy
+from model_bakery import baker
 
 from orders.models import Order
 
@@ -15,8 +15,8 @@ def test_send_documents_task_for_third_party_orders(
 ):
     settings.FEATURES['routes'] = True
 
-    order_1 = mommy.make(Order, processed=False)
-    order_2 = mommy.make(Order, processed=True)
+    order_1 = baker.make(Order, processed=False)
+    order_2 = baker.make(Order, processed=True)
 
     response = client_anonymous.get(
         '/orders/crons/third-party-delivery-orders', **{'HTTP_X_APPENGINE_CRON': True}

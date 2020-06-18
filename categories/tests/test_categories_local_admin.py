@@ -1,9 +1,9 @@
 from django.urls import reverse
-from model_mommy import mommy
+from model_bakery import baker
 
 
 def test_do_not_allow_change_container_local_admin(platform_user, django_app):
-    container = mommy.make_recipe("categories.category")
+    container = baker.make_recipe("categories.category")
 
     response = django_app.get(
         reverse("admin:categories_category_change", kwargs={"object_id": container.id}),
@@ -13,7 +13,7 @@ def test_do_not_allow_change_container_local_admin(platform_user, django_app):
 
 
 def test_do_not_allow_delete_container_by_local_admin(platform_user, django_app):
-    container = mommy.make_recipe("containers.container")
+    container = baker.make_recipe("containers.container")
     django_app.get(
         reverse("admin:categories_category_delete", kwargs={"object_id": container.id}),
         user=platform_user,

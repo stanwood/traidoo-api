@@ -1,9 +1,9 @@
 from faker import Faker
-from model_mommy.recipe import Recipe, foreign_key, related
+from model_bakery.recipe import Recipe, foreign_key, related
 
-from common.mommy_recipes import region
-from containers.mommy_recipes import container
-from delivery_options.mommy_recipes import buyer, central_logistic, seller
+from common.baker_recipes import region
+from containers.baker_recipes import container
+from delivery_options.baker_recipes import buyer, central_logistic, seller
 
 from .models import Product
 

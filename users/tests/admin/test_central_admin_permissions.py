@@ -1,9 +1,9 @@
 from django.urls import reverse
-from model_mommy import mommy
+from model_bakery import baker
 
 
 def test_allow_set_superuser_flag(django_app, central_platform_user):
-    new_admin = mommy.make_recipe("users.user", is_superuser=False)
+    new_admin = baker.make_recipe("users.user", is_superuser=False)
     response = django_app.get(
         reverse("admin:users_user_change", kwargs={"object_id": new_admin.id}),
         user=central_platform_user,

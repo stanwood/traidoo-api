@@ -2,7 +2,7 @@ import datetime
 from unittest import mock
 
 import pytest
-from model_mommy import mommy
+from model_bakery import baker
 
 
 from ..models import Detour, Job
@@ -15,14 +15,14 @@ def test_send_jobs_notification_email_to_all_users_with_routes(
 ):
     settings.FEATURES["routes"] = True
 
-    user_1, user_2 = mommy.make_recipe(
+    user_1, user_2 = baker.make_recipe(
         "users.user",
         is_email_verified=True,
         is_active=True,
         region=traidoo_region,
         _quantity=2,
     )
-    mommy.make_recipe("routes.route", user=user_1)
+    baker.make_recipe("routes.route", user=user_1)
 
     response = client_anonymous.get(
         "/jobs/cron/notifications", **{"HTTP_X_APPENGINE_CRON": True}
@@ -55,27 +55,27 @@ def test_send_jobs_notification_email_to_user(
 ):
     settings.FEATURES["routes"] = True
 
-    user_1, user_2 = mommy.make_recipe(
+    user_1, user_2 = baker.make_recipe(
         "users.user", is_email_verified=True, is_active=True, _quantity=2
     )
-    route = mommy.make_recipe("routes.route", user=user_1)
-    delivery_address = mommy.make_recipe("delivery_addresses.delivery_address")
-    product_1, product_2 = mommy.make_recipe(
+    route = baker.make_recipe("routes.route", user=user_1)
+    delivery_address = baker.make_recipe("delivery_addresses.delivery_address")
+    product_1, product_2 = baker.make_recipe(
         "products.product", seller=user_2, _quantity=2
     )
-    order = mommy.make(
+    order = baker.make(
         "orders.order",
         earliest_delivery_date=(datetime.datetime.today() + datetime.timedelta(days=1)),
         buyer=user_1,
     )
-    order_item_1 = mommy.make(
+    order_item_1 = baker.make(
         "orders.orderitem",
         delivery_address=delivery_address,
         product=product_1,
         latest_delivery_date=datetime.date.today() + datetime.timedelta(days=6),
         order=order,
     )
-    order_item_2 = mommy.make(
+    order_item_2 = baker.make(
         "orders.orderitem",
         delivery_address=delivery_address,
         product=product_2,
@@ -83,11 +83,11 @@ def test_send_jobs_notification_email_to_user(
         order=order,
     )
 
-    job_1 = mommy.make(Job, order_item=order_item_1)
-    job_2 = mommy.make(Job, order_item=order_item_2)
+    job_1 = baker.make(Job, order_item=order_item_1)
+    job_2 = baker.make(Job, order_item=order_item_2)
 
-    mommy.make(Detour, job=job_1, route=route, length=100)
-    mommy.make(Detour, job=job_2, route=route, length=200)
+    baker.make(Detour, job=job_1, route=route, length=100)
+    baker.make(Detour, job=job_2, route=route, length=200)
 
     routes = [email for email in mailoutbox if email.subject == "Routes"]
 
@@ -127,8 +127,8 @@ def test_do_not_send_empty_jobs_notification_email_to_user(
 ):
     settings.FEATURES["routes"] = True
 
-    user = mommy.make_recipe("users.user", is_email_verified=True, is_active=True)
-    mommy.make_recipe("routes.route", user=user)
+    user = baker.make_recipe("users.user", is_email_verified=True, is_active=True)
+    baker.make_recipe("routes.route", user=user)
 
     routes = [email for email in mailoutbox if email.subject == "Routes"]
     assert len(routes) == 0

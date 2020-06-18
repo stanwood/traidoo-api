@@ -2,7 +2,7 @@ import datetime
 
 import pytest
 from freezegun import freeze_time
-from model_mommy import mommy
+from model_bakery import baker
 
 from categories.models import Category
 from items.models import Item
@@ -13,8 +13,8 @@ pytestmark = pytest.mark.django_db()
 
 @freeze_time("2019-01-01")
 def test_items_available_calculation(client_buyer, product, delivery_options):
-    category_1 = mommy.make(Category, name="Foo")
-    category_2 = mommy.make(Category, name="Foo", parent=category_1)
+    category_1 = baker.make(Category, name="Foo")
+    category_2 = baker.make(Category, name="Foo", parent=category_1)
 
     product.name = "Foo"
     product.description = "Foo"
@@ -30,7 +30,7 @@ def test_items_available_calculation(client_buyer, product, delivery_options):
     product.seller.company_name = "Foo"
     product.seller.save()
     product.save()
-    mommy.make(
+    baker.make(
         Item,
         product=product,
         quantity=3,

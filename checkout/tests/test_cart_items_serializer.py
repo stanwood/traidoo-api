@@ -1,17 +1,17 @@
 from unittest import mock
 
-from model_mommy import mommy
+from model_bakery import baker
 
 from checkout.serializers import CartItemSerializer
 
 
 def test_cart_item_delivery_options(db, buyer):
-    seller_delivery_option = mommy.make_recipe("delivery_options.seller")
-    product = mommy.make_recipe(
+    seller_delivery_option = baker.make_recipe("delivery_options.seller")
+    product = baker.make_recipe(
         "products.product", delivery_options=[seller_delivery_option]
     )
-    cart = mommy.make_recipe("carts.cart", user=buyer)
-    cart_item = mommy.make_recipe(
+    cart = baker.make_recipe("carts.cart", user=buyer)
+    cart_item = baker.make_recipe(
         "carts.cartitem", cart=cart, quantity=1, product=product
     )
 

@@ -1,12 +1,12 @@
 import pytest
-from model_mommy import mommy
+from model_bakery import baker
 
 
 @pytest.mark.django_db
 def test_get_regions(client_buyer, neighbour_region):
-    mommy.make("common.region", id=100, name="Test Region 1")
-    mommy.make("common.region", id=101, name="Test Region 2")
-    mommy.make("common.region", id=102, name="Test Region 3")
+    baker.make("common.region", id=100, name="Test Region 1")
+    baker.make("common.region", id=101, name="Test Region 2")
+    baker.make("common.region", id=102, name="Test Region 3")
 
     response = client_buyer.get("/regions?ordering=name")
 

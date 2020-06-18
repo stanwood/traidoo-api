@@ -2,12 +2,12 @@ from unittest import mock
 
 import pytest
 from ..models import Route
-from model_mommy import mommy
+from model_bakery import baker
 
 
 @pytest.mark.django_db
 def test_delete_route(seller, client_seller, send_task):
-    route = mommy.make(Route, user=seller)
+    route = baker.make(Route, user=seller)
 
     response = client_seller.delete(f'/routes/{route.id}')
 
@@ -28,7 +28,7 @@ def test_delete_route(seller, client_seller, send_task):
 
 @pytest.mark.django_db
 def test_delete_someone_else_route(buyer, client_seller, send_task):
-    route = mommy.make(Route, user=buyer)
+    route = baker.make(Route, user=buyer)
 
     response = client_seller.delete(f'/routes/{route.id}')
 

@@ -1,9 +1,9 @@
 from django.urls import reverse
-from model_mommy import mommy
+from model_bakery import baker
 
 
 def test_allow_editing_containers(django_app, central_platform_user):
-    container = mommy.make_recipe("containers.container")
+    container = baker.make_recipe("containers.container")
 
     response = django_app.get(
         reverse(
@@ -16,7 +16,7 @@ def test_allow_editing_containers(django_app, central_platform_user):
 
 
 def test_allow_deleting_containers(django_app, central_platform_user):
-    container = mommy.make_recipe("containers.container")
+    container = baker.make_recipe("containers.container")
 
     django_app.get(
         reverse(

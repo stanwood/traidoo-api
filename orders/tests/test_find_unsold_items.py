@@ -3,7 +3,7 @@ import datetime
 import pytest
 from django.conf import settings
 from django.utils import timezone
-from model_mommy import mommy
+from model_bakery import baker
 
 from items.models import Item
 
@@ -29,11 +29,11 @@ def test_find_unsold_product_items(
 ):
     yesterday = timezone.now().date() - datetime.timedelta(days=1)
 
-    product_1, product_2 = mommy.make(
+    product_1, product_2 = baker.make(
         "products.product", seller=seller, region=traidoo_region, _quantity=2
     )
-    mommy.make(Item, product=product_1, quantity=10, latest_delivery_date=yesterday)
-    mommy.make(Item, product=product_2, quantity=5, latest_delivery_date=yesterday)
+    baker.make(Item, product=product_1, quantity=10, latest_delivery_date=yesterday)
+    baker.make(Item, product=product_2, quantity=5, latest_delivery_date=yesterday)
 
     expired_products = [
         email for email in mailoutbox if email.subject == "Abgelaufene Produkte"
@@ -64,11 +64,11 @@ def test_find_unsold_product_items_dates_do_not_match(
     today = timezone.now().date()
     assert len(mailoutbox) == 0
 
-    product_1, product_2 = mommy.make(
+    product_1, product_2 = baker.make(
         "products.product", seller=seller, region=traidoo_region, _quantity=2
     )
-    mommy.make(Item, product=product_1, quantity=10, latest_delivery_date=today)
-    mommy.make(Item, product=product_2, quantity=5, latest_delivery_date=today)
+    baker.make(Item, product=product_1, quantity=10, latest_delivery_date=today)
+    baker.make(Item, product=product_2, quantity=5, latest_delivery_date=today)
 
     assert Item.objects.count() == 2
 

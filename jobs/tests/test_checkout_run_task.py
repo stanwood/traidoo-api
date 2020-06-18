@@ -4,7 +4,7 @@ from unittest import mock
 
 import pytest
 from django.utils import timezone
-from model_mommy import mommy
+from model_bakery import baker
 
 from carts.models import Cart, CartItem
 from orders.models import OrderItem
@@ -30,7 +30,7 @@ def test_run_job_task_feature_disabled(
     products[1].third_party_delivery = True
     products[1].save()
 
-    cart = mommy.make(
+    cart = baker.make(
         Cart,
         user=buyer,
         delivery_address=delivery_address,
@@ -39,14 +39,14 @@ def test_run_job_task_feature_disabled(
         ).date(),
     )
 
-    mommy.make(
+    baker.make(
         CartItem,
         product=products[0],
         cart=cart,
         quantity=1,
         delivery_option=delivery_options[0],
     )
-    mommy.make(
+    baker.make(
         CartItem,
         product=products[1],
         cart=cart,
@@ -81,7 +81,7 @@ def test_run_job_task_for_each_order_item_on_checkout(
     products[1].third_party_delivery = True
     products[1].save()
 
-    cart = mommy.make(
+    cart = baker.make(
         Cart,
         user=buyer,
         delivery_address=delivery_address,
@@ -89,7 +89,7 @@ def test_run_job_task_for_each_order_item_on_checkout(
             datetime.datetime.now() + datetime.timedelta(days=2)
         ).date(),
     )
-    mommy.make(
+    baker.make(
         CartItem,
         product=products[0],
         cart=cart,
@@ -97,7 +97,7 @@ def test_run_job_task_for_each_order_item_on_checkout(
         delivery_option=delivery_options[0],
     )
 
-    mommy.make(
+    baker.make(
         CartItem,
         product=products[1],
         cart=cart,

@@ -1,6 +1,6 @@
 import pytest
 from django.contrib.auth import get_user_model
-from model_mommy import mommy
+from model_bakery import baker
 
 User = get_user_model()
 
@@ -8,9 +8,9 @@ User = get_user_model()
 @pytest.mark.django_db
 def test_cannot_login_to_different_region(client_anonymous):
     test_password = "Traidoo123"
-    region_1 = mommy.make("common.region", name="Test Region 1")
-    region_2 = mommy.make("common.region", name="Test Region 2")
-    user = mommy.make("users.user", region=region_1, is_active=True)
+    region_1 = baker.make("common.region", name="Test Region 1")
+    region_2 = baker.make("common.region", name="Test Region 2")
+    user = baker.make("users.user", region=region_1, is_active=True)
     user.set_password(test_password)
     user.save()
 

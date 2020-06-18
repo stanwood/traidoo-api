@@ -1,6 +1,6 @@
 from faker import Faker
-from model_mommy.recipe import Recipe, foreign_key
-from users.mommy_recipes import staff_user
+from model_bakery.recipe import Recipe, foreign_key
+from users.baker_recipes import staff_user
 
 from .models import Setting
 

@@ -1,7 +1,7 @@
 from faker import Faker
-from model_mommy.recipe import Recipe, foreign_key
+from model_bakery.recipe import Recipe, foreign_key
 
-from products.mommy_recipes import product
+from products.baker_recipes import product
 
 from .models import Item
 

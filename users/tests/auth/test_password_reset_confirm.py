@@ -3,14 +3,14 @@ from unittest import mock
 import pytest
 from django.conf import settings
 from django.contrib.auth import get_user_model
-from model_mommy import mommy
+from model_bakery import baker
 
 User = get_user_model()
 
 
 @pytest.mark.django_db
 def test_password_reset_confirm_incorrect_uid(client_anonymous, mailoutbox):
-    user = mommy.make(User)
+    user = baker.make(User)
 
     emails = [
         email for email in mailoutbox if email.subject == "Ihr Password wurde geändert"
@@ -35,7 +35,7 @@ def test_password_reset_confirm_incorrect_uid(client_anonymous, mailoutbox):
 
 @pytest.mark.django_db
 def test_password_reset_confirm_incorrect_token(client_anonymous, mailoutbox):
-    user = mommy.make(User)
+    user = baker.make(User)
 
     emails = [
         email for email in mailoutbox if email.subject == "Ihr Password wurde geändert"
@@ -60,7 +60,7 @@ def test_password_reset_confirm_incorrect_token(client_anonymous, mailoutbox):
 
 @pytest.mark.django_db
 def test_password_reset_confirm_incorrect_password_format(client_anonymous, mailoutbox):
-    user = mommy.make(User)
+    user = baker.make(User)
 
     emails = [
         email for email in mailoutbox if email.subject == "Ihr Password wurde geändert"
@@ -85,7 +85,7 @@ def test_password_reset_confirm_incorrect_password_format(client_anonymous, mail
 
 @pytest.mark.django_db
 def test_password_reset_confirm(client_anonymous, mailoutbox, traidoo_region):
-    user = mommy.make(User, region=traidoo_region)
+    user = baker.make(User, region=traidoo_region)
 
     emails = [
         email for email in mailoutbox if email.subject == "Ihr Password wurde geändert"

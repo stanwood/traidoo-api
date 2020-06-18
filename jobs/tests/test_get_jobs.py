@@ -4,7 +4,7 @@ import pytest
 from dictdiffer import diff
 from django.contrib.auth import get_user_model
 from django.utils import timezone
-from model_mommy import mommy
+from model_bakery import baker
 
 from orders.models import Order, OrderItem
 
@@ -60,34 +60,34 @@ def _generate_job_response_dict(
 
 
 def _create_test_data():
-    user_1 = mommy.make_recipe("users.user")
-    user_2 = mommy.make_recipe("users.user")
+    user_1 = baker.make_recipe("users.user")
+    user_2 = baker.make_recipe("users.user")
 
-    route_1 = mommy.make_recipe("routes.route", user=user_1)
-    route_2 = mommy.make_recipe("routes.route", user=user_1)
+    route_1 = baker.make_recipe("routes.route", user=user_1)
+    route_2 = baker.make_recipe("routes.route", user=user_1)
 
-    delivery_address_1 = mommy.make_recipe("delivery_addresses.delivery_address")
-    delivery_address_2 = mommy.make_recipe("delivery_addresses.delivery_address")
+    delivery_address_1 = baker.make_recipe("delivery_addresses.delivery_address")
+    delivery_address_2 = baker.make_recipe("delivery_addresses.delivery_address")
 
-    seller_delivery_option = mommy.make_recipe("delivery_options.seller")
+    seller_delivery_option = baker.make_recipe("delivery_options.seller")
 
-    product_1 = mommy.make_recipe(
+    product_1 = baker.make_recipe(
         "products.product", seller=user_2, delivery_options=[seller_delivery_option]
     )
-    product_2 = mommy.make_recipe(
+    product_2 = baker.make_recipe(
         "products.product", seller=user_2, delivery_options=[seller_delivery_option]
     )
-    product_3 = mommy.make_recipe(
+    product_3 = baker.make_recipe(
         "products.product", seller=user_2, delivery_options=[seller_delivery_option]
     )
 
-    order = mommy.make(
+    order = baker.make(
         Order,
         earliest_delivery_date=timezone.make_aware(
             datetime.datetime.now() + datetime.timedelta(days=1)
         ),
     )
-    order_item_1 = mommy.make(
+    order_item_1 = baker.make(
         OrderItem,
         delivery_address=delivery_address_1,
         product=product_1,
@@ -95,7 +95,7 @@ def _create_test_data():
         order=order,
         delivery_option=seller_delivery_option,
     )
-    order_item_2 = mommy.make(
+    order_item_2 = baker.make(
         OrderItem,
         delivery_address=delivery_address_2,
         product=product_2,
@@ -103,7 +103,7 @@ def _create_test_data():
         order=order,
         delivery_option=seller_delivery_option,
     )
-    order_item_3 = mommy.make(
+    order_item_3 = baker.make(
         OrderItem,
         delivery_address=delivery_address_2,
         product=product_2,
@@ -111,7 +111,7 @@ def _create_test_data():
         order=order,
         delivery_option=seller_delivery_option,
     )
-    order_item_4 = mommy.make(
+    order_item_4 = baker.make(
         OrderItem,
         delivery_address=delivery_address_2,
         product=product_3,
@@ -120,17 +120,17 @@ def _create_test_data():
         delivery_option=seller_delivery_option,
     )
 
-    job_1 = mommy.make(Job, order_item=order_item_1, user=None)
-    job_2 = mommy.make(Job, order_item=order_item_2, user=None)
-    job_3 = mommy.make(Job, order_item=order_item_3, user=None)
-    job_4 = mommy.make(Job, order_item=order_item_4, user=user_1)
+    job_1 = baker.make(Job, order_item=order_item_1, user=None)
+    job_2 = baker.make(Job, order_item=order_item_2, user=None)
+    job_3 = baker.make(Job, order_item=order_item_3, user=None)
+    job_4 = baker.make(Job, order_item=order_item_4, user=user_1)
 
-    detour_1 = mommy.make(Detour, job=job_1, route=route_1, length=100)
-    detour_2 = mommy.make(Detour, job=job_1, route=route_2, length=200)
-    detour_3 = mommy.make(Detour, job=job_2, route=route_1, length=300)
-    detour_4 = mommy.make(Detour, job=job_2, route=route_2, length=250)
-    detour_5 = mommy.make(Detour, job=job_3, route=route_2, length=111)
-    detour_6 = mommy.make(Detour, job=job_4, route=route_2, length=111)
+    detour_1 = baker.make(Detour, job=job_1, route=route_1, length=100)
+    detour_2 = baker.make(Detour, job=job_1, route=route_2, length=200)
+    detour_3 = baker.make(Detour, job=job_2, route=route_1, length=300)
+    detour_4 = baker.make(Detour, job=job_2, route=route_2, length=250)
+    detour_5 = baker.make(Detour, job=job_3, route=route_2, length=111)
+    detour_6 = baker.make(Detour, job=job_4, route=route_2, length=111)
 
     return (
         (user_1, user_2),
@@ -258,32 +258,32 @@ def test_order_jobs_by_delivery_fee(
 ):
     settings.FEATURES["routes"] = True
 
-    route_1 = mommy.make_recipe("routes.route", user=seller)
-    route_2 = mommy.make_recipe("routes.route", user=seller)
+    route_1 = baker.make_recipe("routes.route", user=seller)
+    route_2 = baker.make_recipe("routes.route", user=seller)
 
-    seller_delivery_option = mommy.make_recipe("delivery_options.seller")
-    product = mommy.make_recipe(
+    seller_delivery_option = baker.make_recipe("delivery_options.seller")
+    product = baker.make_recipe(
         "products.product", delivery_options=[seller_delivery_option]
     )
 
-    order_item_1 = mommy.make_recipe(
+    order_item_1 = baker.make_recipe(
         "orders.orderitem",
         latest_delivery_date=datetime.date.today() + datetime.timedelta(days=6),
         delivery_option=seller_delivery_option,
         product=product,
     )
-    order_item_2 = mommy.make_recipe(
+    order_item_2 = baker.make_recipe(
         "orders.orderitem",
         latest_delivery_date=datetime.date.today() + datetime.timedelta(days=6),
         delivery_option=seller_delivery_option,
         product=product,
     )
 
-    job_1 = mommy.make(Job, order_item=order_item_1, user=None)
-    job_2 = mommy.make(Job, order_item=order_item_2, user=None)
+    job_1 = baker.make(Job, order_item=order_item_1, user=None)
+    job_2 = baker.make(Job, order_item=order_item_2, user=None)
 
-    mommy.make(Detour, job=job_1, route=route_1, length=100)
-    mommy.make(Detour, job=job_2, route=route_2, length=200)
+    baker.make(Detour, job=job_1, route=route_1, length=100)
+    baker.make(Detour, job=job_2, route=route_2, length=200)
 
     with django_assert_num_queries(5):
         response_json = client_seller.get(

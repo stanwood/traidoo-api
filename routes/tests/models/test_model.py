@@ -1,7 +1,7 @@
 from unittest import mock
 
 import pytest
-from model_mommy import mommy
+from model_bakery import baker
 
 from ...models import Route
 
@@ -15,7 +15,7 @@ def test_route_model_calculate_route_length(
     origin = faker.address()
     destination = faker.address()
     waypoints = [faker.address(), faker.address()]
-    route = mommy.make(
+    route = baker.make(
         Route, origin=origin, destination=destination, waypoints=waypoints
     )
 

@@ -1,7 +1,7 @@
 import pytest
 from django.contrib.auth import get_user_model
 from django.urls import reverse
-from model_mommy import mommy
+from model_bakery import baker
 
 
 User = get_user_model()
@@ -9,12 +9,12 @@ User = get_user_model()
 
 @pytest.fixture
 def user_from_traidoo(traidoo_region):
-    yield mommy.make_recipe("users.user", region=traidoo_region)
+    yield baker.make_recipe("users.user", region=traidoo_region)
 
 
 @pytest.fixture
 def user_from_neighbour(neighbour_region):
-    yield mommy.make_recipe("users.user", region=neighbour_region)
+    yield baker.make_recipe("users.user", region=neighbour_region)
 
 
 def test_regional_admin_can_read_own_user_only(

@@ -1,7 +1,7 @@
 import datetime
 
 import pytest
-from model_mommy import mommy
+from model_bakery import baker
 
 from carts.models import CartItem
 from items.models import Item
@@ -9,9 +9,9 @@ from items.models import Item
 
 @pytest.mark.django_db
 def test_delete_cart(buyer, client_buyer, traidoo_region):
-    product_item = mommy.make_recipe("items.item", quantity=9)
-    cart = mommy.make_recipe("carts.cart", user=buyer)
-    cart_item = mommy.make_recipe(
+    product_item = baker.make_recipe("items.item", quantity=9)
+    cart = baker.make_recipe("carts.cart", user=buyer)
+    cart_item = baker.make_recipe(
         "carts.cartitem",
         cart=cart,
         quantity=1,

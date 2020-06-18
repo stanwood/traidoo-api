@@ -1,7 +1,7 @@
 from unittest import mock
 
 import pytest
-from model_mommy import mommy
+from model_bakery import baker
 
 from ...models import Detour
 
@@ -17,48 +17,48 @@ def test_create_detours_for_route(
     default_route_length = 1200
     calculate_route_length_mock.return_value = default_route_length
 
-    route = mommy.make('routes.Route')
+    route = baker.make('routes.Route')
 
-    product_1 = mommy.make('products.Product', third_party_delivery=False)
-    order_1 = mommy.make('orders.Order', processed=False)
-    order_item_1 = mommy.make_recipe(
+    product_1 = baker.make('products.Product', third_party_delivery=False)
+    order_1 = baker.make('orders.Order', processed=False)
+    order_item_1 = baker.make_recipe(
         'orders.orderitem', order=order_1, product=product_1
     )
 
-    product_2 = mommy.make('products.Product', third_party_delivery=True)
-    order_2 = mommy.make('orders.Order', processed=True)
-    order_item_2 = mommy.make(
+    product_2 = baker.make('products.Product', third_party_delivery=True)
+    order_2 = baker.make('orders.Order', processed=True)
+    order_item_2 = baker.make(
         'orders.OrderItem', order=order_2, job=None, product=product_2
     )
 
-    seller_1 = mommy.make_recipe('users.user')
-    product_3 = mommy.make(
+    seller_1 = baker.make_recipe('users.user')
+    product_3 = baker.make(
         'products.Product', third_party_delivery=True, seller=seller_1
     )
-    order_3 = mommy.make('orders.Order', processed=False)
-    delivery_address_1 = mommy.make_recipe('delivery_addresses.delivery_address')
-    order_item_3 = mommy.make(
+    order_3 = baker.make('orders.Order', processed=False)
+    delivery_address_1 = baker.make_recipe('delivery_addresses.delivery_address')
+    order_item_3 = baker.make(
         'orders.OrderItem',
         order=order_3,
         product=product_3,
         delivery_address=delivery_address_1,
     )
-    job_1 = mommy.make('jobs.Job', order_item=order_item_3, user=None)
+    job_1 = baker.make('jobs.Job', order_item=order_item_3, user=None)
 
-    seller_2 = mommy.make_recipe('users.user')
-    product_4 = mommy.make(
+    seller_2 = baker.make_recipe('users.user')
+    product_4 = baker.make(
         'products.Product', third_party_delivery=True, seller=seller_2
     )
-    order_4 = mommy.make('orders.Order', processed=False)
-    delivery_address_2 = mommy.make_recipe('delivery_addresses.delivery_address')
-    order_item_4 = mommy.make(
+    order_4 = baker.make('orders.Order', processed=False)
+    delivery_address_2 = baker.make_recipe('delivery_addresses.delivery_address')
+    order_item_4 = baker.make(
         'orders.OrderItem',
         order=order_4,
         product=product_4,
         delivery_address=delivery_address_2,
     )
-    user = mommy.make('users.User')
-    job_2 = mommy.make('jobs.Job', order_item=order_item_4, user=user)
+    user = baker.make('users.User')
+    job_2 = baker.make('jobs.Job', order_item=order_item_4, user=user)
 
     assert not Detour.objects.first()
 

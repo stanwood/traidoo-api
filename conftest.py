@@ -8,7 +8,7 @@ from django.conf import settings
 from django.contrib.auth.models import Group
 from django.utils import timezone
 from faker import Faker
-from model_mommy import mommy
+from model_bakery import baker
 from PIL import Image
 from rest_framework.test import APIClient
 
@@ -95,7 +95,7 @@ def send_task():
 
 @pytest.fixture
 def logistics_user(traidoo_region):
-    yield mommy.make(
+    yield baker.make(
         "users.user",
         email=settings.LOGISTICS_EMAIL,
         mangopay_user_id="30",
@@ -107,7 +107,7 @@ def logistics_user(traidoo_region):
 
 @pytest.fixture
 def platform_user(traidoo_region, admin_group):
-    yield mommy.make(
+    yield baker.make(
         "users.user",
         region=traidoo_region,
         email="platform-local@example.com",
@@ -121,7 +121,7 @@ def platform_user(traidoo_region, admin_group):
 
 @pytest.fixture(autouse=True)
 def central_platform_user(db, traidoo_region):
-    yield mommy.make_recipe(
+    yield baker.make_recipe(
         "users.user",
         email=settings.PLATFORM_EMAIL,
         mangopay_user_id="50",
@@ -135,7 +135,7 @@ def central_platform_user(db, traidoo_region):
 
 @pytest.fixture(autouse=True)
 def traidoo_settings(traidoo_region, platform_user, logistics_user):
-    yield mommy.make(
+    yield baker.make(
         Setting,
         charge=10,
         mc_swiss_delivery_fee_vat=19,
@@ -153,14 +153,14 @@ def traidoo_settings(traidoo_region, platform_user, logistics_user):
 
 @pytest.fixture(autouse=True)
 def neighbour_settings(neighbour_region):
-    platform_user = mommy.make_recipe(
+    platform_user = baker.make_recipe(
         "users.user", company_name="Neighbour Local Platform"
     )
-    logistics_user = mommy.make_recipe(
+    logistics_user = baker.make_recipe(
         "users.user", company_name="Neighbour Logistics", region=neighbour_region
     )
 
-    yield mommy.make(
+    yield baker.make(
         Setting,
         charge=10,
         mc_swiss_delivery_fee_vat=19,
@@ -178,12 +178,12 @@ def neighbour_settings(neighbour_region):
 
 @pytest.fixture
 def buyer_group():
-    yield mommy.make(Group, name="buyer")
+    yield baker.make(Group, name="buyer")
 
 
 @pytest.fixture
 def buyer(buyer_group, traidoo_region):
-    yield mommy.make_recipe(
+    yield baker.make_recipe(
         "users.user",
         groups=[buyer_group],
         company_name="ACME",
@@ -196,17 +196,17 @@ def buyer(buyer_group, traidoo_region):
 
 @pytest.fixture
 def seller_group():
-    yield mommy.make(Group, name="seller")
+    yield baker.make(Group, name="seller")
 
 
 @pytest.fixture
 def admin_group(db):
-    yield mommy.make(Group, name="admin")
+    yield baker.make(Group, name="admin")
 
 
 @pytest.fixture(autouse=True)
 def admin(admin_group, traidoo_region):
-    yield mommy.make(
+    yield baker.make(
         "users.user",
         groups=[admin_group],
         is_staff=True,
@@ -217,7 +217,7 @@ def admin(admin_group, traidoo_region):
 
 @pytest.fixture
 def seller(seller_group, traidoo_region):
-    yield mommy.make_recipe(
+    yield baker.make_recipe(
         "users.user",
         groups=[seller_group],
         mangopay_user_id="10",
@@ -232,15 +232,15 @@ def seller(seller_group, traidoo_region):
 @pytest.yield_fixture
 def categories():
     yield [
-        mommy.make(Category, name="Fruits", ordering=1, default_vat=19),
-        mommy.make(Category, name="Vegetables", ordering=2, default_vat=19),
+        baker.make(Category, name="Fruits", ordering=1, default_vat=19),
+        baker.make(Category, name="Vegetables", ordering=2, default_vat=19),
     ]
 
 
 @pytest.yield_fixture
 def container_types():
     yield [
-        mommy.make(
+        baker.make(
             "containers.container",
             size_class="Isolierbox",
             volume=6,
@@ -248,7 +248,7 @@ def container_types():
             standard=1,
             delivery_fee=Decimal("0.5"),
         ),
-        mommy.make(
+        baker.make(
             "containers.container",
             size_class="Greenbox",
             volume=4,
@@ -256,7 +256,7 @@ def container_types():
             standard=1,
             delivery_fee=Decimal("0.5"),
         ),
-        mommy.make(
+        baker.make(
             "containers.container",
             size_class="Yellowbox",
             volume=2,
@@ -269,9 +269,9 @@ def container_types():
 
 @pytest.fixture
 def product(traidoo_region):
-    yield mommy.make(
+    yield baker.make(
         "products.product",
-        seller=mommy.make(
+        seller=baker.make(
             "users.user",
             first_name="Seller",
             is_cooperative_member=True,
@@ -280,7 +280,7 @@ def product(traidoo_region):
         price=1.1,
         amount=1,
         vat=19,
-        container_type=mommy.make("containers.container", deposit=3.2),
+        container_type=baker.make("containers.container", deposit=3.2),
         region=traidoo_region,
     )
 
@@ -288,7 +288,7 @@ def product(traidoo_region):
 @pytest.fixture
 def products(seller, traidoo_region, container_types, categories, delivery_options):
     yield [
-        mommy.make_recipe(
+        baker.make_recipe(
             "products.product",
             category=categories[0],
             seller=seller,
@@ -301,7 +301,7 @@ def products(seller, traidoo_region, container_types, categories, delivery_optio
             delivery_charge=0.1,
             unit="kg",
         ),
-        mommy.make_recipe(
+        baker.make_recipe(
             "products.product",
             category=categories[1],
             seller=seller,
@@ -320,17 +320,17 @@ def products(seller, traidoo_region, container_types, categories, delivery_optio
 @pytest.fixture
 def products_items(products):
     yield [
-        mommy.make(Item, product=products[0], quantity=10),
-        mommy.make(Item, product=products[1], quantity=17),
+        baker.make(Item, product=products[0], quantity=10),
+        baker.make(Item, product=products[1], quantity=17),
     ]
 
 
 @pytest.fixture
 def delivery_options():
     yield [
-        mommy.make(DeliveryOption, name="traidoo", id=0),
-        mommy.make(DeliveryOption, name="seller", id=1),
-        mommy.make(DeliveryOption, name="buyer", id=2),
+        baker.make(DeliveryOption, name="traidoo", id=0),
+        baker.make(DeliveryOption, name="seller", id=1),
+        baker.make(DeliveryOption, name="buyer", id=2),
     ]
 
 
@@ -371,7 +371,7 @@ def cart(buyer, products, delivery_options, delivery_address):
     products[1].price = 60
     products[1].save()
 
-    cart = mommy.make(
+    cart = baker.make(
         "carts.cart",
         user=buyer,
         delivery_address=delivery_address,
@@ -380,7 +380,7 @@ def cart(buyer, products, delivery_options, delivery_address):
         ).date(),
     )
 
-    mommy.make(
+    baker.make(
         "carts.cartitem",
         product=products[0],
         cart=cart,
@@ -388,7 +388,7 @@ def cart(buyer, products, delivery_options, delivery_address):
         delivery_option=delivery_options[0],
     )
 
-    mommy.make(
+    baker.make(
         "carts.cartitem",
         product=products[1],
         cart=cart,
@@ -401,7 +401,7 @@ def cart(buyer, products, delivery_options, delivery_address):
 
 @pytest.fixture
 def order(buyer, traidoo_region):
-    yield mommy.make(
+    yield baker.make(
         "orders.order",
         buyer=buyer,
         region=traidoo_region,
@@ -411,7 +411,7 @@ def order(buyer, traidoo_region):
 
 @pytest.fixture
 def delivery_address(buyer):
-    yield mommy.make(
+    yield baker.make(
         DeliveryAddress,
         company_name="ABC",
         street="Foo Street 1",
@@ -424,7 +424,7 @@ def delivery_address(buyer):
 @pytest.fixture
 def order_items(products, order, delivery_address, delivery_options):
     items = [
-        mommy.make(
+        baker.make(
             "orders.orderitem",
             product=products[0],
             quantity=3,
@@ -433,7 +433,7 @@ def order_items(products, order, delivery_address, delivery_options):
             delivery_option=delivery_options[0],
             latest_delivery_date=timezone.now().date() + datetime.timedelta(days=3),
         ),
-        mommy.make(
+        baker.make(
             "orders.orderitem",
             product=products[1],
             quantity=2,
@@ -532,18 +532,18 @@ def cloud_storage_url():
 
 @pytest.fixture
 def other_region_product(neighbour_region, delivery_options):
-    neighbour_seller = mommy.make_recipe("users.user", region=neighbour_region)
-    product = mommy.make_recipe(
+    neighbour_seller = baker.make_recipe("users.user", region=neighbour_region)
+    product = baker.make_recipe(
         "products.product",
         price=100,
         amount=3,
         vat=19,
-        container_type=mommy.make("containers.container", deposit=0.3),
+        container_type=baker.make("containers.container", deposit=0.3),
         region=neighbour_region,
         seller=neighbour_seller,
         delivery_options=delivery_options,
     )
-    mommy.make(Item, product=product, quantity=100)
+    baker.make(Item, product=product, quantity=100)
 
     yield product
 
@@ -552,7 +552,7 @@ def other_region_product(neighbour_region, delivery_options):
 def order_with_neighbour_product(
     neighbour_region, delivery_address, order, order_items, other_region_product
 ):
-    mommy.make(
+    baker.make(
         "orders.orderitem",
         product=other_region_product,
         quantity=3,
