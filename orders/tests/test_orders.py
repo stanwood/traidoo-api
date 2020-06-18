@@ -3,6 +3,7 @@ from django.contrib.auth import get_user_model
 from model_bakery import baker
 
 from documents import factories
+from documents.models import Document
 from items.models import Item
 from orders.models import Order, OrderItem
 from products.models import Product
@@ -26,6 +27,18 @@ def _create_test_data(buyer, seller, seller_group, buyer_group, traidoo_region):
 
     baker.make_recipe("orders.orderitem", product=product_1, order=order_1)
     baker.make_recipe("orders.orderitem", product=product_2, order=order_2)
+
+    document_1 = baker.make(
+        Document,
+        document_type=Document.TYPES.order_confirmation_buyer.value[0],
+        order=order_1,
+    )
+
+    document_2 = baker.make(
+        Document,
+        document_type=Document.TYPES.delivery_overview_seller[0],
+        order=order_1,
+    )
 
     yield (product_1, product_2), (order_1, order_2)
 
