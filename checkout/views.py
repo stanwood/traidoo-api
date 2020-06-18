@@ -75,7 +75,11 @@ class CheckoutView(TasksMixin, views.APIView):
                 delivery_option_id=cart_item.delivery_option.id,
             )
 
-            if settings.FEATURES["routes"] and order_item.product.third_party_delivery:
+            if (
+                settings.FEATURES["routes"]
+                and order_item.product.third_party_delivery
+                and order_item.delivery_option_id == DeliveryOption.SELLER
+            ):
                 third_party_delivery = True
 
                 self.send_task(
@@ -86,9 +90,7 @@ class CheckoutView(TasksMixin, views.APIView):
                     headers={"Region": region.slug},
                 )
 
-        # WARNING: It's required.
-        # The changes should be stored in the DB before we run
-        # recalculate_items_delivery_fee method.
+        # WARNING: It's required. The changes should be stored in the DB before we run recalculate_items_delivery_fee method.
         # FIXME: It should not work like this.
         order.save()
 
@@ -99,7 +101,7 @@ class CheckoutView(TasksMixin, views.APIView):
 
         cart.delete()
 
-        if not (settings.FEATURES["routes"] and third_party_delivery):
+        if not third_party_delivery:
             self.send_task(
                 f"/documents/queue/{order.id}/all",
                 queue_name="documents",
