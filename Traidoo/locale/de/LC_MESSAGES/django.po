@@ -1,7 +1,7 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# Hannes Kleist hannes.kleist@stanwood.de, 2020.
 #
 #, fuzzy
 msgid ""
@@ -20,11 +20,11 @@ msgstr ""
 
 #: Traidoo/dashboard.py:24
 msgid "Quick links"
-msgstr ""
+msgstr "Quicklinks"
 
 #: Traidoo/dashboard.py:30
 msgid "Change password"
-msgstr ""
+msgstr "Passwort ändern"
 
 #: Traidoo/dashboard.py:31
 msgid "Log out"
@@ -32,15 +32,15 @@ msgstr "Abmelden"
 
 #: Traidoo/dashboard.py:38
 msgid "Applications"
-msgstr ""
+msgstr "Anwendungen"
 
 #: Traidoo/dashboard.py:41 Traidoo/dashboard.py:56
 msgid "Recent Actions"
-msgstr ""
+msgstr "Aktivität"
 
 #: Traidoo/menu.py:20
 msgid "Dashboard"
-msgstr ""
+msgstr "Dashboard"
 
 #: Traidoo/menu.py:21
 msgid "Users"
@@ -48,298 +48,298 @@ msgstr "Benutzer"
 
 #: Traidoo/menu.py:23 containers/models.py:60
 msgid "Containers"
-msgstr ""
+msgstr "Container"
 
 #: Traidoo/menu.py:26 categories/models.py:32
 msgid "Categories"
-msgstr ""
+msgstr "Kategorien"
 
 #: Traidoo/menu.py:28 products/models.py:31
 msgid "Products"
-msgstr ""
+msgstr "Produkte"
 
 #: Traidoo/menu.py:29 orders/models.py:33
 msgid "Orders"
-msgstr ""
+msgstr "Käufe"
 
 #: Traidoo/menu.py:31 Traidoo/menu.py:34 settings/models.py:13
 msgid "Settings"
-msgstr ""
+msgstr "Einstellungen"
 
 #: Traidoo/menu.py:37 common/models.py:44 orders/models.py:75
 #: settings/models.py:38 users/models/user.py:44
 msgid "Region"
-msgstr ""
+msgstr "Region"
 
 #: Traidoo/settings/django/language.py:10
 msgid "German"
-msgstr ""
+msgstr "Deutsch"
 
 #: Traidoo/settings/django/language.py:11
 msgid "English"
-msgstr ""
+msgstr "Englisch"
 
 #: Traidoo/urls.py:78
 msgid "Traidoo"
-msgstr ""
+msgstr "Traidoo"
 
 #: Traidoo/urls.py:79 Traidoo/urls.py:80
 msgid "Traidoo Administration"
-msgstr ""
+msgstr "Traidoo Administration"
 
 #: carts/apps.py:7 carts/models.py:55
 msgid "Carts"
-msgstr ""
+msgstr "Einkaufswagen"
 
 #: carts/models.py:23 delivery_addresses/models.py:14 jobs/models.py:22
 #: routes/models.py:39 users/models/kyc.py:21
 msgid "User"
-msgstr ""
+msgstr "Benutzer"
 
 #: carts/models.py:26 orders/models.py:66
 msgid "Earliest delivery date"
-msgstr ""
+msgstr "Frühstes Lieferdatum"
 
 #: carts/models.py:33 delivery_addresses/models.py:19 documents/models.py:71
 msgid "Delivery address"
-msgstr ""
+msgstr "Lieferadresse"
 
 #: carts/models.py:54 carts/models.py:63 orders/models.py:36
 msgid "Cart"
-msgstr ""
+msgstr "Einkaufswagen"
 
 #: carts/models.py:60 items/models.py:14 products/models.py:30
 msgid "Product"
-msgstr ""
+msgstr "Produkt"
 
 #: carts/models.py:65 items/models.py:16
 msgid "Latest delivery date"
-msgstr ""
+msgstr "Letztes Lieferdatun"
 
 #: carts/models.py:66 items/models.py:17
 msgid "Quantity"
-msgstr ""
+msgstr "Anzahl"
 
 #: carts/models.py:72 delivery_options/models.py:23
 msgid "Delivery option"
-msgstr ""
+msgstr "Lieferoptionen"
 
 #: carts/models.py:78
 msgid "Cart item"
-msgstr ""
+msgstr "Gebinde"
 
 #: categories/models.py:8
 msgid "Icon"
-msgstr ""
+msgstr "Icon"
 
 #: categories/models.py:9 common/models.py:12 delivery_options/models.py:10
 #: products/models.py:33 users/models/kyc.py:26
 msgid "Name"
-msgstr ""
+msgstr "Name"
 
 #: categories/models.py:10
 msgid "Ordering"
-msgstr ""
+msgstr "Sortierung"
 
 #: categories/models.py:16
 msgid "Default VAT Rate"
-msgstr ""
+msgstr "Standard MwSt."
 
 #: categories/models.py:24
 msgid "Parent category"
-msgstr ""
+msgstr "Elternkategorie"
 
 #: categories/models.py:31 products/models.py:56
 msgid "Category"
-msgstr ""
+msgstr "Kategorie"
 
 #: common/models.py:14
 msgid "Slug"
-msgstr ""
+msgstr "Slug"
 
 #: common/models.py:16
 msgid "Slogan used in emails"
-msgstr ""
+msgstr "Email Slogan"
 
 #: common/models.py:18
 msgid "Mail footer"
-msgstr ""
+msgstr "Email Abbinder"
 
 #: common/models.py:23
 msgid "Mail logo"
-msgstr ""
+msgstr "Email Logo"
 
 #: common/models.py:26
 msgid "Terms of services"
-msgstr ""
+msgstr "Nutzungsbedigungen"
 
 #: common/models.py:27
 msgid "Privacy policy"
-msgstr ""
+msgstr "Datenschutzerklärung"
 
 #: common/models.py:28
 msgid "Prices"
-msgstr ""
+msgstr "Preise"
 
 #: common/models.py:29
 msgid "Contact"
-msgstr ""
+msgstr "Kontakt"
 
 #: common/models.py:30
 msgid "Imprint"
-msgstr ""
+msgstr "Impressum"
 
 #: common/models.py:45
 msgid "Regions"
-msgstr ""
+msgstr "Regionen"
 
 #: containers/models.py:11
 msgid "Size class"
-msgstr ""
+msgstr "Größe"
 
 #: containers/models.py:14
 msgid "Standard container"
-msgstr ""
+msgstr "Standard-Container"
 
 #: containers/models.py:19
 msgid "Container volume cannot be negative"
-msgstr ""
+msgstr "Das Volumen darf nicht negativ sein"
 
 #: containers/models.py:22
 msgid "Volume"
-msgstr ""
+msgstr "Volumen"
 
 #: containers/models.py:31
 msgid "Container deposit cannot be negative"
-msgstr ""
+msgstr "Der Pfand darf nicht negativ sein"
 
 #: containers/models.py:34
 msgid "Depoisit"
-msgstr ""
+msgstr "Pfand"
 
 #: containers/models.py:43
 msgid "Container delivery fee cannot be negative"
-msgstr ""
+msgstr "Liefergebühr darf nicht negativ sein"
 
 #: containers/models.py:46
 msgid "Delivery fee"
-msgstr ""
+msgstr "Liefergebühr"
 
 #: containers/models.py:49 products/models.py:36 users/models/user.py:93
 msgid "Image url"
-msgstr ""
+msgstr "Bild-URL"
 
 #: containers/models.py:52 products/models.py:39 users/models/user.py:96
 msgid "Image"
-msgstr ""
+msgstr "Bild"
 
 #: containers/models.py:59
 msgid "Container"
-msgstr ""
+msgstr "Container"
 
 #: core/errors/exceptions.py:8
 msgid "Cannot be deleted due to protected related entities."
-msgstr ""
+msgstr "Kann nicht gelöscht werden, weil es Produkte in dieser Kategorie gibt."
 
 #: core/errors/exceptions.py:14
 msgid "Could not satisfy the request Region header."
-msgstr ""
+msgstr "Could not satisfy the request Region header."
 
 #: core/validators/user_password.py:16
 msgid "Incorrect password format."
-msgstr ""
+msgstr "Falsche Passwortformat"
 
 #: delivery_addresses/models.py:9 users/models/user.py:114
 msgid "Company name"
-msgstr ""
+msgstr "Firma"
 
 #: delivery_addresses/models.py:10 users/models/user.py:57
 msgid "Street"
-msgstr ""
+msgstr "Straße"
 
 #: delivery_addresses/models.py:11 users/models/user.py:59
 msgid "Zip code"
-msgstr ""
+msgstr "PLZ"
 
 #: delivery_addresses/models.py:12 users/models/user.py:58
 msgid "City"
-msgstr ""
+msgstr "Stadt"
 
 #: delivery_addresses/models.py:20
 msgid "Delivery addresses"
-msgstr ""
+msgstr "Lieferadresse"
 
 #: delivery_options/models.py:13
 msgid "Created at"
-msgstr ""
+msgstr "Erstellt"
 
 #: delivery_options/models.py:16
 msgid "Last update at"
-msgstr ""
+msgstr "Letztes Update"
 
 #: delivery_options/models.py:24 products/models.py:120
 msgid "Delivery options"
-msgstr ""
+msgstr "Lieferoptionen"
 
 #: documents/models.py:21
 msgid "Document"
-msgstr ""
+msgstr "Dokument"
 
 #: documents/models.py:22
 msgid "Documents"
-msgstr ""
+msgstr "Dokumente"
 
 #: documents/models.py:65
 msgid "Document type"
-msgstr ""
+msgstr "Typ"
 
 #: documents/models.py:68 orders/models.py:57
 msgid "Buyer"
-msgstr ""
+msgstr "Käufer"
 
 #: documents/models.py:69 products/models.py:59
 msgid "Seller"
-msgstr ""
+msgstr "Verkäufer"
 
 #: documents/models.py:73
 msgid "Invoice lines"
-msgstr ""
+msgstr "Rechnungszeilen"
 
 #: documents/models.py:78 orders/models.py:32
 msgid "Order"
-msgstr ""
+msgstr "Kauf"
 
 #: documents/models.py:81
 msgid "Blob name in storage"
-msgstr ""
+msgstr "Blob-Name im Storage"
 
 #: documents/models.py:84
 msgid "Payment reference"
-msgstr ""
+msgstr "Zahlungsreferenz"
 
 #: documents/models.py:87
 msgid "Mangopay payin id"
-msgstr ""
+msgstr "Mangopay Zahlungs-ID"
 
 #: documents/models.py:94
 msgid "Bank account owner"
-msgstr ""
+msgstr "Inhaber Bankkonto"
 
 #: documents/models.py:96
 msgid "Is paid"
-msgstr ""
+msgstr "Wurde bezahlt"
 
 #: items/models.py:19
 msgid "Date valid from"
-msgstr ""
+msgstr "Datum ist gültig von"
 
 #: items/models.py:24
 msgid "Item"
-msgstr ""
+msgstr "Gebinde"
 
 #: items/models.py:25
 msgid "Items"
-msgstr ""
+msgstr "Gebinde"
 
 #: jobs/models.py:15
 msgid "Order item"
@@ -347,396 +347,396 @@ msgstr ""
 
 #: jobs/models.py:26 jobs/models.py:32
 msgid "Job"
-msgstr ""
+msgstr "Auftrag"
 
 #: jobs/models.py:27
 msgid "Jobs"
-msgstr ""
+msgstr "Aufträge"
 
 #: jobs/models.py:34 routes/models.py:26
 msgid "Route"
-msgstr ""
+msgstr "Route"
 
 #: jobs/models.py:35
 msgid "Lenght"
-msgstr ""
+msgstr "Länge"
 
 #: jobs/models.py:38
 msgid "Detour"
-msgstr ""
+msgstr "Umweg"
 
 #: jobs/models.py:39
 msgid "Detours"
-msgstr ""
+msgstr "Umwege"
 
 #: orders/models.py:37
 msgid "Paid"
-msgstr ""
+msgstr "Bezahlt"
 
 #: orders/models.py:38
 msgid "Ordered"
-msgstr ""
+msgstr "Bestellt"
 
 #: orders/models.py:60
 msgid "Status"
-msgstr ""
+msgstr "Status"
 
 #: orders/models.py:63
 msgid "Total price"
-msgstr ""
+msgstr "Gesamtpreis"
 
 #: orders/models.py:68
 msgid "Processed"
-msgstr ""
+msgstr "Verarbeitet"
 
 #: orders/models.py:74
 msgid "Region in which order took place"
-msgstr ""
+msgstr "Region des Käufers"
 
 #: products/models.py:19
 msgid "Weight (g) per item"
-msgstr ""
+msgstr "Gewicht (g) pro Gebinde"
 
 #: products/models.py:20
 msgid "Volume (l) per item"
-msgstr ""
+msgstr "Volumen (l) pro Gebinde"
 
 #: products/models.py:25
 msgid "Object id"
-msgstr ""
+msgstr "Objekt ID"
 
 #: products/models.py:34 users/models/user.py:55
 msgid "Description"
-msgstr ""
+msgstr "Beschreibung"
 
 #: products/models.py:46 products/models.py:47
 msgid "Region of origin"
-msgstr ""
+msgstr "Ursprungsregion"
 
 #: products/models.py:51
 msgid "The associated regions the product should be available in"
-msgstr ""
+msgstr "Verfügbar in folgenden Regionen"
 
 #: products/models.py:52
 msgid "Available in regions"
-msgstr ""
+msgstr "Verfügbar in Regionen"
 
 #: products/models.py:62
 msgid "Is organic"
-msgstr ""
+msgstr "Bio"
 
 #: products/models.py:63
 msgid "Is vegan"
-msgstr ""
+msgstr "Vegan"
 
 #: products/models.py:65
 msgid "Is gluten free"
-msgstr ""
+msgstr "Gluten-frei"
 
 #: products/models.py:68
 msgid "Is grazing animal"
-msgstr ""
+msgstr "Weidehaltung"
 
 #: products/models.py:70
 msgid "Is GMO free"
-msgstr ""
+msgstr "Gentechnikfrei"
 
 #: products/models.py:75
 msgid "Amount in a lot"
-msgstr ""
+msgstr "Anzahl pro Gebinde"
 
 #: products/models.py:77
 msgid "Amount should not be negative"
-msgstr ""
+msgstr "Anzahl darf nicht negativ sein"
 
 #: products/models.py:81
 msgid "Unit"
-msgstr ""
+msgstr "Einheit"
 
 #: products/models.py:86
 msgid "Price"
-msgstr ""
+msgstr "Preis"
 
 #: products/models.py:88
 msgid "Price should not be negative"
-msgstr ""
+msgstr "Preis darf nicht negativ sein"
 
 #: products/models.py:94
 msgid "VAT rate"
-msgstr ""
+msgstr "MwSt."
 
 #: products/models.py:96
 msgid "VAT should not be more than 100%"
-msgstr ""
+msgstr "MwSt. darf nicht mehr als 100% sein"
 
 #: products/models.py:97
 msgid "VAT should not be negative"
-msgstr ""
+msgstr "MwSt. darf nicht negativ sein"
 
 #: products/models.py:102
 msgid "Container type"
-msgstr ""
+msgstr "Container"
 
 #: products/models.py:105
 msgid "Container description"
-msgstr ""
+msgstr "Containerbeschreibung"
 
 #: products/models.py:114
 msgid "Delivery charge should not be negative"
-msgstr ""
+msgstr "Liefergebühr darf nicht negativ sein"
 
 #: products/models.py:117
 msgid "Delivery charge"
-msgstr ""
+msgstr "Liefergebühr"
 
 #: products/models.py:123
 msgid "Third party delivery possible"
-msgstr ""
+msgstr "Drittlieferung zulässig"
 
 #: products/models.py:126
 msgid "Delivery requirements"
-msgstr ""
+msgstr "Lieferbedigungen"
 
 #: products/models.py:129
 msgid "Tags"
-msgstr ""
+msgstr "Tags"
 
 #: products/models.py:138
 msgid "Sellers product identifier"
-msgstr ""
+msgstr "Produkt-ID Verkäufer"
 
 #: products/models.py:142
 msgid "Base unit"
-msgstr ""
+msgstr "Basiseinheit"
 
 #: products/models.py:151
 msgid "Items quantity should not be negative"
-msgstr ""
+msgstr "Gebindeanzahl darf nicht negativ sein"
 
 #: products/models.py:154
 msgid "Item quantity"
-msgstr ""
+msgstr "Anzahl Gebinde"
 
 #: routes/models.py:27
 msgid "Routes"
-msgstr ""
+msgstr "Routen"
 
 #: routes/models.py:32
 msgid "Frequency"
-msgstr ""
+msgstr "Frequenz"
 
 #: routes/models.py:34
 msgid "Length"
-msgstr ""
+msgstr "Länge"
 
 #: routes/models.py:41
 msgid "Origin"
-msgstr ""
+msgstr "Start"
 
 #: routes/models.py:42
 msgid "Destination"
-msgstr ""
+msgstr "Ziel"
 
 #: routes/models.py:47
 msgid "Way points"
-msgstr ""
+msgstr "Zwischenstops"
 
 #: settings/models.py:12
 msgid "Setting"
-msgstr ""
+msgstr "Einstellungen"
 
 #: settings/models.py:16
 msgid "Platform charge rate"
-msgstr ""
+msgstr "Plattformgebühr"
 
 #: settings/models.py:19
 msgid "Central delivery fee VAT rate"
-msgstr ""
+msgstr "MwSt. Liefergebühr"
 
 #: settings/models.py:22
 msgid "Platform fee VAT rate"
-msgstr ""
+msgstr "MwSt. Plattformgebühr"
 
 #: settings/models.py:25
 msgid "Transport insurance rate"
-msgstr ""
+msgstr "Liefergebühr"
 
 #: settings/models.py:28
 msgid "Deposit VAT rate"
-msgstr ""
+msgstr "MwSt. Pfand"
 
 #: settings/models.py:31
 msgid "Min purchase value"
-msgstr ""
+msgstr "Mindestbestellwert"
 
 #: settings/models.py:46
 msgid "Platform user account"
-msgstr ""
+msgstr "Admin"
 
 #: settings/models.py:49
 msgid "Central logistic company available"
-msgstr ""
+msgstr "Zentrale Logistikfirma vorhanden"
 
 #: settings/models.py:56
 msgid "Logistics company account"
-msgstr ""
+msgstr "Logistikfirma"
 
 #: settings/models.py:64
 msgid "Enable platform fee share"
-msgstr ""
+msgstr "Plattformgebühr wird geteilt"
 
 #: settings/models.py:79
 msgid "Central platform share"
-msgstr ""
+msgstr "Anteil Plattformgebühr"
 
 #: trucks/models.py:9 trucks/models.py:12
 msgid "Truck"
-msgstr ""
+msgstr "LKW"
 
 #: trucks/models.py:10
 msgid "Trucks"
-msgstr ""
+msgstr "LKW"
 
 #: users/admin.py:16
 msgid "Groups filter"
-msgstr ""
+msgstr "Gruppenfilter"
 
 #: users/admin.py:20
 msgid "To approve"
-msgstr ""
+msgstr "Zu genehmigen"
 
 #: users/admin.py:51
 msgid "Permissions"
-msgstr ""
+msgstr "Rechte"
 
 #: users/admin.py:122
 msgid "Approve user"
-msgstr ""
+msgstr "Nutzer genehmigen"
 
 #: users/models/kyc.py:33
 msgid "File"
-msgstr ""
+msgstr "Datei"
 
 #: users/models/kyc.py:38
 msgid "KYC document"
-msgstr ""
+msgstr "KYC Datei"
 
 #: users/models/kyc.py:39
 msgid "KYC documents"
-msgstr ""
+msgstr "KYC Dateien"
 
 #: users/models/user.py:33
 msgid "Password"
-msgstr ""
+msgstr "Passwort"
 
 #: users/models/user.py:35
 msgid "Is email verified"
-msgstr ""
+msgstr "Verifzierte Email"
 
 #: users/models/user.py:48
 msgid "First name"
-msgstr ""
+msgstr "Vorname"
 
 #: users/models/user.py:49
 msgid "Last name"
-msgstr ""
+msgstr "Nachname"
 
 #: users/models/user.py:50
 msgid "Birth date"
-msgstr ""
+msgstr "Geburtsdatum"
 
 #: users/models/user.py:51
 msgid "Phone"
-msgstr ""
+msgstr "Telefon"
 
 #: users/models/user.py:53
 msgid "Website"
-msgstr ""
+msgstr "Website"
 
 #: users/models/user.py:60
 msgid "Residence country code"
-msgstr ""
+msgstr "Code: Wohnland"
 
 #: users/models/user.py:61
 msgid "Nationality country code"
-msgstr ""
+msgstr "Code: Nationalität"
 
 #: users/models/user.py:64
 msgid "Invoice email"
-msgstr ""
+msgstr "Rechnungsadresse"
 
 #: users/models/user.py:68
 msgid "Tax id"
-msgstr ""
+msgstr "Steuer-ID"
 
 #: users/models/user.py:71
 msgid "Bank name"
-msgstr ""
+msgstr "Name der Bank"
 
 #: users/models/user.py:74
 msgid "BIC account number"
-msgstr ""
+msgstr "BIC/Swift"
 
 #: users/models/user.py:78
 msgid "Mangopay user id"
-msgstr ""
+msgstr "Mangopay Benutzer-ID"
 
 #: users/models/user.py:81
 msgid "Mangopay user type"
-msgstr ""
+msgstr "Mangopay Nutzertyp"
 
 #: users/models/user.py:88
 msgid "Mangopay validation level"
-msgstr ""
+msgstr "Status Mangopay Verifizierung"
 
 #: users/models/user.py:100
 msgid "Business license url"
-msgstr ""
+msgstr "URL Gewerbeanmeldung"
 
 #: users/models/user.py:107
 msgid "Business license"
-msgstr ""
+msgstr "Gewerbeanmeldung oder ähnlich"
 
 #: users/models/user.py:111
 msgid "Declared as seller"
-msgstr ""
+msgstr "Verkäufer"
 
 #: users/models/user.py:118
 msgid "Company type"
-msgstr ""
+msgstr "Unternehmenstyp"
 
 #: users/models/user.py:122
 msgid "VAT ID"
-msgstr ""
+msgstr "MwSt. ID"
 
 #: users/models/user.py:124
 msgid "IBAN number"
-msgstr ""
+msgstr "IBAN"
 
 #: users/models/user.py:126
 msgid "Company registration id"
-msgstr ""
+msgstr "Handelsregisternummer"
 
 #: users/models/user.py:132
 msgid "Association registration id"
-msgstr ""
+msgstr "Mitglieds-ID"
 
 #: users/models/user.py:135
 msgid "Organic control body"
-msgstr ""
+msgstr "Bio-Zertifizierer"
 
 #: users/models/user.py:141
 msgid "Is certified organic producer"
-msgstr ""
+msgstr "Zertifzierter Bio-Produzent"
 
 #: users/models/user.py:145
 msgid "Is cooperative member"
-msgstr ""
+msgstr "Genosse"
 
 #: users/models/user.py:150
 msgid "Id photo url"
-msgstr ""
+msgstr "Photo URL"
 
 #: users/models/user.py:157
 msgid "ID photo"
-msgstr ""
+msgstr "Photo"
