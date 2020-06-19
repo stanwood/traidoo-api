@@ -1,9 +1,9 @@
 from django.urls import reverse
-from model_mommy import mommy
+from model_bakery import baker
 
 
 def test_see_own_region_only(traidoo_region, platform_user, django_app):
-    other_region = mommy.make_recipe("common.region")
+    other_region = baker.make_recipe("common.region")
     response = django_app.get(
         reverse("admin:common_region_changelist"), user=platform_user
     )
@@ -13,7 +13,7 @@ def test_see_own_region_only(traidoo_region, platform_user, django_app):
 
 
 def test_can_edit_own_region(traidoo_region, platform_user, django_app):
-    other_region = mommy.make_recipe("common.region")
+    other_region = baker.make_recipe("common.region")
     response = django_app.get(
         reverse("admin:common_region_change", kwargs={"object_id": traidoo_region.id}),
         user=platform_user,
@@ -29,13 +29,13 @@ def test_can_edit_own_region(traidoo_region, platform_user, django_app):
 
 
 def test_superuser_can_add_region(django_app):
-    superuser = mommy.make_recipe("users.user", is_superuser=True, is_staff=True)
+    superuser = baker.make_recipe("users.user", is_superuser=True, is_staff=True)
     response = django_app.get(reverse("admin:common_region_add"), user=superuser)
     assert response.status_code == 200
 
 
 def test_superuser_can_delete_region(django_app, traidoo_region):
-    superuser = mommy.make_recipe("users.user", is_superuser=True, is_staff=True)
+    superuser = baker.make_recipe("users.user", is_superuser=True, is_staff=True)
     response = django_app.get(
         reverse("admin:common_region_delete", kwargs={"object_id": traidoo_region.id}),
         user=superuser,
@@ -44,7 +44,7 @@ def test_superuser_can_delete_region(django_app, traidoo_region):
 
 
 def test_superuser_can_see_all_regions(django_app, admin_group):
-    superuser = mommy.make_recipe(
+    superuser = baker.make_recipe(
         "users.user", is_superuser=True, is_staff=True, groups=[admin_group]
     )
     response = django_app.get(reverse("admin:common_region_changelist"), user=superuser)

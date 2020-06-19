@@ -1,7 +1,7 @@
 import json
 
 import pytest
-from model_mommy import mommy
+from model_bakery import baker
 
 from products.models import Product
 
@@ -11,7 +11,7 @@ from products.models import Product
 def test_update_product_with_valid_base_unit_options(
     seller, admin, client_admin, base_unit, traidoo_region
 ):
-    product = mommy.make(Product, region=traidoo_region)
+    product = baker.make(Product, region=traidoo_region)
 
     response = client_admin.patch(
         f"/products/{product.id}",
@@ -30,7 +30,7 @@ def test_update_product_with_valid_base_unit_options(
 def test_update_product_with_invalid_base_unit_options(
     seller, admin, client_admin, traidoo_region
 ):
-    product = mommy.make(Product, region=traidoo_region)
+    product = baker.make(Product, region=traidoo_region)
 
     response = client_admin.patch(
         f"/products/{product.id}",
@@ -50,8 +50,8 @@ def test_update_product_with_invalid_base_unit_options(
 
 @pytest.mark.django_db
 def test_remove_product_regions(seller, admin, client_seller, traidoo_region):
-    region = mommy.make("common.region")
-    product = mommy.make(Product, region=traidoo_region, regions=[region])
+    region = baker.make("common.region")
+    product = baker.make(Product, region=traidoo_region, regions=[region])
     assert product.regions.count() == 1
 
     response = client_seller.patch(

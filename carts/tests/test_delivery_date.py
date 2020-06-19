@@ -3,7 +3,7 @@ import datetime
 import pytest
 from django.conf import settings
 from django.utils import timezone
-from model_mommy import mommy
+from model_bakery import baker
 
 from carts.models import CartItem
 from items.models import Item
@@ -11,7 +11,7 @@ from items.models import Item
 
 @pytest.mark.django_db
 def test_delivery_date(buyer, client_buyer, traidoo_region):
-    cart = mommy.make_recipe("carts.cart", user=buyer)
+    cart = baker.make_recipe("carts.cart", user=buyer)
     assert not cart.earliest_delivery_date
 
     delivery_date = (
@@ -28,7 +28,7 @@ def test_delivery_date(buyer, client_buyer, traidoo_region):
 
 @pytest.mark.django_db
 def test_delivery_date_not_in_the_future(buyer, client_buyer, traidoo_region):
-    cart = mommy.make_recipe("carts.cart", user=buyer)
+    cart = baker.make_recipe("carts.cart", user=buyer)
     assert not cart.earliest_delivery_date
 
     response = client_buyer.post(
@@ -58,7 +58,7 @@ def test_delivery_date_not_in_the_future(buyer, client_buyer, traidoo_region):
 
 @pytest.mark.django_db
 def test_delivery_date_is_too_far_away(buyer, client_buyer, traidoo_region):
-    cart = mommy.make_recipe("carts.cart", user=buyer)
+    cart = baker.make_recipe("carts.cart", user=buyer)
     assert not cart.earliest_delivery_date
 
     response = client_buyer.post(

@@ -3,7 +3,7 @@ from unittest import mock
 import pytest
 from django.contrib.auth import get_user_model
 from django.urls import reverse
-from model_mommy import mommy
+from model_bakery import baker
 
 from orders.models import Order
 
@@ -29,8 +29,8 @@ def mangopay(mangopay):
 def test_do_not_try_create_bank_account_when_format_is_wrong(
     mangopay, api_client, traidoo_region
 ):
-    mommy.make(User, mangopay_user_id="999", iban="-")
-    mommy.make(Order, id=99)
+    baker.make(User, mangopay_user_id="999", iban="-")
+    baker.make(Order, id=99)
     mangopay.return_value.get_bank_accounts.return_value = []
 
     api_client.post(
@@ -43,8 +43,8 @@ def test_do_not_try_create_bank_account_when_format_is_wrong(
 
 
 def test_create_payout_for_order(mangopay, api_client, central_platform_user):
-    mommy.make(Order, id=99)
-    mommy.make(User, mangopay_user_id="999")
+    baker.make(Order, id=99)
+    baker.make(User, mangopay_user_id="999")
 
     api_client.post(
         reverse("payouts-user", kwargs={"mangopay_user_id": "999"}),

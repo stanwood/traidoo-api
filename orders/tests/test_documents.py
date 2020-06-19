@@ -3,7 +3,7 @@ from unittest import mock
 
 import pytest
 from django.conf import settings
-from model_mommy import mommy
+from model_bakery import baker
 
 from documents.models import Document
 
@@ -13,7 +13,7 @@ def test_download_document_buyer(client_buyer, order, storage, buyer, seller):
     buyer.is_email_verified = True
     buyer.save()
 
-    document_1 = mommy.make(
+    document_1 = baker.make(
         Document,
         document_type=Document.TYPES.order_confirmation_buyer.value[0],
         order=order,

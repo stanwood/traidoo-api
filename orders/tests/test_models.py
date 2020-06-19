@@ -1,11 +1,11 @@
 import pytest
-from model_mommy import mommy
+from model_bakery import baker
 
 
 def test_order_item_third_party_delivery_without_job(db, delivery_options, settings):
     settings.FEATURES["routes"] = True
-    product = mommy.make_recipe("products.product", delivery_options=delivery_options)
-    order_item = mommy.make_recipe(
+    product = baker.make_recipe("products.product", delivery_options=delivery_options)
+    order_item = baker.make_recipe(
         "orders.orderitem", delivery_option=delivery_options[1], product=product
     )
     assert not order_item.is_third_party_delivery
@@ -14,11 +14,11 @@ def test_order_item_third_party_delivery_without_job(db, delivery_options, setti
 @pytest.mark.django_db
 def test_order_item_third_party_delivery_without_user(delivery_options, settings):
     settings.FEATURES["routes"] = True
-    product = mommy.make_recipe("products.product", delivery_options=delivery_options)
-    order_item = mommy.make_recipe(
+    product = baker.make_recipe("products.product", delivery_options=delivery_options)
+    order_item = baker.make_recipe(
         "orders.orderitem", delivery_option=delivery_options[1], product=product
     )
-    mommy.make("jobs.Job", order_item=order_item)
+    baker.make("jobs.Job", order_item=order_item)
     assert not order_item.is_third_party_delivery
 
 
@@ -30,7 +30,7 @@ def test_order_item_third_party_delivery(delivery_options, order_items, settings
     order_item.product.third_party_delivery = True
     order_item.product.save()
 
-    mommy.make("jobs.Job", order_item=order_item, user=mommy.make("users.User"))
+    baker.make("jobs.Job", order_item=order_item, user=baker.make("users.User"))
 
     assert order_item.is_third_party_delivery
 
@@ -39,23 +39,23 @@ def test_order_item_third_party_delivery(delivery_options, order_items, settings
 def test_order_item_third_party_delivery_without_correct_delivery_option(settings):
     settings.FEATURES["routes"] = True
 
-    delivery_option = mommy.make_recipe("delivery_options.seller", id=1)
-    product = mommy.make_recipe("products.product", delivery_options=[delivery_option])
-    order_item = mommy.make_recipe(
+    delivery_option = baker.make_recipe("delivery_options.seller", id=1)
+    product = baker.make_recipe("products.product", delivery_options=[delivery_option])
+    order_item = baker.make_recipe(
         "orders.orderitem", delivery_option=delivery_option, product=product
     )
-    user = mommy.make("users.User")
-    mommy.make("jobs.Job", order_item=order_item, user=user)
+    user = baker.make("users.User")
+    baker.make("jobs.Job", order_item=order_item, user=user)
 
     assert not order_item.is_third_party_delivery
 
 
 @pytest.mark.django_db
 def test_delivery_address_as_str_when_delivery_address_is_available():
-    delivery_address = mommy.make_recipe("delivery_addresses.delivery_address")
-    delivery_option = mommy.make_recipe("delivery_options.seller")
-    product = mommy.make_recipe("products.product", delivery_options=[delivery_option])
-    order_item = mommy.make(
+    delivery_address = baker.make_recipe("delivery_addresses.delivery_address")
+    delivery_option = baker.make_recipe("delivery_options.seller")
+    product = baker.make_recipe("products.product", delivery_options=[delivery_option])
+    order_item = baker.make(
         "orders.OrderItem",
         delivery_address=delivery_address,
         product=product,
@@ -70,10 +70,10 @@ def test_delivery_address_as_str_when_delivery_address_is_available():
 
 @pytest.mark.django_db
 def test_delivery_address_as_str_when_delivery_address_is_not_available():
-    user = mommy.make_recipe("users.user")
-    order = mommy.make("orders.Order", buyer=user)
-    product = mommy.make_recipe("products.product")
-    order_item = mommy.make(
+    user = baker.make_recipe("users.user")
+    order = baker.make("orders.Order", buyer=user)
+    product = baker.make_recipe("products.product")
+    order_item = baker.make(
         "orders.OrderItem",
         delivery_address=None,
         order=order,
@@ -128,6 +128,6 @@ def test_get_delivery_company_third_party_withut_assigned_job(
     order_item.product.third_party_delivery = True
     order_item.product.save()
 
-    mommy.make("jobs.Job", order_item=order_item, user=None)
+    baker.make("jobs.Job", order_item=order_item, user=None)
 
     assert order_item.delivery_company == order_item.product.seller

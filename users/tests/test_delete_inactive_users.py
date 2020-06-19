@@ -5,14 +5,14 @@ from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.utils import timezone
 from freezegun import freeze_time
-from model_mommy import mommy
+from model_bakery import baker
 
 User = get_user_model()
 
 
 @pytest.mark.django_db
 def test_delete_not_verified_users(client_anonymous):
-    users = mommy.make("users.user", is_email_verified=False, _quantity=2)
+    users = baker.make("users.user", is_email_verified=False, _quantity=2)
     emails = [user.email for user in users]
 
     updated_at = timezone.now() + datetime.timedelta(
@@ -31,7 +31,7 @@ def test_delete_not_verified_users(client_anonymous):
 
 @pytest.mark.django_db
 def test_do_not_delete_verified_users(client_anonymous):
-    users = mommy.make("users.user", is_email_verified=True, _quantity=2)
+    users = baker.make("users.user", is_email_verified=True, _quantity=2)
     emails = [user.email for user in users]
 
     updated_at = timezone.now() + datetime.timedelta(
@@ -50,7 +50,7 @@ def test_do_not_delete_verified_users(client_anonymous):
 
 @pytest.mark.django_db
 def test_do_not_delete_not_verified_users_before_given_time(client_anonymous):
-    users = mommy.make("users.user", is_email_verified=False, _quantity=2)
+    users = baker.make("users.user", is_email_verified=False, _quantity=2)
     emails = [user.email for user in users]
 
     updated_at = timezone.now() + datetime.timedelta(

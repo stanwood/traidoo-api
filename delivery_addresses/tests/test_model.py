@@ -1,5 +1,5 @@
 import pytest
-from model_mommy import mommy
+from model_bakery import baker
 
 from ..models import DeliveryAddress
 
@@ -12,7 +12,7 @@ def test_delivery_address_as_str():
     city = 'City'
     street = 'Street'
 
-    delivery_address = mommy.make(
+    delivery_address = baker.make(
         DeliveryAddress,
         company_name=company_name,
         zip=zip_code,

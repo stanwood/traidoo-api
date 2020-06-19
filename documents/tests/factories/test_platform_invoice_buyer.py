@@ -4,7 +4,7 @@ from decimal import Decimal
 import pytest
 from django.contrib.auth import get_user_model
 from django.utils import timezone
-from model_mommy import mommy
+from model_bakery import baker
 
 from containers.models import Container
 from orders.models import Order, OrderItem
@@ -33,7 +33,7 @@ def test_platform_invoice_factory_buyer_invoice_data_available(
     faker,
     traidoo_region,
 ):
-    buyer = mommy.make(
+    buyer = baker.make(
         User,
         company_name="This is useless company name",
         email="thisisuselessemailofthecompany@example.com",
@@ -46,19 +46,19 @@ def test_platform_invoice_factory_buyer_invoice_data_available(
 
     assert buyer.is_cooperative_member is is_cooperative_member
 
-    product = mommy.make(
+    product = baker.make(
         Product,
         seller=seller,
         price=10.6,
         amount=3,
         vat=19,
-        container_type=mommy.make(Container, deposit=3.2),
+        container_type=baker.make(Container, deposit=3.2),
         region=traidoo_region,
     )
 
-    order = mommy.make(Order, buyer=buyer, region=traidoo_region)
+    order = baker.make(Order, buyer=buyer, region=traidoo_region)
 
-    mommy.make(
+    baker.make(
         OrderItem,
         product=product,
         quantity=3,

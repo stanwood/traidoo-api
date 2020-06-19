@@ -2,7 +2,7 @@ from unittest import mock
 
 import pytest
 from django.contrib.auth import get_user_model
-from model_mommy import mommy
+from model_bakery import baker
 
 from delivery_addresses.models import DeliveryAddress
 from orders.models import Order, OrderItem
@@ -39,9 +39,9 @@ def test_create_job_task_product_without_third_party_delivery(
 ):
     settings.FEATURES["routes"] = True
 
-    product = mommy.make(Product, third_party_delivery=False, region=traidoo_region)
-    order = mommy.make(Order)
-    order_item = mommy.make_recipe("orders.orderitem", order=order, product=product)
+    product = baker.make(Product, third_party_delivery=False, region=traidoo_region)
+    order = baker.make(Order)
+    order_item = baker.make_recipe("orders.orderitem", order=order, product=product)
 
     response = client_anonymous.post(
         f"/jobs/create/{order_item.id}", **{"HTTP_X_APPENGINE_QUEUENAME": "queue"}
@@ -60,10 +60,10 @@ def test_create_job_user_without_routes(
 ):
     settings.FEATURES["routes"] = True
 
-    product = mommy.make(Product, third_party_delivery=False, region=traidoo_region)
-    order = mommy.make(Order)
-    order_item = mommy.make_recipe("orders.orderitem", order=order, product=product)
-    mommy.make(User, is_email_verified=True, is_active=True)
+    product = baker.make(Product, third_party_delivery=False, region=traidoo_region)
+    order = baker.make(Order)
+    order_item = baker.make_recipe("orders.orderitem", order=order, product=product)
+    baker.make(User, is_email_verified=True, is_active=True)
 
     response = client_anonymous.post(
         f"/jobs/create/{order_item.id}", **{"HTTP_X_APPENGINE_QUEUENAME": "queue"}
@@ -88,8 +88,8 @@ def test_create_job_for_order_item(
     assert not Job.objects.first()
     assert not Detour.objects.first()
 
-    buyer = mommy.make(User, is_email_verified=True, is_active=True)
-    seller = mommy.make(
+    buyer = baker.make(User, is_email_verified=True, is_active=True)
+    seller = baker.make(
         User,
         is_email_verified=True,
         is_active=True,
@@ -99,7 +99,7 @@ def test_create_job_for_order_item(
         street="Seller Street",
     )
 
-    route_1 = mommy.make(
+    route_1 = baker.make(
         Route,
         user=buyer,
         length=20,
@@ -107,14 +107,14 @@ def test_create_job_for_order_item(
         destination="Droga Dębińska 2, 61-555 Poznań",
         waypoints=["Droga Dębińska 3, 61-555 Poznań"],
     )
-    route_2 = mommy.make(
+    route_2 = baker.make(
         Route,
         user=buyer,
         origin="Droga Dębińska 1, 61-555 Poznań",
         destination="Droga Dębińska 2, 61-555 Poznań",
         length=30,
     )
-    delivery_address = mommy.make(
+    delivery_address = baker.make(
         DeliveryAddress,
         company_name="Buyer Company Name",
         zip="321",
@@ -122,11 +122,11 @@ def test_create_job_for_order_item(
         street="Buyer Street",
     )
 
-    product = mommy.make(
+    product = baker.make(
         Product, third_party_delivery=True, seller=seller, region=traidoo_region
     )
-    order = mommy.make(Order)
-    order_item = mommy.make(
+    order = baker.make(Order)
+    order_item = baker.make(
         OrderItem, order=order, product=product, delivery_address=delivery_address
     )
 

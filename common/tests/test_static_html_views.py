@@ -1,5 +1,5 @@
 import pytest
-from model_mommy import mommy
+from model_bakery import baker
 
 
 @pytest.mark.parametrize(
@@ -8,7 +8,7 @@ from model_mommy import mommy
 )
 @pytest.mark.django_db
 def test_region_static_sites(page_name, client_anonymous):
-    region = mommy.make("common.region", **{page_name: f"<p>test {page_name}</p>"})
+    region = baker.make("common.region", **{page_name: f"<p>test {page_name}</p>"})
 
     response = client_anonymous.get(
         f"/regions/static/{page_name}", **{"HTTP_REGION": region.slug},

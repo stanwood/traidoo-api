@@ -1,6 +1,6 @@
 import pytest
 from django.contrib.auth import get_user_model
-from model_mommy import mommy
+from model_bakery import baker
 
 
 User = get_user_model()
@@ -9,9 +9,9 @@ pytestmark = pytest.mark.django_db
 
 
 def test_user_valid_iban():
-    user = mommy.make(User, iban="-")
+    user = baker.make(User, iban="-")
     assert not user.has_valid_iban
-    user = mommy.make(User, iban="DE30170560600101004672")
+    user = baker.make(User, iban="DE30170560600101004672")
     assert user.has_valid_iban
 
 

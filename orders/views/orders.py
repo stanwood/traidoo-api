@@ -36,7 +36,12 @@ class BuyerOrderViewSet(viewsets.ModelViewSet):
         queryset = (
             Order.objects.select_related("buyer")
             .prefetch_related("items")
-            .filter(buyer=self.request.user)
+            .filter(
+                buyer=self.request.user,
+                documents__document_type=Document.TYPES.order_confirmation_buyer.value[
+                    0
+                ],
+            )
         )
 
         return queryset

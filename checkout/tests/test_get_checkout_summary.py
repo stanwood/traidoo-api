@@ -1,5 +1,5 @@
 import pytest
-from model_mommy import mommy
+from model_bakery import baker
 
 from carts.models import CartItem
 from delivery_options.models import DeliveryOption
@@ -8,8 +8,8 @@ pytestmark = pytest.mark.django_db
 
 
 def test_get_the_latest_cart(seller, buyer, client_seller):
-    cart_1 = mommy.make("carts.Cart", user=seller)
-    mommy.make("carts.Cart", user=buyer)
+    cart_1 = baker.make("carts.Cart", user=seller)
+    baker.make("carts.Cart", user=buyer)
 
     response = client_seller.get("/checkout")
     assert response.json() == {
@@ -41,7 +41,7 @@ def test_try_to_get_the_latest_cart(seller, client_seller):
 
 
 def test_get_checkout_with_delivery_address(buyer, client_buyer, delivery_address):
-    cart = mommy.make("carts.Cart", user=buyer, delivery_address=delivery_address)
+    cart = baker.make("carts.Cart", user=buyer, delivery_address=delivery_address)
     response = client_buyer.get("/checkout")
     assert response.json()["deliveryAddress"] == delivery_address.id
 

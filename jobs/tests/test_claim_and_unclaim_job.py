@@ -1,22 +1,22 @@
 import datetime
 
 import pytest
-from model_mommy import mommy
+from model_bakery import baker
 
 pytestmark = pytest.mark.django_db
 
 
 def _prepare_test_data():
-    user_1 = mommy.make_recipe("users.user")
-    user_2 = mommy.make_recipe("users.user")
-    route = mommy.make_recipe("routes.route", user=user_1)
-    delivery_address = mommy.make_recipe("delivery_addresses.delivery_address")
-    delivery_option_seller = mommy.make_recipe("delivery_options.seller")
-    product = mommy.make_recipe(
+    user_1 = baker.make_recipe("users.user")
+    user_2 = baker.make_recipe("users.user")
+    route = baker.make_recipe("routes.route", user=user_1)
+    delivery_address = baker.make_recipe("delivery_addresses.delivery_address")
+    delivery_option_seller = baker.make_recipe("delivery_options.seller")
+    product = baker.make_recipe(
         "products.product", seller=user_2, delivery_options=[delivery_option_seller]
     )
-    order = mommy.make("orders.Order")
-    order_item = mommy.make(
+    order = baker.make("orders.Order")
+    order_item = baker.make(
         "orders.OrderItem",
         delivery_address=delivery_address,
         product=product,
@@ -24,8 +24,8 @@ def _prepare_test_data():
         order=order,
         delivery_option=delivery_option_seller,
     )
-    job = mommy.make("jobs.Job", order_item=order_item, user=None)
-    mommy.make("jobs.Detour", job=job, route=route)
+    job = baker.make("jobs.Job", order_item=order_item, user=None)
+    baker.make("jobs.Detour", job=job, route=route)
     return user_1, user_2, job, order
 
 

@@ -1,15 +1,15 @@
 from unittest import mock
 
 import pytest
-from model_mommy import mommy
+from model_bakery import baker
 
 from ..models import Route
 
 
 @pytest.mark.django_db
 def test_get_only_own_routes(seller, buyer, client_seller, send_task):
-    route_1 = mommy.make(Route, user=seller)
-    mommy.make(Route, user=buyer)
+    route_1 = baker.make(Route, user=seller)
+    baker.make(Route, user=buyer)
 
     response = client_seller.get('/routes')
 
@@ -37,7 +37,7 @@ def test_get_only_own_routes(seller, buyer, client_seller, send_task):
 
 @pytest.mark.django_db
 def test_get_single_route(seller, client_seller, send_task):
-    route = mommy.make(Route, user=seller)
+    route = baker.make(Route, user=seller)
 
     response = client_seller.get(f'/routes/{route.id}')
 
@@ -62,7 +62,7 @@ def test_get_single_route(seller, client_seller, send_task):
 
 @pytest.mark.django_db
 def test_get_someone_else_route(buyer, client_seller, send_task):
-    route = mommy.make(Route, user=buyer)
+    route = baker.make(Route, user=buyer)
 
     response = client_seller.get(f'/routes/{route.id}')
 

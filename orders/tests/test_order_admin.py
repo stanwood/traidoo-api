@@ -1,10 +1,10 @@
 from django.urls import reverse
-from model_mommy import mommy
+from model_bakery import baker
 
 
 def test_local_admin_view_orders(django_app, platform_user):
-    order = mommy.make_recipe("orders.order", region=platform_user.region)
-    other_order = mommy.make_recipe("orders.order")
+    order = baker.make_recipe("orders.order", region=platform_user.region)
+    other_order = baker.make_recipe("orders.order")
 
     response = django_app.get(
         reverse("admin:orders_order_changelist"), user=platform_user
@@ -14,7 +14,7 @@ def test_local_admin_view_orders(django_app, platform_user):
 
 
 def test_local_admin_cannot_edit_order(django_app, platform_user):
-    order = mommy.make_recipe("orders.order", region=platform_user.region)
+    order = baker.make_recipe("orders.order", region=platform_user.region)
     response = django_app.get(
         reverse("admin:orders_order_change", kwargs={"object_id": order.id}),
         user=platform_user,
@@ -26,7 +26,7 @@ def test_local_admin_cannot_edit_order(django_app, platform_user):
 
 
 def test_local_admin_cannot_delete_order(django_app, platform_user):
-    order = mommy.make_recipe("orders.order", region=platform_user.region)
+    order = baker.make_recipe("orders.order", region=platform_user.region)
     django_app.get(
         reverse("admin:orders_order_delete", kwargs={"object_id": order.id}),
         user=platform_user,

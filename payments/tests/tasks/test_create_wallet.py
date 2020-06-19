@@ -1,13 +1,13 @@
 from unittest import mock
 
 import pytest
-from model_mommy import mommy
+from model_bakery import baker
 
 
 @pytest.mark.django_db
 @mock.patch("payments.client.client.MangopayClient.post")
 def test_create_wallet(mocked_post, client_anonymous, send_task, traidoo_region):
-    user = mommy.make_recipe("users.user", mangopay_user_id=123, region=traidoo_region)
+    user = baker.make_recipe("users.user", mangopay_user_id=123, region=traidoo_region)
     wallet_id = "wallet-1"
 
     mocked_post.side_effect = [

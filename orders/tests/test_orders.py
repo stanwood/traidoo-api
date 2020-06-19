@@ -1,8 +1,9 @@
 import pytest
 from django.contrib.auth import get_user_model
-from model_mommy import mommy
+from model_bakery import baker
 
 from documents import factories
+from documents.models import Document
 from items.models import Item
 from orders.models import Order, OrderItem
 from products.models import Product
@@ -12,20 +13,32 @@ User = get_user_model()
 
 @pytest.fixture
 def _create_test_data(buyer, seller, seller_group, buyer_group, traidoo_region):
-    seller_2 = mommy.make(User, groups=[seller_group])
-    buyer_2 = mommy.make(User, groups=[buyer_group])
+    seller_2 = baker.make(User, groups=[seller_group])
+    buyer_2 = baker.make(User, groups=[buyer_group])
 
-    product_1 = mommy.make(Product, seller=seller_2, region=traidoo_region)
-    product_2 = mommy.make(Product, seller=seller, region=traidoo_region)
+    product_1 = baker.make(Product, seller=seller_2, region=traidoo_region)
+    product_2 = baker.make(Product, seller=seller, region=traidoo_region)
 
-    mommy.make(Item, product=product_1)
-    mommy.make(Item, product=product_2)
+    baker.make(Item, product=product_1)
+    baker.make(Item, product=product_2)
 
-    order_1 = mommy.make(Order, buyer=buyer)
-    order_2 = mommy.make(Order, buyer=buyer_2)
+    order_1 = baker.make(Order, buyer=buyer)
+    order_2 = baker.make(Order, buyer=buyer_2)
 
-    mommy.make_recipe("orders.orderitem", product=product_1, order=order_1)
-    mommy.make_recipe("orders.orderitem", product=product_2, order=order_2)
+    baker.make_recipe("orders.orderitem", product=product_1, order=order_1)
+    baker.make_recipe("orders.orderitem", product=product_2, order=order_2)
+
+    document_1 = baker.make(
+        Document,
+        document_type=Document.TYPES.order_confirmation_buyer.value[0],
+        order=order_1,
+    )
+
+    document_2 = baker.make(
+        Document,
+        document_type=Document.TYPES.delivery_overview_seller.value[0],
+        order=order_1,
+    )
 
     yield (product_1, product_2), (order_1, order_2)
 
@@ -53,26 +66,26 @@ def test_get_order_anonymous(api_client):
 
 @pytest.mark.django_db
 def test_buyer_can_get_own_order_with_multiple_items(api_client):
-    region = mommy.make_recipe("common.region")
-    mommy.make_recipe("settings.setting", region=region)
-    seller = mommy.make_recipe("users.user", region=region)
-    buyer = mommy.make_recipe("users.user", region=region)
-    product_1 = mommy.make_recipe("products.product", seller=seller, region=region)
-    product_2 = mommy.make_recipe(
+    region = baker.make_recipe("common.region")
+    baker.make_recipe("settings.setting", region=region)
+    seller = baker.make_recipe("users.user", region=region)
+    buyer = baker.make_recipe("users.user", region=region)
+    product_1 = baker.make_recipe("products.product", seller=seller, region=region)
+    product_2 = baker.make_recipe(
         "products.product",
         seller=seller,
         region=region,
-        # weird that mommy tries to make an update on existing delivery options without this line
+        # weird that baker tries to make an update on existing delivery options without this line
         delivery_options=product_1.delivery_options.all(),
     )
-    order = mommy.make_recipe("orders.order", buyer=buyer, region=region, total_price=1)
-    mommy.make_recipe(
+    order = baker.make_recipe("orders.order", buyer=buyer, region=region, total_price=1)
+    baker.make_recipe(
         "orders.orderitem",
         order=order,
         product=product_1,
         delivery_option=product_1.delivery_options.first(),
     )
-    mommy.make_recipe(
+    baker.make_recipe(
         "orders.orderitem",
         order=order,
         product=product_2,

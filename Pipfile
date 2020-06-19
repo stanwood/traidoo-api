@@ -10,7 +10,6 @@ pycodestyle = "*"
 ipdb = "*"
 pylint = "*"
 pytest-django = "*"
-model-mommy = "*"
 beautifulsoup4 = "*"
 black = "*"
 faker = "*"
@@ -21,6 +20,7 @@ pytest-dotenv = "*"
 pytest-icdiff = "*"
 dj-inmemorystorage = "*"
 django-webtest = "*"
+model-bakery = "*"
 
 [packages]
 django = "==2.2.10"
@@ -62,6 +62,7 @@ sentry-sdk = "*"
 django-tinymce = "*"
 django-admin-tools = "*"
 django-admirarchy = "*"
+model-bakery = "*"
 
 [requires]
 python_version = "3.7"

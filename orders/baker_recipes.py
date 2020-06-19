@@ -1,9 +1,9 @@
 import datetime
 
-from model_mommy.recipe import Recipe, foreign_key
+from model_bakery.recipe import Recipe, foreign_key
 
-from common.mommy_recipes import region
-from products.mommy_recipes import product
+from common.baker_recipes import region
+from products.baker_recipes import product
 
 from .models import Order, OrderItem
 

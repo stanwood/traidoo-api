@@ -1,7 +1,7 @@
 import datetime
 
 import pytest
-from model_mommy import mommy
+from model_bakery import baker
 
 from carts.models import CartItem
 from items.models import Item
@@ -9,9 +9,9 @@ from items.models import Item
 
 @pytest.mark.django_db
 def test_increase_product_quantity(buyer, client_buyer, traidoo_region):
-    product_item = mommy.make_recipe("items.item", quantity=10)
-    cart = mommy.make_recipe("carts.cart", user=buyer)
-    cart_item = mommy.make_recipe(
+    product_item = baker.make_recipe("items.item", quantity=10)
+    cart = baker.make_recipe("carts.cart", user=buyer)
+    cart_item = baker.make_recipe(
         "carts.cartitem",
         cart=cart,
         quantity=1,
@@ -40,24 +40,24 @@ def test_increase_product_quantity_from_multiple_product_items(
     date_2 = datetime.datetime.now() + datetime.timedelta(days=2)
     date_3 = datetime.datetime.now() + datetime.timedelta(days=3)
 
-    product_item_1 = mommy.make_recipe(
+    product_item_1 = baker.make_recipe(
         "items.item", quantity=1, latest_delivery_date=date_1
     )
-    product_item_2 = mommy.make_recipe(
+    product_item_2 = baker.make_recipe(
         "items.item",
         product=product_item_1.product,
         quantity=2,
         latest_delivery_date=date_3,
     )
-    product_item_3 = mommy.make_recipe(
+    product_item_3 = baker.make_recipe(
         "items.item",
         product=product_item_1.product,
         quantity=3,
         latest_delivery_date=date_2,
     )
 
-    cart = mommy.make_recipe("carts.cart", user=buyer)
-    cart_item = mommy.make_recipe(
+    cart = baker.make_recipe("carts.cart", user=buyer)
+    cart_item = baker.make_recipe(
         "carts.cartitem",
         cart=cart,
         quantity=1,
@@ -104,9 +104,9 @@ def test_increase_product_quantity_from_multiple_product_items(
 
 @pytest.mark.django_db
 def test_decrease_product_quantity(buyer, client_buyer, traidoo_region):
-    product_item = mommy.make_recipe("items.item", quantity=10)
-    cart = mommy.make_recipe("carts.cart", user=buyer)
-    cart_item = mommy.make_recipe(
+    product_item = baker.make_recipe("items.item", quantity=10)
+    cart = baker.make_recipe("carts.cart", user=buyer)
+    cart_item = baker.make_recipe(
         "carts.cartitem",
         cart=cart,
         quantity=2,
@@ -134,32 +134,32 @@ def test_decrease_product_quantity_from_multiple_product_items(
     date_2 = datetime.datetime.now() + datetime.timedelta(days=2)
     date_3 = datetime.datetime.now() + datetime.timedelta(days=3)
 
-    product_item_1 = mommy.make_recipe(
+    product_item_1 = baker.make_recipe(
         "items.item", quantity=1, latest_delivery_date=date_1
     )
-    product_item_2 = mommy.make_recipe(
+    product_item_2 = baker.make_recipe(
         "items.item",
         product=product_item_1.product,
         quantity=2,
         latest_delivery_date=date_2,
     )
 
-    cart = mommy.make_recipe("carts.cart", user=buyer)
-    cart_item_1 = mommy.make_recipe(
+    cart = baker.make_recipe("carts.cart", user=buyer)
+    cart_item_1 = baker.make_recipe(
         "carts.cartitem",
         cart=cart,
         quantity=2,
         product=product_item_1.product,
         latest_delivery_date=product_item_1.latest_delivery_date,
     )
-    cart_item_2 = mommy.make_recipe(
+    cart_item_2 = baker.make_recipe(
         "carts.cartitem",
         cart=cart,
         quantity=2,
         product=product_item_2.product,
         latest_delivery_date=product_item_2.latest_delivery_date,
     )
-    cart_item_3 = mommy.make_recipe(
+    cart_item_3 = baker.make_recipe(
         "carts.cartitem",
         cart=cart,
         quantity=2,

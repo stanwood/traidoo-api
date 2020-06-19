@@ -3,7 +3,7 @@ import datetime
 import pytest
 from bs4 import BeautifulSoup
 from django.utils import timezone
-from model_mommy import mommy
+from model_bakery import baker
 
 from delivery_options.models import DeliveryOption
 from documents import factories
@@ -49,8 +49,8 @@ def test_third_party_logistic_invoice(
     order_items[0].delivery_option_id = DeliveryOption.SELLER
     order_items[0].save()
 
-    user = mommy.make_recipe("users.user", region=traidoo_region)
-    mommy.make("jobs.Job", user=user, order_item=order_items[0])
+    user = baker.make_recipe("users.user", region=traidoo_region)
+    baker.make("jobs.Job", user=user, order_item=order_items[0])
 
     order.recalculate_items_delivery_fee()
 
@@ -95,7 +95,7 @@ def test_producer_invoice(
     buyer,
     products,
 ):
-    other_seller = mommy.make_recipe("users.user")
+    other_seller = baker.make_recipe("users.user")
     products[1].seller = other_seller
     products[1].save()
 
@@ -204,14 +204,14 @@ def test_use_buyer_delivery_address_when_self_collect(
     traidoo_settings,
 ):
 
-    order = mommy.make(
+    order = baker.make(
         Order,
         buyer=buyer,
         earliest_delivery_date=timezone.make_aware(datetime.datetime.today()),
         region=traidoo_region,
     )
     order.save()
-    order_item = mommy.make(
+    order_item = baker.make(
         OrderItem,
         product=products[0],
         quantity=1,

@@ -1,4 +1,4 @@
-from model_mommy import mommy
+from model_bakery import baker
 
 from delivery_options.models import DeliveryOption
 from documents import factories
@@ -82,10 +82,10 @@ def test_create_delivery_overview_producer_3rd_party_delivery(
     order_items[0].save()
     order.recalculate_items_delivery_fee()
 
-    supplier = mommy.make_recipe(
+    supplier = baker.make_recipe(
         "users.user", email="supplier@example.com", region=traidoo_region
     )
-    mommy.make("jobs.Job", order_item=order_items[0], user=supplier)
+    baker.make("jobs.Job", order_item=order_items[0], user=supplier)
 
     factory = factories.DeliveryOverviewSellerFactory(
         order, seller=seller, region=traidoo_region

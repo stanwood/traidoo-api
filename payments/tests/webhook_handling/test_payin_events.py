@@ -5,7 +5,7 @@ import pytest
 from django.conf import settings
 from django.urls import reverse
 from django.utils import timezone
-from model_mommy import mommy
+from model_bakery import baker
 
 from documents import factories
 from mails.utils import get_admin_emails
@@ -211,7 +211,7 @@ def test_pay_oldest_order_first(
     delivery_options,
 ):
 
-    new_order = mommy.make(
+    new_order = baker.make(
         Order,
         buyer=buyer,
         region=traidoo_region,
@@ -222,7 +222,7 @@ def test_pay_oldest_order_first(
     product.amount = 10
     product.save()
 
-    mommy.make(
+    baker.make(
         OrderItem,
         product=product,
         quantity=1,

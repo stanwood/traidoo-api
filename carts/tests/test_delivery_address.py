@@ -1,7 +1,7 @@
 import datetime
 
 import pytest
-from model_mommy import mommy
+from model_bakery import baker
 
 from carts.models import CartItem
 from items.models import Item
@@ -9,7 +9,7 @@ from items.models import Item
 
 @pytest.mark.django_db
 def test_delivery_address(buyer, client_buyer, traidoo_region, delivery_address):
-    cart = mommy.make_recipe("carts.cart", user=buyer)
+    cart = baker.make_recipe("carts.cart", user=buyer)
     assert not cart.delivery_address
 
     response = client_buyer.post(
@@ -33,7 +33,7 @@ def test_delivery_address_when_cart_does_not_exist(buyer, client_buyer, traidoo_
 def test_delivery_address_when_address_does_not_exist(
     buyer, client_buyer, traidoo_region
 ):
-    cart = mommy.make_recipe("carts.cart", user=buyer)
+    cart = baker.make_recipe("carts.cart", user=buyer)
     assert not cart.delivery_address
 
     response = client_buyer.post(

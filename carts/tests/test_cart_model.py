@@ -2,21 +2,21 @@ from decimal import Decimal
 
 import django
 import pytest
-from model_mommy import mommy
+from model_bakery import baker
 
 from carts.models import Cart, CartItem
 
 
 @pytest.fixture
 def cart(buyer):
-    yield mommy.make(Cart, user=buyer)
+    yield baker.make(Cart, user=buyer)
 
 
 @pytest.fixture
 def cart_items(cart, products):
     yield [
-        mommy.make(CartItem, cart=cart, product=products[0], quantity=1),
-        mommy.make(CartItem, cart=cart, product=products[1], quantity=2),
+        baker.make(CartItem, cart=cart, product=products[0], quantity=1),
+        baker.make(CartItem, cart=cart, product=products[1], quantity=2),
     ]
 
 

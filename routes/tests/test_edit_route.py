@@ -2,7 +2,7 @@ from unittest import mock
 
 import pytest
 from ..models import Route
-from model_mommy import mommy
+from model_bakery import baker
 
 
 @pytest.mark.django_db
@@ -17,7 +17,7 @@ def test_edit_route(
     waypoints = [faker.address(), faker.address()]
     frequency = [1, 7]
 
-    route_1 = mommy.make(Route, user=seller)
+    route_1 = baker.make(Route, user=seller)
 
     assert route_1.frequency == []
     assert route_1.waypoints == []
@@ -68,7 +68,7 @@ def test_edit_route_partially(
 ):
     waypoints = [faker.address(), faker.address()]
 
-    route_1 = mommy.make(Route, user=seller)
+    route_1 = baker.make(Route, user=seller)
 
     new_length = route_1.length + 100
     calculate_route_length_mock.return_value = new_length
@@ -107,7 +107,7 @@ def test_edit_route_without_updating_points(
     waypoints = [faker.address(), faker.address()]
     frequency = [1, 7]
 
-    route_1 = mommy.make(Route, user=seller)
+    route_1 = baker.make(Route, user=seller)
 
     assert route_1.frequency == []
     assert route_1.waypoints == []
@@ -147,7 +147,7 @@ def test_edit_someone_else_route(seller, buyer, client_seller, faker, send_task)
     waypoints = [faker.address(), faker.address()]
     frequency = [1, 7]
 
-    route_1 = mommy.make(Route, user=buyer)
+    route_1 = baker.make(Route, user=buyer)
 
     response = client_seller.put(
         f'/routes/{route_1.id}', {'frequency': frequency, 'waypoints': waypoints}

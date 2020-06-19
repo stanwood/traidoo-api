@@ -4,7 +4,7 @@ import pytest
 from django.conf import settings
 from django.test import Client
 from django.urls import reverse
-from model_mommy import mommy
+from model_bakery import baker
 
 from ..models import User
 
@@ -17,7 +17,7 @@ def test_user_address_as_str():
     city = "City"
     street = "Street"
 
-    user = mommy.make(
+    user = baker.make(
         User, company_name=company_name, zip=zip_code, city=city, street=street
     )
     assert user.address_as_str == f"{company_name}, {street}, {zip_code}, {city}"
@@ -52,7 +52,7 @@ def test_seller_platform_fee_rate(
     if is_seller:
         groups.append(seller_group)
 
-    user = mommy.make(
+    user = baker.make(
         User,
         is_cooperative_member=is_cooperative_member,
         groups=groups,
@@ -94,7 +94,7 @@ def test_buyer_platform_fee_rate(
     if is_seller:
         groups.append(seller_group)
 
-    user = mommy.make(
+    user = baker.make(
         User,
         is_cooperative_member=is_cooperative_member,
         groups=groups,
@@ -121,7 +121,7 @@ def test_send_mail_to_user_after_activation(
 ):
     client = Client()
     client.force_login(user=admin)
-    new_user = mommy.make_recipe("users.user", region=traidoo_region)
+    new_user = baker.make_recipe("users.user", region=traidoo_region)
 
     client.post(
         reverse("admin:users_user_changelist"),

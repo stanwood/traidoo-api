@@ -1,7 +1,7 @@
 import random
 
 import pytest
-from model_mommy import mommy
+from model_bakery import baker
 
 from delivery_addresses.models import DeliveryAddress
 
@@ -9,8 +9,8 @@ pytestmark = pytest.mark.django_db
 
 
 def test_get_own_delivery_addresses(client_seller, seller, buyer):
-    mommy.make_recipe("delivery_addresses.delivery_address", user=buyer)
-    address_1, address_2 = mommy.make_recipe(
+    baker.make_recipe("delivery_addresses.delivery_address", user=buyer)
+    address_1, address_2 = baker.make_recipe(
         "delivery_addresses.delivery_address", user=seller, _quantity=2
     )
 
@@ -35,7 +35,7 @@ def test_get_own_delivery_addresses(client_seller, seller, buyer):
 
 
 def test_get_own_delivery_address(client_seller, seller):
-    address = mommy.make_recipe("delivery_addresses.delivery_address", user=seller)
+    address = baker.make_recipe("delivery_addresses.delivery_address", user=seller)
 
     response = client_seller.get(f"/delivery_addresses/{address.id}")
 
@@ -49,7 +49,7 @@ def test_get_own_delivery_address(client_seller, seller):
 
 
 def test_get_someone_else_delivery_address(client_seller, buyer):
-    address = mommy.make_recipe("delivery_addresses.delivery_address", user=buyer)
+    address = baker.make_recipe("delivery_addresses.delivery_address", user=buyer)
 
     response = client_seller.get(f"/delivery_addresses/{address.id}")
     assert response.status_code == 404
@@ -75,7 +75,7 @@ def test_add_delivery_address(client_seller, seller, faker):
 
 
 def test_edit_delivery_address(client_seller, seller, faker):
-    address = mommy.make_recipe("delivery_addresses.delivery_address", user=seller)
+    address = baker.make_recipe("delivery_addresses.delivery_address", user=seller)
 
     data = {
         "city": faker.city(),
@@ -103,7 +103,7 @@ def test_edit_delivery_address(client_seller, seller, faker):
 
 
 def test_edit_someone_else_delivery_address(client_buyer, seller, buyer, faker):
-    address = mommy.make_recipe("delivery_addresses.delivery_address", user=seller)
+    address = baker.make_recipe("delivery_addresses.delivery_address", user=seller)
 
     data = {
         "city": faker.city(),
@@ -117,7 +117,7 @@ def test_edit_someone_else_delivery_address(client_buyer, seller, buyer, faker):
 
 
 def test_partially_edit_delivery_address(client_seller, seller, faker):
-    address = mommy.make_recipe("delivery_addresses.delivery_address", user=seller)
+    address = baker.make_recipe("delivery_addresses.delivery_address", user=seller)
 
     data = {
         "city": faker.city(),
@@ -134,7 +134,7 @@ def test_partially_edit_delivery_address(client_seller, seller, faker):
 def test_partially_edit_someone_else_delivery_address(
     client_buyer, seller, buyer, faker
 ):
-    address = mommy.make_recipe("delivery_addresses.delivery_address", user=seller)
+    address = baker.make_recipe("delivery_addresses.delivery_address", user=seller)
     response = client_buyer.patch(
         f"/delivery_addresses/{address.id}", {"city": faker.city()}
     )
@@ -142,7 +142,7 @@ def test_partially_edit_someone_else_delivery_address(
 
 
 def test_delete_delivery_address(client_seller, seller, faker):
-    address = mommy.make_recipe("delivery_addresses.delivery_address", user=seller)
+    address = baker.make_recipe("delivery_addresses.delivery_address", user=seller)
     response = client_seller.delete(f"/delivery_addresses/{address.id}")
 
     with pytest.raises(DeliveryAddress.DoesNotExist):
@@ -150,7 +150,7 @@ def test_delete_delivery_address(client_seller, seller, faker):
 
 
 def test_delete_someone_else_delivery_address(client_seller, buyer, faker):
-    address = mommy.make_recipe("delivery_addresses.delivery_address", user=buyer)
+    address = baker.make_recipe("delivery_addresses.delivery_address", user=buyer)
     response = client_seller.delete(f"/delivery_addresses/{address.id}")
     assert response.status_code == 404
     assert not address.refresh_from_db()
