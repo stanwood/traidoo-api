@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-05-25 08:54+0000\n"
+"POT-Creation-Date: 2020-06-22 14:21+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -79,11 +79,11 @@ msgstr "Deutsch"
 msgid "English"
 msgstr "Englisch"
 
-#: Traidoo/urls.py:78
+#: Traidoo/urls.py:71
 msgid "Traidoo"
 msgstr "Traidoo"
 
-#: Traidoo/urls.py:79 Traidoo/urls.py:80
+#: Traidoo/urls.py:72 Traidoo/urls.py:73
 msgid "Traidoo Administration"
 msgstr "Traidoo Administration"
 
@@ -229,7 +229,8 @@ msgstr "Liefergebühr"
 msgid "Image url"
 msgstr "Bild-URL"
 
-#: containers/models.py:52 products/models.py:39 users/models/user.py:96
+#: containers/models.py:52 overlays/models.py:43 products/models.py:39
+#: users/models/user.py:96
 msgid "Image"
 msgstr "Bild"
 
@@ -392,6 +393,44 @@ msgstr "Verarbeitet"
 #: orders/models.py:74
 msgid "Region in which order took place"
 msgstr "Region des Käufers"
+
+#: overlays/models.py:22
+msgid "Anonymous user"
+msgstr ""
+
+#: overlays/models.py:23
+msgid "Not verified user"
+msgstr ""
+
+#: overlays/models.py:24
+#, fuzzy
+#| msgid "Is cooperative member"
+msgid "Not cooperative user"
+msgstr "Genosse"
+
+#: overlays/models.py:30
+msgid "Overlay type"
+msgstr ""
+
+#: overlays/models.py:33
+msgid "Title"
+msgstr ""
+
+#: overlays/models.py:34
+msgid "Subtitle"
+msgstr ""
+
+#: overlays/models.py:35
+msgid "Body"
+msgstr ""
+
+#: overlays/models.py:37
+msgid "Learn more URL"
+msgstr ""
+
+#: overlays/models.py:40
+msgid "Avatar"
+msgstr ""
 
 #: products/models.py:19
 msgid "Weight (g) per item"

@@ -130,6 +130,7 @@ urlpatterns = [
     path(r"", include("features.urls")),
     path(r"", include("orders.urls")),
     path(r"sellers/", include("sellers.urls")),
+    path(r"", include("overlays.urls")),
     path(r"auth/", include("users.urls")),
     url(r"^docs/", include_docs_urls(title="Traidoo Documentation", public=False)),
     url(r"^warmup", warmup),

@@ -38,4 +38,5 @@ INSTALLED_APPS = [
     "routes",
     "jobs",
     "admirarchy",
+    "overlays",
 ]
