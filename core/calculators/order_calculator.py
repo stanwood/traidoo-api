@@ -1,7 +1,9 @@
 import abc
+import collections
 import itertools
 from decimal import Decimal
 
+from core.calculators.utils import round_float
 from core.calculators.value import Value
 
 
@@ -45,9 +47,7 @@ class OrderCalculatorMixin:
     @property
     def price(self):
         total = sum(item.value.netto for item in self.calc_items)
-        total = Decimal(str(total))
-        total = total.quantize(Decimal(".01"), "ROUND_HALF_UP")
-        return float(total)
+        return round_float(total)
 
     @property
     def price_gross(self) -> float:
@@ -57,10 +57,7 @@ class OrderCalculatorMixin:
             gross_per_seller = self.calculate_gross_value_of_items(items)
             gross += gross_per_seller
 
-        gross = Decimal(str(gross))
-        gross = gross.quantize(Decimal(".01"), "ROUND_HALF_UP")
-        gross = float(gross)
-        return gross
+        return round_float(gross)
 
     @property
     def price_gross_cents(self):

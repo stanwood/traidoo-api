@@ -3,13 +3,12 @@ from decimal import Decimal
 
 import jinja2
 
+from core.calculators.utils import round_float
 from core.calculators.value import Value
 
 
 def format_price(value):
-    value = Decimal(str(value))
-    value = value.quantize(Decimal(".01"), "ROUND_HALF_UP")
-    value = float(value)
+    value = round_float(value)
     return "{:.2f}".format(value).replace(".", ",")
 
 

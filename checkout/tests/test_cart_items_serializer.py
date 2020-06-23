@@ -32,9 +32,9 @@ def test_cart_item_delivery_options(db, buyer):
 
 
 def test_include_price_net(db, buyer):
-    product = mommy.make_recipe("products.product", price=10, amount=2)
-    cart = mommy.make_recipe("carts.cart", user=buyer)
-    cart_item = mommy.make_recipe(
+    product = baker.make_recipe("products.product", price=10, amount=2)
+    cart = baker.make_recipe("carts.cart", user=buyer)
+    cart_item = baker.make_recipe(
         "carts.cartitem", cart=cart, quantity=1, product=product
     )
 

@@ -116,7 +116,9 @@ class ItemCalculatorMixin:
                 self.settings.mc_swiss_delivery_fee_vat,
             )
         elif self.is_seller_delivery:
-            return Value(self.product_delivery_charge, self.product_vat)
+            return Value(
+                self.product_delivery_charge, self.settings.mc_swiss_delivery_fee_vat
+            )
 
         return Value(0)
 

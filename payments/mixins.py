@@ -7,6 +7,7 @@ from django.contrib.auth import get_user_model
 from loguru import logger
 
 from core import utils
+from core.calculators.utils import round_float
 from payments.client.client import MangopayClient
 from payments.utils import lookup_legal_person_type, lookup_user_type
 
@@ -124,9 +125,7 @@ class MangopayMixin:
     @staticmethod
     def mangopay_fees(order_value):
         fees = 0.005 * order_value * 1.19
-        fees = Decimal(str(fees))
-        fees = fees.quantize(Decimal(".01"), "ROUND_HALF_UP")
-        return float(fees)
+        return round_float(fees)
 
     def create_mangopay_account_for_user(self, user: User) -> None:
         if lookup_user_type(user.company_type) == "natural":
