@@ -65,9 +65,9 @@ def test_get_all_overlay_buttons(client_anonymous):
                     "order": overlay_button.order,
                 }
                 for overlay_button in {
-                    overlay_button_1,
-                    overlay_button_2,
                     overlay_button_3,
+                    overlay_button_2,
+                    overlay_button_1,
                 }
             ],
         }
