@@ -13,5 +13,10 @@ class UserProfile(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ["id", "groups"]
-        read_only_fields = ("id", "groups")
+        fields = ["id", "groups", "is_cooperative_member", "is_email_verified"]
+        read_only_fields = (
+            "id",
+            "groups",
+            "is_cooperative_member",
+            "is_email_verified",
+        )
