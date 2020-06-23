@@ -38,11 +38,11 @@ def test_get_all_overlay_buttons(client_anonymous):
         "overlays.overlay", overlay_type=Overlay.OVERLAY_TYPE_ANONYMOUS
     )
 
-    overlay_button_1 = baker.make_recipe(
-        "overlays.overlay_button", overlay=overlay, order=1
-    )
     overlay_button_2 = baker.make_recipe(
         "overlays.overlay_button", overlay=overlay, order=2
+    )
+    overlay_button_1 = baker.make_recipe(
+        "overlays.overlay_button", overlay=overlay, order=1
     )
     overlay_button_3 = baker.make_recipe(
         "overlays.overlay_button", overlay=overlay, order=3
@@ -50,25 +50,20 @@ def test_get_all_overlay_buttons(client_anonymous):
 
     response = client_anonymous.get("/overlays")
 
-    assert response.json() == [
-        {
-            "overlayType": overlay.overlay_type,
-            "title": overlay.title,
-            "subtitle": overlay.subtitle,
-            "body": overlay.body,
-            "avatar": f"http://testserver/{overlay.avatar.url}",
-            "image": f"http://testserver/{overlay.image.url}",
-            "buttons": [
-                {
-                    "title": overlay_button.title,
-                    "url": overlay_button.url,
-                    "order": overlay_button.order,
-                }
-                for overlay_button in {
-                    overlay_button_3,
-                    overlay_button_2,
-                    overlay_button_1,
-                }
-            ],
-        }
-    ]
+    assert sorted(
+        response.json()[0]["buttons"], key=lambda button: button["order"]
+    ) == sorted(
+        [
+            {
+                "title": overlay_button.title,
+                "url": overlay_button.url,
+                "order": overlay_button.order,
+            }
+            for overlay_button in {
+                overlay_button_1,
+                overlay_button_2,
+                overlay_button_3,
+            }
+        ],
+        key=lambda button: button["order"],
+    )
