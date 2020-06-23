@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-06-22 14:21+0000\n"
+"POT-Creation-Date: 2020-06-23 12:09+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -229,7 +229,7 @@ msgstr "Liefergebühr"
 msgid "Image url"
 msgstr "Bild-URL"
 
-#: containers/models.py:52 overlays/models.py:43 products/models.py:39
+#: containers/models.py:52 overlays/models.py:42 products/models.py:39
 #: users/models/user.py:96
 msgid "Image"
 msgstr "Bild"
@@ -306,7 +306,7 @@ msgstr "Verkäufer"
 msgid "Invoice lines"
 msgstr "Rechnungszeilen"
 
-#: documents/models.py:78 orders/models.py:32
+#: documents/models.py:78 orders/models.py:32 overlays/models.py:59
 msgid "Order"
 msgstr "Kauf"
 
@@ -394,42 +394,64 @@ msgstr "Verarbeitet"
 msgid "Region in which order took place"
 msgstr "Region des Käufers"
 
-#: overlays/models.py:22
+#: overlays/models.py:23
 msgid "Anonymous user"
 msgstr ""
 
-#: overlays/models.py:23
+#: overlays/models.py:24
 msgid "Not verified user"
 msgstr ""
 
-#: overlays/models.py:24
+#: overlays/models.py:25
 #, fuzzy
 #| msgid "Is cooperative member"
 msgid "Not cooperative user"
 msgstr "Genosse"
 
-#: overlays/models.py:30
+#: overlays/models.py:26
+#, fuzzy
+#| msgid "Approve user"
+msgid "Not approved user"
+msgstr "Nutzer genehmigen"
+
+#: overlays/models.py:32
 msgid "Overlay type"
 msgstr ""
 
-#: overlays/models.py:33
+#: overlays/models.py:35 overlays/models.py:57
 msgid "Title"
 msgstr ""
 
-#: overlays/models.py:34
+#: overlays/models.py:36
 msgid "Subtitle"
 msgstr ""
 
-#: overlays/models.py:35
+#: overlays/models.py:37
 msgid "Body"
 msgstr ""
 
-#: overlays/models.py:37
-msgid "Learn more URL"
+#: overlays/models.py:39
+msgid "Avatar"
 msgstr ""
 
-#: overlays/models.py:40
-msgid "Avatar"
+#: overlays/models.py:46 overlays/models.py:55
+msgid "Overlay"
+msgstr ""
+
+#: overlays/models.py:47
+msgid "Overlays"
+msgstr ""
+
+#: overlays/models.py:58
+msgid "URL"
+msgstr ""
+
+#: overlays/models.py:63
+msgid "Overlay button"
+msgstr ""
+
+#: overlays/models.py:64
+msgid "Overlay buttons"
 msgstr ""
 
 #: products/models.py:19
