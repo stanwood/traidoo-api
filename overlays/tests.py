@@ -38,14 +38,14 @@ def test_get_all_overlay_buttons(client_anonymous):
         "overlays.overlay", overlay_type=Overlay.OVERLAY_TYPE_ANONYMOUS
     )
 
+    overlay_button_1 = baker.make_recipe(
+        "overlays.overlay_button", overlay=overlay, order=1
+    )
     overlay_button_2 = baker.make_recipe(
         "overlays.overlay_button", overlay=overlay, order=2
     )
     overlay_button_3 = baker.make_recipe(
         "overlays.overlay_button", overlay=overlay, order=3
-    )
-    overlay_button_1 = baker.make_recipe(
-        "overlays.overlay_button", overlay=overlay, order=1
     )
 
     response = client_anonymous.get("/overlays")
@@ -65,9 +65,9 @@ def test_get_all_overlay_buttons(client_anonymous):
                     "order": overlay_button.order,
                 }
                 for overlay_button in {
+                    overlay_button_1,
                     overlay_button_2,
                     overlay_button_3,
-                    overlay_button_1,
                 }
             ],
         }
