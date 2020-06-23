@@ -2,7 +2,7 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from faker import Faker
 from model_bakery.recipe import Recipe
 
-from overlays.models import Overlay
+from overlays.models import Overlay, OverlayButton
 
 fake = Faker()
 
@@ -18,7 +18,10 @@ overlay = Recipe(
     title=fake.sentence(),
     subtitle=fake.sentence(),
     body=fake.text(),
-    learn_more_url=fake.uri_path(),
     avatar=image_file,
     image=image_file,
+)
+
+overlay_button = Recipe(
+    OverlayButton, title=fake.word(), url=fake.uri_path(), overlay=overlay, order=1
 )

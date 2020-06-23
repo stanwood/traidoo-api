@@ -17,11 +17,13 @@ class Overlay(BaseAbstractModel):
     OVERLAY_TYPE_ANONYMOUS = "anonymous"
     OVERLAY_TYPE_NOT_VERIFIED = "not_verified"
     OVERLAY_TYPE_NOT_COOPERATIVE = "not_cooperative"
+    OVERLAY_TYPE_NOT_APPROVED = "not_approved"
 
     OVERLAY_TYPES = [
         (OVERLAY_TYPE_ANONYMOUS, _("Anonymous user")),
         (OVERLAY_TYPE_NOT_VERIFIED, _("Not verified user")),
         (OVERLAY_TYPE_NOT_COOPERATIVE, _("Not cooperative user")),
+        (OVERLAY_TYPE_NOT_APPROVED, _("Not approved user")),
     ]
 
     overlay_type = models.CharField(
@@ -33,12 +35,30 @@ class Overlay(BaseAbstractModel):
     title = models.CharField(max_length=255, verbose_name=_("Title"))
     subtitle = models.CharField(max_length=255, verbose_name=_("Subtitle"))
     body = models.TextField(verbose_name=_("Body"))
-    learn_more_url = models.CharField(
-        max_length=255, blank=True, verbose_name=_("Learn more URL")
-    )
     avatar = models.ImageField(
         upload_to=overlay_image_upload_to, verbose_name=_("Avatar"),
     )
     image = models.ImageField(
         upload_to=overlay_image_upload_to, verbose_name=_("Image"),
     )
+
+    class Meta:
+        verbose_name = _("Overlay")
+        verbose_name_plural = _("Overlays")
+
+
+class OverlayButton(BaseAbstractModel):
+    overlay = models.ForeignKey(
+        Overlay,
+        related_name="buttons",
+        on_delete=models.CASCADE,
+        verbose_name=_("Overlay"),
+    )
+    title = models.CharField(max_length=255, verbose_name=_("Title"))
+    url = models.CharField(max_length=255, verbose_name=_("URL"))
+    order = models.PositiveIntegerField(verbose_name=_("Order"))
+
+    class Meta:
+        unique_together = ["overlay", "order"]
+        verbose_name = _("Overlay button")
+        verbose_name_plural = _("Overlay buttons")

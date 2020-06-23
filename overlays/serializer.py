@@ -1,9 +1,17 @@
 from rest_framework import serializers
 
-from overlays.models import Overlay
+from overlays.models import Overlay, OverlayButton
 
 
-class OvertlaySerializer(serializers.ModelSerializer):
+class OverlayButtonSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = OverlayButton
+        fields = ["title", "url", "order"]
+
+
+class OverlaySerializer(serializers.ModelSerializer):
+    buttons = serializers.ListSerializer(child=OverlayButtonSerializer())
+
     class Meta:
         model = Overlay
         fields = [
@@ -11,7 +19,7 @@ class OvertlaySerializer(serializers.ModelSerializer):
             "title",
             "subtitle",
             "body",
-            "learn_more_url",
             "avatar",
             "image",
+            "buttons",
         ]
