@@ -168,7 +168,7 @@ def test_transfers_after_successful_processing(
         "mangopay-buyer-1",
         "buyer-wallet-1",
         "seller-1-wallet",
-        amount=181.69,
+        amount=178.98,
         fees=0,
         tag=f"v2 Order: {order.id} Document: Producer Invoice Seller: Best apples Buyer: ACME",
     )
@@ -176,7 +176,7 @@ def test_transfers_after_successful_processing(
         "mangopay-buyer-1",
         "buyer-wallet-1",
         "logistics-1-wallet",
-        amount=22.38,
+        amount=18.81,
         fees=0,
         tag=f"v2 Order: {order.id} Document: Logistics Invoice Seller: Traidoo Buyer: ACME",
     )
@@ -295,7 +295,7 @@ def test_transfer_to_global_platform_owner_if_local_does_not_have_mangopay_accou
         "mangopay-buyer-1",
         "buyer-wallet-1",
         "seller-1-wallet",
-        amount=181.69,
+        amount=178.98,
         fees=0,
         tag=f"v2 Order: {order.id} Document: Producer Invoice Seller: Best apples Buyer: ACME",
     )
@@ -303,7 +303,7 @@ def test_transfer_to_global_platform_owner_if_local_does_not_have_mangopay_accou
         "mangopay-buyer-1",
         "buyer-wallet-1",
         "logistics-1-wallet",
-        amount=22.38,
+        amount=18.81,
         fees=0,
         tag=f"v2 Order: {order.id} Document: Logistics Invoice Seller: Traidoo Buyer: ACME",
     )
@@ -378,7 +378,7 @@ def test_create_payouts_tasks_after_paying_invoices(
         "/mangopay/cron/payouts/10",
         queue_name="mangopay-payouts",
         http_method="POST",
-        payload={"order_id": order.id, "amount": 181.69},
+        payload={"order_id": order.id, "amount": 178.98},
         headers={"Region": "traidoo", "Content-Type": "application/json"},
     )
 
@@ -386,7 +386,7 @@ def test_create_payouts_tasks_after_paying_invoices(
         "/mangopay/cron/payouts/30",
         queue_name="mangopay-payouts",
         http_method="POST",
-        payload={"order_id": order.id, "amount": 22.38},
+        payload={"order_id": order.id, "amount": 18.81},
         headers={"Region": "traidoo", "Content-Type": "application/json"},
     )
 
@@ -435,7 +435,7 @@ def test_pay_in_for_order_confirmation_bankwire_pay_in_to_wallet(
     assert mailoutbox[1].to == [settings.LOGISTICS_EMAIL]
     assert mailoutbox[1].subject == f"Zahlung erhalten für Auftrag #{order.id}"
     assert (
-        f"Wir haben folgenden Betrag erhalten EUR22.38 von ACME für den "
+        f"Wir haben folgenden Betrag erhalten EUR18.81 von ACME für den "
         f"Kauf # {order.id}."
     ) in mailoutbox[1].body
 
@@ -453,7 +453,7 @@ def test_pay_in_for_order_confirmation_bankwire_pay_in_to_wallet(
     assert mailoutbox[0].to == ["best@apples.de"]
     assert mailoutbox[0].subject == (f"Zahlung erhalten für Auftrag #{order.id}")
     assert (
-        f"Wir haben folgenden Betrag erhalten EUR181.69 von ACME für "
+        f"Wir haben folgenden Betrag erhalten EUR178.98 von ACME für "
         f"den Kauf # {order.id}."
     ) in mailoutbox[0].body
 
@@ -466,14 +466,14 @@ def test_pay_in_for_order_confirmation_bankwire_pay_in_to_wallet(
         mock.call(
             "/mangopay/cron/payouts/10",
             http_method="POST",
-            payload={"order_id": order.id, "amount": 181.69},
+            payload={"order_id": order.id, "amount": 178.98},
             queue_name="mangopay-payouts",
             headers={"Region": traidoo_region.slug, "Content-Type": "application/json"},
         ),
         mock.call(
             "/mangopay/cron/payouts/30",
             http_method="POST",
-            payload={"order_id": order.id, "amount": 22.38},
+            payload={"order_id": order.id, "amount": 18.81},
             queue_name="mangopay-payouts",
             headers={"Region": traidoo_region.slug, "Content-Type": "application/json"},
         ),
@@ -498,7 +498,7 @@ def test_pay_in_for_order_confirmation_bankwire_pay_in_to_wallet(
         "mangopay-buyer-1",
         "buyer-wallet-1",
         "seller-1-wallet",
-        amount=181.69,
+        amount=178.98,
         fees=0,
         tag=f"v2 Order: {order.id} Document: Producer Invoice Seller: Best apples Buyer: ACME",
     )
@@ -506,7 +506,7 @@ def test_pay_in_for_order_confirmation_bankwire_pay_in_to_wallet(
         "mangopay-buyer-1",
         "buyer-wallet-1",
         "logistics-1-wallet",
-        amount=22.38,
+        amount=18.81,
         fees=0,
         tag=f"v2 Order: {order.id} Document: Logistics Invoice Seller: Traidoo Buyer: ACME",
     )
@@ -626,7 +626,7 @@ def test_seller_does_not_have_mangopay_user(
         "mangopay-buyer-1",
         "buyer-wallet-1",
         "logistics-1-wallet",
-        amount=22.38,
+        amount=18.81,
         fees=0,
         tag=f"v2 Order: {order.id} Document: Logistics Invoice Seller: Traidoo Buyer: ACME",
     )
@@ -971,7 +971,7 @@ def test_do_not_try_pay_to_the_same_wallet(
         "mangopay-buyer-1",
         "buyer-wallet-1",
         "logistics-1-wallet",
-        amount=22.38,
+        amount=18.81,
         fees=0,
         tag=f"v2 Order: {order.id} Document: Logistics Invoice Seller: Traidoo Buyer: ACME",
     )

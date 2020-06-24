@@ -1,4 +1,5 @@
 import functools
+import itertools
 from decimal import Decimal
 from typing import Dict, List, Union
 
@@ -6,6 +7,9 @@ from rest_framework import serializers
 
 from carts.models import Cart, CartItem
 from common.utils import get_region
+from core.calculators.order_calculator import OrderCalculatorMixin
+from core.calculators.utils import round_float
+from core.calculators.value import Value
 
 from delivery_options.models import DeliveryOption
 from delivery_options.serializers import DeliveryOptionSerializer
@@ -18,6 +22,7 @@ class CartItemSerializer(serializers.ModelSerializer):
     product_id = serializers.IntegerField(write_only=True)
     product = ProductSerializer(read_only=True)
     price_gross = serializers.FloatField(read_only=True)
+    price_net = serializers.FloatField(read_only=True)
     platform_fee_gross = serializers.FloatField(read_only=True)
     delivery_fee_gross = serializers.FloatField(read_only=True)
     delivery_option = DeliveryOptionSerializer(read_only=True)
@@ -35,6 +40,7 @@ class CartItemSerializer(serializers.ModelSerializer):
             "quantity",
             "latest_delivery_date",
             "price_gross",
+            "price_net",
             "platform_fee_gross",
             "delivery_fee_gross",
             "delivery_option",
@@ -90,7 +96,7 @@ class CartItemSerializer(serializers.ModelSerializer):
         return delivery_options
 
 
-class CartSerializer(serializers.ModelSerializer):
+class CartSerializer(OrderCalculatorMixin, serializers.ModelSerializer):
     id = serializers.ReadOnlyField()
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
     items = CartItemSerializer(many=True)
@@ -100,6 +106,7 @@ class CartSerializer(serializers.ModelSerializer):
     delivery_fee_gross = serializers.SerializerMethodField()
     total_container_deposit = serializers.SerializerMethodField()
     net_total = serializers.SerializerMethodField()
+    gross_total = serializers.SerializerMethodField()
     vat_breakdown = serializers.SerializerMethodField()
     product_total = serializers.SerializerMethodField()
     deposit = serializers.SerializerMethodField()
@@ -121,6 +128,7 @@ class CartSerializer(serializers.ModelSerializer):
             "product_total",
             "deposit",
             "vat_total",
+            "gross_total",
             "earliest_delivery_date",
             "delivery_address",
         )
@@ -165,52 +173,29 @@ class CartSerializer(serializers.ModelSerializer):
             ]
         )
 
+    def get_gross_total(self, obj):
+        return self.get_vat_total(obj) + self.get_net_total(obj)
+
     def _vat_breakdown(self, obj):
-        result = {}
-        total = 0.0
-
-        settings = get_settings()
-
+        items_values = []
         for cart_item in self._cart_items(obj):
-            # Product vat
-            key = float(cart_item.price.vat_rate)
-            if key in result:
-                result[key] = result[key] + cart_item.price.vat
-            else:
-                result[key] = cart_item.price.vat
+            items_values.append(cart_item.price)
+            items_values.append(cart_item._delivery_fee())
+            items_values.append(cart_item.buyer_platform_fee)
+            items_values.append(cart_item.container_deposit)
+        items_values = sorted(items_values, key=lambda item: item.vat_rate)
+        vat_mounts_by_rates = {}
+        for vat_rate, items_for_vat_rate in itertools.groupby(
+            items_values, lambda item: item.vat_rate
+        ):
+            sum_net_value = sum(value.netto for value in items_for_vat_rate)
+            total_value = Value(sum_net_value, vat_rate)
+            vat_mounts_by_rates[float(vat_rate)] = total_value.vat
 
-            # Logistic vat
-            delivery_vat_rate = float(cart_item.delivery_fee_vat_rate)
-            if delivery_vat_rate in result:
-                result[delivery_vat_rate] = (
-                    result[delivery_vat_rate] + cart_item.delivery_fee_vat
-                )
-            else:
-                result[delivery_vat_rate] = cart_item.delivery_fee_vat
+        total_vat_amount = sum(list(vat_mounts_by_rates.values()))
+        total_vat_amount = round_float(total_vat_amount)
 
-            # Platform vat
-            platform_fee_vat_rate = float(cart_item.platform_fee_vat_rate)
-            if platform_fee_vat_rate in result:
-                result[platform_fee_vat_rate] = (
-                    result[platform_fee_vat_rate] + cart_item.platform_fee_vat
-                )
-            else:
-                result[platform_fee_vat_rate] = cart_item.platform_fee_vat
-
-        # Deposit vat
-        total_container_deposit = self.get_total_container_deposit(obj)
-        deposit_vat_rate = float(settings.deposit_vat)
-
-        if deposit_vat_rate in result:
-            result[deposit_vat_rate] = result[deposit_vat_rate] + (
-                total_container_deposit * deposit_vat_rate
-            )
-        else:
-            result[deposit_vat_rate] = total_container_deposit * deposit_vat_rate
-
-        total = sum(list(result.values()))
-
-        return result, total
+        return vat_mounts_by_rates, total_vat_amount
 
     def get_vat_breakdown(self, obj):
         breakdown, _ = self._vat_breakdown(obj)

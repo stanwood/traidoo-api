@@ -18,6 +18,7 @@ from loguru import logger
 from common.models import Region
 from core.calculators.item_calculator import ItemCalculatorMixin
 from core.calculators.order_calculator import OrderCalculatorMixin
+from core.calculators.utils import round_float
 from core.calculators.value import Value
 from core.db.base import BaseAbstractModel
 from delivery_addresses.models import DeliveryAddress
@@ -81,7 +82,7 @@ class Order(OrderCalculatorMixin, BaseAbstractModel):
 
     def recalculate_items_delivery_fee(self):
         for item in self.items.all():
-            item.delivery_fee = item._delivery_fee().brutto
+            item.delivery_fee = item._delivery_fee().netto
             item.save()
 
     @property
@@ -96,9 +97,7 @@ class Order(OrderCalculatorMixin, BaseAbstractModel):
             ):
                 prices.append(item.price.netto)
 
-        price = Decimal(str(sum(prices)))
-        price = price.quantize(Decimal(".01"), "ROUND_HALF_UP")
-        return float(price)
+        return round_float(sum(prices))
 
     @property
     def calc_items(self):

@@ -15,7 +15,9 @@ def _prepare_test_data():
     product = baker.make_recipe(
         "products.product", seller=user_2, delivery_options=[delivery_option_seller]
     )
-    order = baker.make("orders.Order")
+    region = baker.make_recipe("common.region")
+    baker.make_recipe("settings.setting", region=region)
+    order = baker.make("orders.Order", region=region)
     order_item = baker.make(
         "orders.OrderItem",
         delivery_address=delivery_address,

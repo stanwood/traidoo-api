@@ -399,33 +399,19 @@ class OrderConfirmationBuyerFactory(DocumentFactory):
 
         for item in self._items:
             if item.is_seller_delivery and item.delivery_fee > 0:
-                producer = item.product.seller.company_name
-                seller_user_id = item.product_snapshot["seller"]["id"]
-
-                if item.product.third_party_delivery:
-                    logger.debug("Third party delivery.")
-
-                    try:
-                        job = Job.objects.get(order_item=item, user__isnull=False)
-                    except Job.DoesNotExist:
-                        pass
-                    else:
-                        logger.debug(f"Job claimed, ID: {job.id}.")
-                        producer = job.user.company_name
-                        seller_user_id = job.user.id
-
+                user_delivering_product = item.delivery_company
                 lines.append(
                     {
                         "number": item.product_snapshot["id"],
                         "name": f"Lieferung von {item.product_name_expanded}",
-                        "producer": producer,
+                        "producer": user_delivering_product.company_name,
                         "amount": 1.0,
                         "unit": "",
                         "price": float(item.delivery_fee),
                         "count": 1,
                         "vat_rate": float(self._settings.mc_swiss_delivery_fee_vat),
                         "category": "Logistik",
-                        "seller_user_id": seller_user_id,
+                        "seller_user_id": user_delivering_product.id,
                     }
                 )
 

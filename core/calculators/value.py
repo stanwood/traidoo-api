@@ -49,4 +49,4 @@ class Value(object):
         return float(Decimal(str(self.netto)) + Decimal(str(self.vat)))
 
     def __str__(self):
-        return f"{self.netto} net / {self.brutto} gross"
+        return f"{self.netto} net / {self.brutto} gross {self.vat_rate} VAT"

@@ -54,6 +54,10 @@ class ItemCalculatorMixin:
         return self.price.brutto
 
     @property
+    def price_net(self) -> float:
+        return self.price.netto
+
+    @property
     def buyer_platform_fee(self) -> Value:
         value = (
             Decimal(str(self.price.netto))
@@ -112,7 +116,9 @@ class ItemCalculatorMixin:
                 self.settings.mc_swiss_delivery_fee_vat,
             )
         elif self.is_seller_delivery:
-            return Value(self.product_delivery_charge, self.product_vat)
+            return Value(
+                self.product_delivery_charge, self.settings.mc_swiss_delivery_fee_vat
+            )
 
         return Value(0)
 
