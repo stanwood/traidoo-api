@@ -36,6 +36,9 @@ class BaseRegionalAdminMixin:
         return True
 
     def has_change_permission(self, request, obj=None):
+        if request.user.is_superuser:
+            return True
+
         if request.user.is_admin:
             return (
                 obj is None
@@ -66,7 +69,7 @@ class BaseRegionalAdminMixin:
             return super(BaseRegionalAdminMixin, self).has_add_permission(request)
 
     def save_form(self, request, form, change):
-        if request.user.is_admin:
+        if request.user.is_admin and not request.user.is_superuser:
             form.instance.region_id = request.user.region_id
 
         return super(BaseRegionalAdminMixin, self).save_form(request, form, change)
