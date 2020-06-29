@@ -1,9 +1,9 @@
 from enum import Enum
 
 from django.conf import settings
-from django.contrib.postgres.fields import ArrayField
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
+from django_better_admin_arrayfield.models.fields import ArrayField
 
 from loguru import logger
 
@@ -30,6 +30,7 @@ class Route(BaseAbstractModel):
         models.PositiveIntegerField(choices=[(day.value, day) for day in Days]),
         size=7,
         verbose_name=_("Frequency"),
+        help_text=_("1 - Monday, 2 - Tuesday etc.")
     )
     length = models.PositiveIntegerField(default=0, verbose_name=_("Length"))
     user = models.ForeignKey(

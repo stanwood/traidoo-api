@@ -28,6 +28,14 @@ class CustomMenu(Menu):
             items.MenuItem(_("Products"), reverse("admin:products_product_changelist")),
             items.MenuItem(_("Orders"), reverse("admin:orders_order_changelist")),
             items.MenuItem(
+                _("Logistics"),
+                children=[
+                    items.MenuItem(_("Routes"), reverse("admin:routes_route_changelist")),
+                    items.MenuItem(_("Jobs"), reverse("admin:jobs_job_changelist")),
+                    items.MenuItem(_("Trucks"), reverse("admin:trucks_truck_changelist")),
+                ]
+            ),
+            items.MenuItem(
                 _("Settings"),
                 children=[
                     items.MenuItem(

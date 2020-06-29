@@ -280,6 +280,9 @@ class OrderItem(ItemCalculatorMixin, BaseAbstractModel):
     class Meta:
         unique_together = (("order", "product", "latest_delivery_date"),)
 
+    def __str__(self):
+        return f"{self.product_snapshot['name']} x {self.quantity}"
+
     @property
     def settings(self):
         return self.order.region.settings.first()

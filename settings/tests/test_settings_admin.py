@@ -49,15 +49,21 @@ def test_superuser_can_delete_setting(django_app, traidoo_settings):
     assert response.status_code == 200
 
 
-def test_superuser_can_edit_region_of_setting(django_app, traidoo_settings, admin_group):
-    superuser = baker.make_recipe("users.user", is_superuser=True, is_staff=True, groups=[admin_group])
+def test_superuser_can_edit_region_of_setting(
+    django_app, traidoo_settings, admin_group
+):
+    superuser = baker.make_recipe(
+        "users.user", is_superuser=True, is_staff=True, groups=[admin_group]
+    )
     region = baker.make_recipe("common.region")
     settings_form = django_app.get(
-        reverse("admin:settings_setting_change", kwargs={"object_id": traidoo_settings.id}),
-        user=superuser
+        reverse(
+            "admin:settings_setting_change", kwargs={"object_id": traidoo_settings.id}
+        ),
+        user=superuser,
     ).form
 
-    settings_form['region'].value = region.id
+    settings_form["region"].value = region.id
     settings_form.submit()
 
     traidoo_settings.refresh_from_db()
