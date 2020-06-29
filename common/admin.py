@@ -10,6 +10,7 @@ class BaseRegionalAdminMixin:
         "categories.category",
         "items.item",
         "common.region",
+        'overlays.overlay'
     ]
 
     @property
