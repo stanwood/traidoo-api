@@ -6,7 +6,7 @@ from .models import Job, Detour
 
 @admin.register(Job)
 class JobAdmin(VersionAdmin):
-    ordering = ('id',)
+    ordering = ('created_at',)
     list_display = ('id', 'user', 'order_item')
     list_display_links = ['user', 'order_item']
 

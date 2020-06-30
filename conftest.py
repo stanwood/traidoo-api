@@ -8,7 +8,7 @@ from django.conf import settings
 from django.contrib.auth.models import Group
 from django.utils import timezone
 from faker import Faker
-from model_bakery import baker
+from model_bakery import baker, random_gen
 from PIL import Image
 from rest_framework.test import APIClient
 
@@ -569,3 +569,11 @@ def service_account():
     with mock.patch("google.oauth2.service_account") as service_account:
         service_account.return_value = mock.MagicMock()
         yield service_account
+
+
+@pytest.fixture(autouse=True, scope="session")
+def baker_support_for_better_array_field():
+    baker.generators.add(
+        "django_better_admin_arrayfield.models.fields.ArrayField", random_gen.gen_array
+    )
+    yield
