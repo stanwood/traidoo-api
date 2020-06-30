@@ -5,6 +5,7 @@ from django.conf import settings
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
+from common.models import Region
 from core.db.base import BaseAbstractModel
 
 
@@ -27,14 +28,20 @@ class Overlay(BaseAbstractModel):
     ]
 
     overlay_type = models.CharField(
-        max_length=20,
-        choices=OVERLAY_TYPES,
-        verbose_name=_("Overlay type"),
-        unique=True,
+        max_length=20, choices=OVERLAY_TYPES, verbose_name=_("Overlay type")
     )
     title = models.CharField(max_length=255, verbose_name=_("Title"))
     subtitle = models.CharField(max_length=255, verbose_name=_("Subtitle"))
     body = models.TextField(verbose_name=_("Body"))
+    region = models.ForeignKey(
+        Region,
+        on_delete=models.PROTECT,
+        related_name="overlays",
+        blank=False,
+        null=False,
+        help_text=_("Region"),
+        verbose_name=_("Region"),
+    )
     avatar = models.ImageField(
         upload_to=overlay_image_upload_to, verbose_name=_("Avatar"),
     )
@@ -45,6 +52,7 @@ class Overlay(BaseAbstractModel):
     class Meta:
         verbose_name = _("Overlay")
         verbose_name_plural = _("Overlays")
+        unique_together = ("overlay_type", "region")
 
 
 class OverlayButton(BaseAbstractModel):
