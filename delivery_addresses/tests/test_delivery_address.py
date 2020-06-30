@@ -149,6 +149,18 @@ def test_delete_delivery_address(client_seller, seller, faker):
         address.refresh_from_db()
 
 
+def test_delete_delivery_address_when_in_use(client_seller, seller, faker):
+    address = baker.make_recipe("delivery_addresses.delivery_address", user=seller)
+    cart = baker.make_recipe("carts.cart", delivery_address=address, user=seller)
+    response = client_seller.delete(f"/delivery_addresses/{address.id}")
+
+    assert response.status_code == 400
+    assert response.json() == {
+        "message": "Cannot be deleted due to protected related entities.",
+        "code": "protected_error",
+    }
+
+
 def test_delete_someone_else_delivery_address(client_seller, buyer, faker):
     address = baker.make_recipe("delivery_addresses.delivery_address", user=buyer)
     response = client_seller.delete(f"/delivery_addresses/{address.id}")
