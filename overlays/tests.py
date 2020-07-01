@@ -29,8 +29,10 @@ def test_get_all_overlays(client_anonymous):
     )
 
     response = client_anonymous.get("/overlays", **{"HTTP_REGION": region_1.slug},)
+    response_json = response.json()
+    response_json.sort(key=lambda overlay: overlay["overlayType"])
 
-    assert response.json() == [
+    assert response_json == [
         {
             "overlayType": overlay.overlay_type,
             "title": overlay.title,
