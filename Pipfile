@@ -63,6 +63,7 @@ django-tinymce = "*"
 django-admin-tools = "*"
 django-admirarchy = "*"
 model-bakery = "*"
+django-better-admin-arrayfield = "*"
 
 [requires]
 python_version = "3.7"
