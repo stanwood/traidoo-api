@@ -10,7 +10,7 @@ from core.calculators.item_calculator import ItemCalculatorMixin
 from core.calculators.order_calculator import OrderCalculatorMixin
 from core.calculators.value import Value
 from core.db.base import BaseAbstractModel
-from core.payments.transport_insurance import calculate_transport_insurance
+from core.payments.transport_insurance import calculate_transport_insurance_rate
 from delivery_addresses.models import DeliveryAddress
 from delivery_options.models import DeliveryOption
 from items.models import Item
@@ -157,24 +157,16 @@ class CartItem(ItemCalculatorMixin, BaseAbstractModel):
         return self.product.container_type.deposit
 
     @property
-    def _transport_insurance(self) -> Decimal:
-        return functools.reduce(
-            lambda prev, next: prev * next,
-            [
-                self.product.price,
-                self.product.amount,
-                Decimal(self.quantity),
-                calculate_transport_insurance(self.product.price),
-            ],
-        )
-
-    @property
     def seller_delivery(self) -> Value:
-        return Value(self.product.delivery_charge, self.product.vat)
+        seller_region_settings = self.product.region.setting
+        return Value(
+            self.product_delivery_charge,
+            seller_region_settings.mc_swiss_delivery_fee_vat,
+        )
 
     def central_logistic_delivery(self, region: Region) -> Value:
         region_settings = region.settings.first()
-        logistics_net = self._transport_insurance
+        logistics_net = self.transport_insurance
 
         container_delivery_fee = self.product.container_type.delivery_fee
         if container_delivery_fee:

@@ -42,7 +42,7 @@ def test_try_to_get_the_latest_cart(seller, client_seller):
 
 
 def test_get_checkout_with_delivery_address(buyer, client_buyer, delivery_address):
-    cart = baker.make("carts.Cart", user=buyer, delivery_address=delivery_address)
+    baker.make("carts.Cart", user=buyer, delivery_address=delivery_address)
     response = client_buyer.get("/checkout")
     assert response.json()["deliveryAddress"] == delivery_address.id
 
@@ -59,8 +59,8 @@ def test_get_delivery_options(client_buyer, cart):
     cart_item_0 = CartItem.objects.get(id=items[0]["id"])
     cart_item_1 = CartItem.objects.get(id=items[1]["id"])
 
-    assert cart_item_0.delivery_fee_gross == 32.73
-    assert cart_item_0.delivery_fee_net == 27.5
+    assert cart_item_0.delivery_fee_gross == 26.3
+    assert cart_item_0.delivery_fee_net == 22.1
     assert cart_item_0._delivery_fee().netto == cart_item_0.delivery_fee_net
     assert cart_item_1.delivery_fee_gross == 11.31
     assert cart_item_1.delivery_fee_net == 9.5

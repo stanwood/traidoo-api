@@ -6,7 +6,7 @@ from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
 
 from core.calculators.value import Value
-from core.payments.transport_insurance import calculate_transport_insurance
+from core.payments.transport_insurance import calculate_transport_insurance_rate
 
 
 class ItemCalculatorMixin:
@@ -94,15 +94,10 @@ class ItemCalculatorMixin:
         """
         Calculates transport insurance
         """
-        return functools.reduce(
-            lambda prev, next: prev * next,
-            [
-                self.product_price,
-                self.amount,
-                Decimal(self.quantity),
-                calculate_transport_insurance(self.product_price),
-            ],
-        )
+
+        price_net = Decimal(str(self.price_net))
+        insurance = price_net * calculate_transport_insurance_rate(price_net)
+        return insurance.quantize(Decimal(".01"), "ROUND_HALF_UP")
 
     def _delivery_fee(self):
         if self.is_central_logistic_delivery:

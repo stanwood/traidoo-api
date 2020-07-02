@@ -13,7 +13,7 @@ from categories.serializers import CategorySerializer
 from common.serializers import RegionSerializer
 from common.utils import get_region
 from containers.serializers import ContainerSerializer
-from core.payments.transport_insurance import calculate_transport_insurance
+from core.payments.transport_insurance import calculate_transport_insurance_rate
 from core.serializers.blankable_decimal_field import BlankableDecimalField
 from core.serializers.image_fallback_mixin import ImageFallbackMixin
 from core.serializers.regions import CustomRegionsSerializerField
@@ -244,9 +244,10 @@ class ProductDetailsSerializer(
     def _transport_insurance(self, obj: Product):
         return functools.reduce(
             lambda prev, next: prev * next,
-            [obj.price, obj.amount, calculate_transport_insurance(obj.price)],
+            [obj.price, obj.amount, calculate_transport_insurance_rate(obj.price)],
         )
 
+    # fixme: Duplicated calculation of delivery, to refactor
     def get_delivery(self, obj):
         request = self.context.get("request")
         region = get_region(request)

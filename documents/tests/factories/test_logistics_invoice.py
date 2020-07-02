@@ -66,7 +66,7 @@ def test_logistics_invoice_for_other_region_logistics_company(
         "count": 1,
         "name": f"Lieferung von {other_region_product.name}",
         "number": other_region_product.id,
-        "price": 135,
+        "price": 63,
         "producer": neighbour_region.setting.logistics_company.company_name,
         "seller_user_id": neighbour_region.setting.logistics_company.id,
         "unit": "",
