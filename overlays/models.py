@@ -67,6 +67,5 @@ class OverlayButton(BaseAbstractModel):
     order = models.PositiveIntegerField(verbose_name=_("Order"))
 
     class Meta:
-        unique_together = ["overlay", "order"]
         verbose_name = _("Overlay button")
         verbose_name_plural = _("Overlay buttons")
