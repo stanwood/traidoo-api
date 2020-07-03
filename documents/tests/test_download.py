@@ -26,7 +26,7 @@ def test_download_document_buyer(client_buyer, order, storage, buyer, seller):
         "https://example.com"
     )
 
-    response = client_buyer.get(f"/orders/{order.id}/download")
+    response = client_buyer.get(f"/documents/{document_1.id}/download")
 
     assert response.json() == {"url": "https://example.com", "filename": "document.pdf"}
 

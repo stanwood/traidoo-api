@@ -19,7 +19,6 @@ from items.views.items import ItemViewSet, ProductsItemViewSet
 from items.views.stats import ItemsStatsView
 from jobs.views import JobsViewSet
 from orders.views.find_unsold_items import FindUnsoldItemsView
-from orders.views.orders import BuyerOrderViewSet
 from products.views import ProductViewSet
 from routes.tasks.calculate_route_length import CalculateRouteLengthView
 from routes.views import RoutesViewSet
@@ -63,10 +62,6 @@ router.register(r"items", ItemViewSet, basename="item")
 product_items_router = routers.NestedSimpleRouter(router, r"products", lookup="product")
 product_items_router.register(r"items", ProductsItemViewSet, basename="item")
 
-# Orders & Items
-router.register(r"orders", BuyerOrderViewSet, basename="order")
-order_items_router = routers.NestedSimpleRouter(router, r"orders", lookup="order")
-
 # Admin site translations
 admin.site.index_title = _("Traidoo")
 admin.site.site_header = _("Traidoo Administration")
@@ -84,7 +79,6 @@ urlpatterns = [
     url(r"^users/(?P<user_id>.+)/mangopay/create", CreateMangopayAccountView.as_view()),
     url(r"^", include(router.urls)),
     url(r"^", include(product_items_router.urls)),
-    url(r"^", include(order_items_router.urls)),
     url(r"^api-auth/", include("rest_framework.urls")),
     url(r"^checkout", CheckoutView.as_view()),
     path(r"documents/", include("documents.urls")),
