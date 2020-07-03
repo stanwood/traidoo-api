@@ -14,9 +14,3 @@ class OverlayButtonInlineItem(BaseRegionalAdminMixin, admin.TabularInline):
 class OverlayAdmin(BaseRegionalAdminMixin, VersionAdmin):
     list_display = ("id", "overlay_type")
     inlines = (OverlayButtonInlineItem,)
-
-    def has_change_permission(self, request, obj=None):
-        return request.user.is_superuser
-
-    def has_delete_permission(self, request, obj=None):
-        return request.user.is_superuser
