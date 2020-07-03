@@ -14,3 +14,4 @@ class OverlayButtonInlineItem(BaseRegionalAdminMixin, admin.TabularInline):
 class OverlayAdmin(BaseRegionalAdminMixin, VersionAdmin):
     list_display = ("id", "overlay_type")
     inlines = (OverlayButtonInlineItem,)
+    readonly_fields = ("region",)
