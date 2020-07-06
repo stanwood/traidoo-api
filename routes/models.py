@@ -30,7 +30,7 @@ class Route(BaseAbstractModel):
         models.PositiveIntegerField(choices=[(day.value, day) for day in Days]),
         size=7,
         verbose_name=_("Frequency"),
-        help_text=_("1 - Monday, 2 - Tuesday etc.")
+        help_text=_("1 - Monday, 2 - Tuesday etc."),
     )
     length = models.PositiveIntegerField(default=0, verbose_name=_("Length"))
     user = models.ForeignKey(
