@@ -37,3 +37,16 @@ def test_do_not_recalculate_after_changing_frequency(
     form.fields["frequency"] = [1]
     form.submit()
     calculate_route_length.assert_not_called()
+
+
+def test_remove_waypoints(calculate_route_length, django_app, admin):
+
+    route = baker.make_recipe("routes.route", waypoints=["foo", "bar"])
+    form = django_app.get(
+        reverse("admin:routes_route_change", kwargs={"object_id": route.id}),
+        user=admin,
+    ).form
+    form.fields["waypoints"] = []
+    form.submit()
+    route.refresh_from_db()
+    assert not route.waypoints
