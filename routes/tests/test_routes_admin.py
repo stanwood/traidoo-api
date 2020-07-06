@@ -46,7 +46,16 @@ def test_remove_waypoints(calculate_route_length, django_app, admin):
         reverse("admin:routes_route_change", kwargs={"object_id": route.id}),
         user=admin,
     ).form
-    form.fields["waypoints"] = []
-    form.submit()
+
+    # Pretty array is not compatible with django webtest, need to grab
+    # data from from and submit it in raw form
+    data = form.submit_fields(None)
+    data = list(filter(lambda field: field[0] != "waypoints", data))
+    data.append(("waypoints", ""))
+    django_app.post(
+        reverse("admin:routes_route_change", kwargs={"object_id": route.id}),
+        user=admin,
+        params=data,
+    )
     route.refresh_from_db()
     assert not route.waypoints
