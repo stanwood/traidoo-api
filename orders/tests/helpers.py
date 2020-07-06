@@ -17,7 +17,14 @@ def create_documents(buyer_group, seller_group, region, cooperative_member):
 
     for document_type in Document.TYPES:
         documents[document_type.value[0]] = baker.make(
-            "documents.document", document_type=document_type.value[0], order=order,
+            "documents.document",
+            document_type=document_type.value[0],
+            order=order,
+            lines=[
+                {"price": 1, "count": 3, "vat_rate": 0.7, "amount": 5},
+                {"price": 2, "count": 2, "vat_rate": 0.7, "amount": 5},
+                {"price": 3, "count": 1, "vat_rate": 0.7, "amount": 5},
+            ],
         )
 
     return buyer, seller, order, documents

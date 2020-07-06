@@ -39,7 +39,7 @@ def test_get_seller_orders(
 
     result = json_response["results"][0]
     assert result["id"] == order.id
-    assert result["totalPrice"] == order.total_price
+    assert result["totalPrice"] == 151.02
     assert result["createdAt"] == order.created_at.isoformat().replace("+00:00", "Z")
 
     seller_document_types = get_seller_document_types()
