@@ -10,20 +10,37 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from documents.models import Document
+from documents.utils.document_types import (
+    get_buyer_document_types,
+    get_seller_document_types,
+)
 
 User = get_user_model()
 
 
 class DownloadDocument(APIView):
     def _check_permissions(self, document: Document, user: User):
-        # TODO: implement permissions
-        pass
+        if user.is_buyer:
+            return (
+                document.order.buyer == user
+                and document.document_type in get_buyer_document_types(user)
+            )
+        elif user.is_seller:
+            return (
+                document.seller["user_id"] == user.id
+                and document.document_type in get_seller_document_types()
+            )
+        else:
+            return False
 
     def get(self, request: Request, document_id: int = None, format: str = None):
         try:
             document = Document.objects.get(id=document_id)
         except Document.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
+
+        if not self._check_permissions(document, request.user):
+            return Response(status=status.HTTP_403_FORBIDDEN)
 
         storage_client = google.cloud.storage.Client.from_service_account_json(
             settings.BASE_DIR.joinpath("service_account.json")
