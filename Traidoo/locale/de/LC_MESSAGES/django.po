@@ -64,7 +64,7 @@ msgstr "Käufe"
 
 #: Traidoo/menu.py:31
 msgid "Logistics"
-msgstr ""
+msgstr "Logistik"
 
 #: Traidoo/menu.py:34 routes/models.py:27
 msgid "Routes"
@@ -361,7 +361,7 @@ msgstr "Gebinde"
 
 #: jobs/models.py:15
 msgid "Order item"
-msgstr ""
+msgstr "Bestell-Artikel"
 
 #: jobs/models.py:26 jobs/models.py:32
 msgid "Job"
@@ -409,11 +409,11 @@ msgstr "Region des Käufers"
 
 #: overlays/models.py:24
 msgid "Anonymous user"
-msgstr ""
+msgstr "Annonymer Benutzer"
 
 #: overlays/models.py:25
 msgid "Not verified user"
-msgstr ""
+msgstr "Nicht-verifizierter Benutzer"
 
 #: overlays/models.py:26
 #, fuzzy
@@ -429,43 +429,43 @@ msgstr "Nutzer genehmigen"
 
 #: overlays/models.py:31
 msgid "Overlay type"
-msgstr ""
+msgstr "Overlay-Typ"
 
 #: overlays/models.py:33 overlays/models.py:65
 msgid "Title"
-msgstr ""
+msgstr "Titel"
 
 #: overlays/models.py:34
 msgid "Subtitle"
-msgstr ""
+msgstr "Untertitel"
 
 #: overlays/models.py:35
 msgid "Body"
-msgstr ""
+msgstr "Body"
 
 #: overlays/models.py:46
 msgid "Avatar"
-msgstr ""
+msgstr "Avatar"
 
 #: overlays/models.py:53 overlays/models.py:63
 msgid "Overlay"
-msgstr ""
+msgstr "Overlay"
 
 #: overlays/models.py:54
 msgid "Overlays"
-msgstr ""
+msgstr "Overlays"
 
 #: overlays/models.py:66
 msgid "URL"
-msgstr ""
+msgstr "URL"
 
 #: overlays/models.py:70
 msgid "Overlay button"
-msgstr ""
+msgstr "Overlay-Button"
 
 #: overlays/models.py:71
 msgid "Overlay buttons"
-msgstr ""
+msgstr "Overlay-Buttons"
 
 #: products/models.py:19
 msgid "Weight (g) per item"
@@ -597,7 +597,7 @@ msgstr "Frequenz"
 
 #: routes/models.py:33
 msgid "1 - Monday, 2 - Tuesday etc."
-msgstr ""
+msgstr "1- Montag, 2 - Dienstag usw."
 
 #: routes/models.py:35
 msgid "Length"
