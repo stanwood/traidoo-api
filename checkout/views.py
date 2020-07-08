@@ -12,7 +12,7 @@ from delivery_addresses.models import DeliveryAddress
 from delivery_options.models import DeliveryOption
 from documents import factories
 from orders.models import Order, OrderItem
-from orders.serializers import OrderSerializer
+from orders.serializers.order import OrderSerializer
 from settings.models import Setting
 
 from .serializers import CartSerializer

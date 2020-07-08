@@ -17,10 +17,10 @@ from core.mixins.storage import StorageMixin
 from delivery_options.models import DeliveryOption
 from documents import factories
 from documents.models import Document
-from Traidoo import errors
 from mails.utils import send_mail
 from orders.models import Order
 from payments.mixins import MangopayMixin
+from Traidoo import errors
 
 User = get_user_model()
 
