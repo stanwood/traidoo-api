@@ -1,11 +1,10 @@
 from django.contrib.postgres.fields import JSONField
 from django.contrib.postgres.fields.jsonb import KeyTransform
-from django.db.models import F, IntegerField, Sum
+from django.db.models import F, IntegerField, Q, Sum
 from django.db.models.functions import Cast
 from rest_framework import serializers
 
 from documents.models import Document
-from documents.utils.document_types import get_seller_document_types
 from orders.models import Order
 
 from .document import DocumentSerializer
@@ -20,21 +19,24 @@ class SaleSerializer(serializers.ModelSerializer):
         fields = ("id", "created_at", "total_price", "documents")
 
     def get_total_price(self, obj):
-        documents = Document.objects.filter(
-            order=obj, document_type__in=get_seller_document_types(),
-        )
+        request = self.context.get("request")
 
-        return sum(
-            sum([item.value.brutto for item in document.calc_items])
-            for document in Document.objects.filter(
-                order=obj, document_type__in=get_seller_document_types()
-            )
-        )
+        try:
+            return obj.documents.get(
+                document_type=Document.TYPES.producer_invoice.value[0],
+                seller__user_id=request.user.id,
+            ).price_gross
+        except Document.DoesNotExist:
+            return 0
 
     def get_documents(self, obj):
+        request = self.context.get("request")
+
         return DocumentSerializer(
-            Document.objects.filter(
-                order=obj, document_type__in=get_seller_document_types(),
-            ).values("id", "document_type"),
+            obj.documents.filter(
+                Q(seller__user_id=request.user.id) | Q(buyer__user_id=request.user.id),
+            )
+            .values("id", "document_type")
+            .distinct(),
             many=True,
         ).data

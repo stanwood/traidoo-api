@@ -1,7 +1,7 @@
+from django.db.models import Q
 from rest_framework import serializers
 
 from documents.models import Document
-from documents.utils.document_types import get_buyer_document_types
 from orders.models import Order
 
 from .document import DocumentSerializer
@@ -15,9 +15,13 @@ class PurchaseSerializer(serializers.ModelSerializer):
         fields = ("id", "created_at", "total_price", "documents")
 
     def get_documents(self, obj):
+        request = self.context.get("request")
+
         return DocumentSerializer(
-            Document.objects.filter(
-                order=obj, document_type__in=get_buyer_document_types(obj.buyer)
-            ).values("id", "document_type"),
+            obj.documents.filter(
+                Q(seller__user_id=request.user.id) | Q(buyer__user_id=request.user.id),
+            )
+            .values("id", "document_type")
+            .distinct(),
             many=True,
         ).data

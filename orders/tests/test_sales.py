@@ -2,7 +2,6 @@ import pytest
 from model_bakery import baker
 
 from documents.models import Document
-from documents.utils.document_types import get_seller_document_types
 
 from .helpers import create_documents
 
@@ -26,7 +25,7 @@ def test_get_seller_orders(
     api_client, buyer_group, seller_group, traidoo_region,
 ):
     _, seller, order, documents = create_documents(
-        buyer_group, seller_group, traidoo_region, False
+        buyer_group, seller_group, traidoo_region
     )
 
     api_client.force_authenticate(user=seller)
@@ -39,14 +38,16 @@ def test_get_seller_orders(
 
     result = json_response["results"][0]
     assert result["id"] == order.id
-    assert result["totalPrice"] == 151.02
+    assert result["totalPrice"] == 50.35
     assert result["createdAt"] == order.created_at.isoformat().replace("+00:00", "Z")
 
-    seller_document_types = get_seller_document_types()
+    assert len(result["documents"]) == len(documents) - 1
 
-    assert len(result["documents"]) == len(seller_document_types) == 3
-
-    for document in seller_document_types:
-        assert {"documentType": document, "id": documents[document].id,} in result[
-            "documents"
-        ]
+    for document_type, document in documents.items():
+        if (
+            document.seller["user_id"] == seller.id
+            or document.buyer["user_id"] == seller.id
+        ):
+            assert {"documentType": document_type, "id": document.id,} in result[
+                "documents"
+            ]

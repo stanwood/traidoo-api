@@ -2,7 +2,6 @@ import pytest
 from model_bakery import baker
 
 from documents.models import Document
-from documents.utils.document_types import get_buyer_document_types
 
 from .helpers import create_documents
 
@@ -21,20 +20,12 @@ def test_get_buyer_orders_as_seller(api_client, seller_group):
     assert response.status_code == 403
 
 
-@pytest.mark.parametrize(
-    "cooperative_member,number_of_documents", [(True, 5), (False, 4)],
-)
 @pytest.mark.django_db
 def test_get_buyer_orders(
-    cooperative_member,
-    number_of_documents,
-    api_client,
-    buyer_group,
-    seller_group,
-    traidoo_region,
+    api_client, buyer_group, seller_group, traidoo_region,
 ):
     buyer, _, order, documents = create_documents(
-        buyer_group, seller_group, traidoo_region, cooperative_member=cooperative_member
+        buyer_group, seller_group, traidoo_region
     )
 
     api_client.force_authenticate(user=buyer)
@@ -50,11 +41,13 @@ def test_get_buyer_orders(
     assert result["totalPrice"] == order.total_price
     assert result["createdAt"] == order.created_at.isoformat().replace("+00:00", "Z")
 
-    buyer_document_types = get_buyer_document_types(buyer)
+    assert len(result["documents"]) == len(documents) - 1
 
-    assert len(result["documents"]) == len(buyer_document_types) == number_of_documents
-
-    for document in buyer_document_types:
-        assert {"documentType": document, "id": documents[document].id,} in result[
-            "documents"
-        ]
+    for document_type, document in documents.items():
+        if (
+            document.seller["user_id"] == buyer.id
+            or document.buyer["user_id"] == buyer.id
+        ):
+            assert {"documentType": document_type, "id": document.id,} in result[
+                "documents"
+            ]
