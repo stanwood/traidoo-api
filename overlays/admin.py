@@ -15,8 +15,9 @@ class OverlayAdmin(BaseRegionalAdminMixin, VersionAdmin):
     list_display = ("id", "overlay_type")
     inlines = (OverlayButtonInlineItem,)
 
-    def get_readonly_fields(self, request, obj=None):
-        read_only_fields = super(OverlayAdmin, self).get_readonly_fields(request, obj)
+    def get_form(self, request, obj=None, **kwargs):
+        form = super().get_form(request, obj, **kwargs)
         if not request.user.is_superuser:
-            read_only_fields += ("region",)
-        return read_only_fields
+            form.base_fields["region"].initial = request.user.region.id
+            form.base_fields["region"].disabled = True
+        return form
