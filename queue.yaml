@@ -6,7 +6,7 @@ queue:
     - name: documents
       rate: 10/s
       bucket_size: 200
-      max_concurrent_requests: 5
+      max_concurrent_requests: 3
 
     - name: mangopay-payouts
       rate: 10/s
