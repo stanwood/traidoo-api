@@ -5,7 +5,7 @@ from common.admin import BaseRegionalAdminMixin
 from overlays.models import Overlay, OverlayButton
 
 
-class OverlayButtonInlineItem(BaseRegionalAdminMixin, admin.TabularInline):
+class OverlayButtonInlineItem(admin.TabularInline):
     model = OverlayButton
     extra = 1
 
@@ -18,5 +18,5 @@ class OverlayAdmin(BaseRegionalAdminMixin, VersionAdmin):
     def get_readonly_fields(self, request, obj=None):
         read_only_fields = super(OverlayAdmin, self).get_readonly_fields(request, obj)
         if not request.user.is_superuser:
-            read_only_fields += ("region")
+            read_only_fields += ("region",)
         return read_only_fields
