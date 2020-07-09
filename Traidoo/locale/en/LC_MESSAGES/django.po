@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-06-23 12:09+0000\n"
+"POT-Creation-Date: 2020-07-09 08:39+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -58,16 +58,33 @@ msgstr ""
 msgid "Products"
 msgstr ""
 
-#: Traidoo/menu.py:29 orders/models.py:33
+#: Traidoo/menu.py:29 orders/models.py:34
 msgid "Orders"
 msgstr ""
 
-#: Traidoo/menu.py:31 Traidoo/menu.py:34 settings/models.py:13
+#: Traidoo/menu.py:31
+msgid "Logistics"
+msgstr ""
+
+#: Traidoo/menu.py:33 routes/models.py:27
+msgid "Routes"
+msgstr ""
+
+#: Traidoo/menu.py:34 jobs/models.py:27
+msgid "Jobs"
+msgstr ""
+
+#: Traidoo/menu.py:35 trucks/models.py:10
+msgid "Trucks"
+msgstr ""
+
+#: Traidoo/menu.py:39 Traidoo/menu.py:42 settings/models.py:13
 msgid "Settings"
 msgstr ""
 
-#: Traidoo/menu.py:37 common/models.py:44 orders/models.py:75
-#: settings/models.py:38 users/models/user.py:44
+#: Traidoo/menu.py:45 common/models.py:44 orders/models.py:76
+#: overlays/models.py:42 overlays/models.py:43 settings/models.py:38
+#: users/models/user.py:44
 msgid "Region"
 msgstr ""
 
@@ -79,11 +96,11 @@ msgstr ""
 msgid "English"
 msgstr ""
 
-#: Traidoo/urls.py:71
+#: Traidoo/urls.py:66
 msgid "Traidoo"
 msgstr ""
 
-#: Traidoo/urls.py:72 Traidoo/urls.py:73
+#: Traidoo/urls.py:67 Traidoo/urls.py:68
 msgid "Traidoo Administration"
 msgstr ""
 
@@ -92,11 +109,11 @@ msgid "Carts"
 msgstr ""
 
 #: carts/models.py:23 delivery_addresses/models.py:14 jobs/models.py:22
-#: routes/models.py:39 users/models/kyc.py:21
+#: routes/models.py:40 users/models/kyc.py:21
 msgid "User"
 msgstr ""
 
-#: carts/models.py:26 orders/models.py:66
+#: carts/models.py:26 orders/models.py:67
 msgid "Earliest delivery date"
 msgstr ""
 
@@ -104,7 +121,7 @@ msgstr ""
 msgid "Delivery address"
 msgstr ""
 
-#: carts/models.py:54 carts/models.py:63 orders/models.py:36
+#: carts/models.py:54 carts/models.py:63 orders/models.py:37
 msgid "Cart"
 msgstr ""
 
@@ -229,7 +246,7 @@ msgstr ""
 msgid "Image url"
 msgstr ""
 
-#: containers/models.py:52 overlays/models.py:42 products/models.py:39
+#: containers/models.py:52 overlays/models.py:49 products/models.py:39
 #: users/models/user.py:96
 msgid "Image"
 msgstr ""
@@ -294,7 +311,7 @@ msgstr ""
 msgid "Document type"
 msgstr ""
 
-#: documents/models.py:68 orders/models.py:57
+#: documents/models.py:68 orders/models.py:58
 msgid "Buyer"
 msgstr ""
 
@@ -306,7 +323,7 @@ msgstr ""
 msgid "Invoice lines"
 msgstr ""
 
-#: documents/models.py:78 orders/models.py:32 overlays/models.py:59
+#: documents/models.py:78 orders/models.py:33 overlays/models.py:67
 msgid "Order"
 msgstr ""
 
@@ -350,10 +367,6 @@ msgstr ""
 msgid "Job"
 msgstr ""
 
-#: jobs/models.py:27
-msgid "Jobs"
-msgstr ""
-
 #: jobs/models.py:34 routes/models.py:26
 msgid "Route"
 msgstr ""
@@ -370,83 +383,83 @@ msgstr ""
 msgid "Detours"
 msgstr ""
 
-#: orders/models.py:37
+#: orders/models.py:38
 msgid "Paid"
 msgstr ""
 
-#: orders/models.py:38
+#: orders/models.py:39
 msgid "Ordered"
 msgstr ""
 
-#: orders/models.py:60
+#: orders/models.py:61
 msgid "Status"
 msgstr ""
 
-#: orders/models.py:63
+#: orders/models.py:64
 msgid "Total price"
 msgstr ""
 
-#: orders/models.py:68
+#: orders/models.py:69
 msgid "Processed"
 msgstr ""
 
-#: orders/models.py:74
+#: orders/models.py:75
 msgid "Region in which order took place"
 msgstr ""
 
-#: overlays/models.py:23
+#: overlays/models.py:24
 msgid "Anonymous user"
 msgstr ""
 
-#: overlays/models.py:24
+#: overlays/models.py:25
 msgid "Not verified user"
 msgstr ""
 
-#: overlays/models.py:25
+#: overlays/models.py:26
 msgid "Not cooperative user"
 msgstr ""
 
-#: overlays/models.py:26
+#: overlays/models.py:27
 msgid "Not approved user"
 msgstr ""
 
-#: overlays/models.py:32
+#: overlays/models.py:31
 msgid "Overlay type"
 msgstr ""
 
-#: overlays/models.py:35 overlays/models.py:57
+#: overlays/models.py:33 overlays/models.py:65
 msgid "Title"
 msgstr ""
 
-#: overlays/models.py:36
+#: overlays/models.py:34
 msgid "Subtitle"
 msgstr ""
 
-#: overlays/models.py:37
+#: overlays/models.py:35
 msgid "Body"
 msgstr ""
 
-#: overlays/models.py:39
+#: overlays/models.py:46
 msgid "Avatar"
 msgstr ""
 
-#: overlays/models.py:46 overlays/models.py:55
+#: overlays/models.py:53 overlays/models.py:63
 msgid "Overlay"
 msgstr ""
 
-#: overlays/models.py:47
+#: overlays/models.py:54
 msgid "Overlays"
 msgstr ""
 
-#: overlays/models.py:58
+#: overlays/models.py:66
 msgid "URL"
 msgstr ""
 
-#: overlays/models.py:63
+#: overlays/models.py:70
 msgid "Overlay button"
 msgstr ""
 
-#: overlays/models.py:64
+#: overlays/models.py:71
 msgid "Overlay buttons"
 msgstr ""
 
@@ -574,27 +587,27 @@ msgstr ""
 msgid "Item quantity"
 msgstr ""
 
-#: routes/models.py:27
-msgid "Routes"
-msgstr ""
-
 #: routes/models.py:32
 msgid "Frequency"
 msgstr ""
 
-#: routes/models.py:34
+#: routes/models.py:33
+msgid "1 - Monday, 2 - Tuesday etc."
+msgstr ""
+
+#: routes/models.py:35
 msgid "Length"
 msgstr ""
 
-#: routes/models.py:41
+#: routes/models.py:42
 msgid "Origin"
 msgstr ""
 
-#: routes/models.py:42
+#: routes/models.py:43
 msgid "Destination"
 msgstr ""
 
-#: routes/models.py:47
+#: routes/models.py:48
 msgid "Way points"
 msgstr ""
 
@@ -648,10 +661,6 @@ msgstr ""
 
 #: trucks/models.py:9 trucks/models.py:12
 msgid "Truck"
-msgstr ""
-
-#: trucks/models.py:10
-msgid "Trucks"
 msgstr ""
 
 #: users/admin.py:16

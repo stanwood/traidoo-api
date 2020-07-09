@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-07-06 16:18+0000\n"
+"POT-Creation-Date: 2020-07-09 08:39+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -66,23 +66,23 @@ msgstr "Käufe"
 msgid "Logistics"
 msgstr "Logistik"
 
-#: Traidoo/menu.py:34 routes/models.py:27
+#: Traidoo/menu.py:33 routes/models.py:27
 msgid "Routes"
 msgstr "Routen"
 
-#: Traidoo/menu.py:36 jobs/models.py:27
+#: Traidoo/menu.py:34 jobs/models.py:27
 msgid "Jobs"
 msgstr "Aufträge"
 
-#: Traidoo/menu.py:38 trucks/models.py:10
+#: Traidoo/menu.py:35 trucks/models.py:10
 msgid "Trucks"
 msgstr "LKW"
 
-#: Traidoo/menu.py:43 Traidoo/menu.py:46 settings/models.py:13
+#: Traidoo/menu.py:39 Traidoo/menu.py:42 settings/models.py:13
 msgid "Settings"
 msgstr "Einstellungen"
 
-#: Traidoo/menu.py:49 common/models.py:44 orders/models.py:76
+#: Traidoo/menu.py:45 common/models.py:44 orders/models.py:76
 #: overlays/models.py:42 overlays/models.py:43 settings/models.py:38
 #: users/models/user.py:44
 msgid "Region"
@@ -96,11 +96,11 @@ msgstr "Deutsch"
 msgid "English"
 msgstr "Englisch"
 
-#: Traidoo/urls.py:71
+#: Traidoo/urls.py:66
 msgid "Traidoo"
 msgstr "Traidoo"
 
-#: Traidoo/urls.py:72 Traidoo/urls.py:73
+#: Traidoo/urls.py:67 Traidoo/urls.py:68
 msgid "Traidoo Administration"
 msgstr "Traidoo Administration"
 
@@ -416,14 +416,10 @@ msgid "Not verified user"
 msgstr "Nicht-verifizierter Benutzer"
 
 #: overlays/models.py:26
-#, fuzzy
-#| msgid "Is cooperative member"
 msgid "Not cooperative user"
 msgstr "Genosse"
 
 #: overlays/models.py:27
-#, fuzzy
-#| msgid "Approve user"
 msgid "Not approved user"
 msgstr "Nutzer genehmigen"
 
