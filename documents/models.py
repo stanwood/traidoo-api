@@ -209,3 +209,14 @@ class Document(OrderCalculatorMixin, BaseAbstractModel):
     @property
     def is_invoice(self):
         return "Invoice" in self.document_type
+
+
+class DocumentSendLog(BaseAbstractModel):
+
+    email = models.EmailField()
+    order = models.ForeignKey(
+        Order,
+        on_delete=models.PROTECT,
+        related_name="document_send_logs",
+        verbose_name=_("Order"),
+    )

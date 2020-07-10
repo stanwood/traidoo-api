@@ -7,7 +7,7 @@ from django.urls import reverse
 from django.test import override_settings
 from model_bakery import baker
 
-from documents.models import Document
+from documents.models import Document, DocumentSendLog
 from Traidoo import errors
 
 pytestmark = pytest.mark.django_db
@@ -226,6 +226,23 @@ def test_documents_sent_to_all_user_emails(
         platform_user.email,
         logistics_user.email,
     }
+
+
+def test_track_sending_emails(
+    mailoutbox,
+    buyer,
+    seller,
+    client,
+    order,
+    order_items,
+    central_platform_user,
+    platform_user,
+    logistics_user,
+):
+    client.post(reverse("task", kwargs={"order_id": order.id, "document_set": "all"}))
+
+    for mail in mailoutbox:
+        assert DocumentSendLog.objects.get(email=mail.to)
 
 
 def test_use_mangopay_iban_alias_in_order_confirmation(client, order, order_items):
