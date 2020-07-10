@@ -1,3 +1,4 @@
+from django.contrib.auth import get_user_model
 from django.contrib.postgres.fields import JSONField
 from django.contrib.postgres.fields.jsonb import KeyTransform
 from django.db.models import F, IntegerField, Q, Sum
@@ -9,14 +10,23 @@ from orders.models import Order
 
 from .document import DocumentSerializer
 
+User = get_user_model()
+
+
+class SaleBuyerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ("id", "first_name", "last_name", "company_name")
+
 
 class SaleSerializer(serializers.ModelSerializer):
+    buyer = SaleBuyerSerializer()
     documents = serializers.SerializerMethodField()
     total_price = serializers.SerializerMethodField()
 
     class Meta:
         model = Order
-        fields = ("id", "created_at", "total_price", "documents")
+        fields = ("id", "created_at", "total_price", "documents", "buyer")
 
     def get_total_price(self, obj):
         request = self.context.get("request")
