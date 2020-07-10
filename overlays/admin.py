@@ -21,3 +21,8 @@ class OverlayAdmin(BaseRegionalAdminMixin, VersionAdmin):
             form.base_fields["region"].initial = request.user.region.id
             form.base_fields["region"].disabled = True
         return form
+
+    def has_delete_permission(self, request, obj=None):
+        if request.user.is_superuser:
+            return True
+        return super().has_delete_permission(request, obj)
