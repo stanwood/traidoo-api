@@ -1,32 +1,32 @@
 from django.contrib import admin
-from reversion.admin import VersionAdmin
+from django.contrib.admin import ModelAdmin
 
 from carts.models import Cart, CartItem
 
 
 @admin.register(Cart)
-class CartAdmin(VersionAdmin):
-    ordering = ('-created_at', )
+class CartAdmin(ModelAdmin):
+    ordering = ("-created_at",)
     list_display = (
-        'id',
-        'user',
+        "id",
+        "user",
     )
     list_display_links = [
-        'user',
+        "user",
     ]
 
 
 @admin.register(CartItem)
-class CartItemAdmin(VersionAdmin):
-    ordering = ('-created_at', )
+class CartItemAdmin(ModelAdmin):
+    ordering = ("-created_at",)
     list_display = (
-        'id',
-        'cart',
-        'product',
-        'latest_delivery_date',
-        'quantity',
+        "id",
+        "cart",
+        "product",
+        "latest_delivery_date",
+        "quantity",
     )
     list_display_links = [
-        'cart',
-        'product',
+        "cart",
+        "product",
     ]

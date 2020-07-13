@@ -1,4 +1,4 @@
-from django.conf.urls import include, url
+from django.conf.urls import url
 
 from .tasks.documents import DocumentsTask
 from .views.download import DownloadDocument

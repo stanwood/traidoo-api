@@ -1,11 +1,11 @@
 from django.contrib import admin
-from reversion.admin import VersionAdmin
+from django.contrib.admin import ModelAdmin
 
 from documents.models import Document
 
 
 @admin.register(Document)
-class DocumentAdmin(VersionAdmin):
+class DocumentAdmin(ModelAdmin):
     ordering = ("-created_at",)
     list_display = (
         "id",

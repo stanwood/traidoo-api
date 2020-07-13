@@ -1,6 +1,5 @@
 from django.contrib import admin
-from django import forms
-from reversion.admin import VersionAdmin
+from django.contrib.admin import ModelAdmin
 
 from common.admin import BaseRegionalAdminMixin
 from core.mixins.storage import StorageMixin
@@ -78,7 +77,7 @@ class DocumentsInline(StorageMixin, admin.TabularInline):
 
 
 @admin.register(Order)
-class OrderAdmin(BaseRegionalAdminMixin, VersionAdmin):
+class OrderAdmin(BaseRegionalAdminMixin, ModelAdmin):
     ordering = ("-earliest_delivery_date",)
     inlines = (OrderItemsInline, DocumentsInline)
     list_display = (
@@ -106,7 +105,7 @@ class OrderAdmin(BaseRegionalAdminMixin, VersionAdmin):
 
 
 @admin.register(OrderItem)
-class OrderItemAdmin(VersionAdmin):
+class OrderItemAdmin(ModelAdmin):
     ordering = ("-latest_delivery_date",)
     list_display = (
         "id",

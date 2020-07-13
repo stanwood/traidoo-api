@@ -1,12 +1,12 @@
 from django.contrib import admin
-from reversion.admin import VersionAdmin
+from django.contrib.admin import ModelAdmin
 
 from common.admin import BaseRegionalAdminMixin
 from settings.models import Setting
 
 
 @admin.register(Setting)
-class SettingAdmin(BaseRegionalAdminMixin, VersionAdmin):
+class SettingAdmin(BaseRegionalAdminMixin, ModelAdmin):
     ordering = ("id",)
     list_display = (
         "id",

@@ -212,6 +212,10 @@ class Document(OrderCalculatorMixin, BaseAbstractModel):
 
 
 class DocumentSendLog(BaseAbstractModel):
+    """
+    Model to track emails to which documents for an order were sent.
+    This way we want to avoid sending duplicate mails.
+    """
 
     email = models.EmailField()
     order = models.ForeignKey(
@@ -220,3 +224,7 @@ class DocumentSendLog(BaseAbstractModel):
         related_name="document_send_logs",
         verbose_name=_("Order"),
     )
+
+    @classmethod
+    def documents_sent(cls, email, order_id):
+        return cls.objects.filter(email=email, order_id=order_id).exists()

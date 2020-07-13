@@ -1,12 +1,12 @@
 from django.contrib import admin
-from reversion.admin import VersionAdmin
+from django.contrib.admin import ModelAdmin
 
 from common.admin import BaseRegionalAdminMixin
 from containers.models import Container
 
 
 @admin.register(Container)
-class ContainerAdmin(BaseRegionalAdminMixin, VersionAdmin):
+class ContainerAdmin(BaseRegionalAdminMixin, ModelAdmin):
     ordering = ("size_class",)
     list_display = (
         "id",

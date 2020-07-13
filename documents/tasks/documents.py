@@ -5,6 +5,8 @@ from typing import List
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
+from django.db import transaction
+from django.utils.decorators import method_decorator
 from loguru import logger
 from rest_framework import status, views
 from rest_framework.permissions import AllowAny
@@ -12,11 +14,10 @@ from rest_framework.request import Request
 from rest_framework.response import Response
 from trans import trans
 
-from common.utils import get_region
 from core.mixins.storage import StorageMixin
 from delivery_options.models import DeliveryOption
 from documents import factories
-from documents.models import Document
+from documents.models import Document, DocumentSendLog
 from mails.utils import send_mail
 from orders.models import Order
 from payments.mixins import MangopayMixin
@@ -25,6 +26,7 @@ from Traidoo import errors
 User = get_user_model()
 
 
+@method_decorator(transaction.non_atomic_requests, name="dispatch")
 class DocumentsTask(MangopayMixin, StorageMixin, views.APIView):
     permission_classes = (AllowAny,)
 
@@ -133,6 +135,7 @@ class DocumentsTask(MangopayMixin, StorageMixin, views.APIView):
         order_confirmation.bank_account_owner = owner_name
         order_confirmation.save()
 
+    @transaction.atomic
     def create_documents(self, order):
         sellers = {item.product.seller for item in order.items.all()}
 
@@ -177,14 +180,9 @@ class DocumentsTask(MangopayMixin, StorageMixin, views.APIView):
         return documents
 
     @staticmethod
-    def send_documents_to_users(documents, stored_blobs, order):
-        emails_with_list_of_attachments_to_send = collections.defaultdict(list)
-        for document, stored_blob in zip(documents, stored_blobs):
-            for email in document.receivers_emails:
-                emails_with_list_of_attachments_to_send[email].append(stored_blob)
-
-        for email, attachments in emails_with_list_of_attachments_to_send.items():
-            logger.debug(f"Number of attachments: {len(attachments)}.")
+    @transaction.atomic
+    def send_documents_to_email(order, email, attachments):
+        if not DocumentSendLog.documents_sent(email, order.id):
             send_mail(
                 region=order.region,
                 subject=f"Bestellbestätigung für #{order.id}",
@@ -205,6 +203,17 @@ class DocumentsTask(MangopayMixin, StorageMixin, views.APIView):
                     for stored_blob in attachments
                 ],
             )
+            DocumentSendLog.objects.create(email=email, order=order)
+
+    @classmethod
+    def send_documents_to_everyone(cls, documents, stored_blobs, order):
+        emails_with_list_of_attachments_to_send = collections.defaultdict(list)
+        for document, stored_blob in zip(documents, stored_blobs):
+            for email in document.receivers_emails:
+                emails_with_list_of_attachments_to_send[email].append(stored_blob)
+
+        for email, attachments in emails_with_list_of_attachments_to_send.items():
+            cls.send_documents_to_email(order, email, attachments)
 
     def render_pdfs(self, documents, order):
         pdfs = [document.render_pdf() for document in documents]
@@ -221,7 +230,6 @@ class DocumentsTask(MangopayMixin, StorageMixin, views.APIView):
     def post(
         self, request: Request, order_id: str, document_set: str, format: str = None
     ):
-        logger.debug(f"Processing documents for order {order_id}.")
         order_id = int(order_id)
 
         try:
@@ -241,7 +249,7 @@ class DocumentsTask(MangopayMixin, StorageMixin, views.APIView):
 
         documents = self.create_documents(order)
         stored_blobs = self.render_pdfs(documents, order)
-        self.send_documents_to_users(documents, stored_blobs, order)
+        self.send_documents_to_everyone(documents, stored_blobs, order)
 
         order.processed = True
         order.save()
