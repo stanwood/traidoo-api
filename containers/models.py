@@ -31,7 +31,7 @@ class Container(BaseAbstractModel):
                 0, message=_("Container deposit cannot be negative")
             )
         ],
-        verbose_name=_("Depoisit"),
+        verbose_name=_("Deposit"),
     )
     delivery_fee = models.DecimalField(
         max_digits=10,

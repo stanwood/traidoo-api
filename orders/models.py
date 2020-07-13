@@ -238,7 +238,7 @@ class Order(OrderCalculatorMixin, BaseAbstractModel):
                 ] = self.Container(
                     id=container["id"],
                     size_class=container["size_class"],
-                    deposit=float(container["deposit"]),
+                    deposit=float(container["deposit"] or 0),
                     vat=float(self.settings.deposit_vat),
                     count=item.quantity,
                     seller_user_id=product["seller"]["id"],

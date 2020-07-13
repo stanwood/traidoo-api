@@ -154,7 +154,7 @@ class CartItem(ItemCalculatorMixin, BaseAbstractModel):
 
     @property
     def container_deposit_net(self) -> Decimal:
-        return self.product.container_type.deposit
+        return self.product.container_type.deposit or Decimal("0")
 
     @property
     def seller_delivery(self) -> Value:
