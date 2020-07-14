@@ -8,6 +8,6 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RunSQL(sql="DROP TABLE IF EXISTS reversion_revision"),
-        migrations.RunSQL(sql="DROP TABLE IF EXISTS reversion_version"),
+        migrations.RunSQL(sql="DROP TABLE IF EXISTS reversion_revision CASCADE "),
+        migrations.RunSQL(sql="DROP TABLE IF EXISTS reversion_version CASCADE"),
     ]
