@@ -1,13 +1,13 @@
 from django.contrib import admin
-from reversion.admin import VersionAdmin
+from django.contrib.admin import ModelAdmin
 
 from delivery_options.models import DeliveryOption
 
 
 @admin.register(DeliveryOption)
-class DeliveryOptionAdmin(VersionAdmin):
-    ordering = ('id', )
+class DeliveryOptionAdmin(ModelAdmin):
+    ordering = ("id",)
     list_display = (
-        'id',
-        'name',
+        "id",
+        "name",
     )

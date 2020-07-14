@@ -219,8 +219,8 @@ class CartSerializer(OrderCalculatorMixin, serializers.ModelSerializer):
                     "volume": cart_item.product.container_type.volume,
                     "size_class": cart_item.product.container_type.size_class,
                     "unit": f"1 {cart_item.product.unit}",
-                    "deposit_per_unit": f"{cart_item.product.container_type.deposit} / {cart_item.product.unit}",
-                    "deposit_total": cart_item.product.container_type.deposit
+                    "deposit_per_unit": f"{cart_item.container_deposit_net} / {cart_item.product.unit}",
+                    "deposit_total": cart_item.container_deposit_net
                     * cart_item.quantity,
                     "vat": settings.deposit_vat,
                     "count": cart_item.quantity,

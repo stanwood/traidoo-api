@@ -1,13 +1,13 @@
 from django.contrib import admin
-from reversion.admin import VersionAdmin
+from django.contrib.admin import ModelAdmin
 
 from trucks.models import Truck
 
 
 @admin.register(Truck)
-class TruckAdmin(VersionAdmin):
-    ordering = ('name', )
+class TruckAdmin(ModelAdmin):
+    ordering = ("name",)
     list_display = (
-        'id',
-        'name',
+        "id",
+        "name",
     )

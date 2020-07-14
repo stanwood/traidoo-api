@@ -1,14 +1,14 @@
 from django.contrib import admin
-from reversion.admin import VersionAdmin
+from django.contrib.admin import ModelAdmin
 
 from taggit.models import Tag
 
 
 @admin.register(Tag)
-class TagAdmin(VersionAdmin):
-    ordering = ('name', )
+class TagAdmin(ModelAdmin):
+    ordering = ("name",)
     list_display = (
-        'id',
-        'name',
-        'slug',
+        "id",
+        "name",
+        "slug",
     )

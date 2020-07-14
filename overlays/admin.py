@@ -1,5 +1,5 @@
 from django.contrib import admin
-from reversion.admin import VersionAdmin
+from django.contrib.admin import ModelAdmin
 
 from common.admin import BaseRegionalAdminMixin
 from overlays.models import Overlay, OverlayButton
@@ -11,7 +11,7 @@ class OverlayButtonInlineItem(admin.TabularInline):
 
 
 @admin.register(Overlay)
-class OverlayAdmin(BaseRegionalAdminMixin, VersionAdmin):
+class OverlayAdmin(BaseRegionalAdminMixin, ModelAdmin):
     list_display = ("id", "overlay_type")
     inlines = (OverlayButtonInlineItem,)
 

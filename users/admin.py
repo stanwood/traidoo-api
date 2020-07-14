@@ -3,7 +3,7 @@ from django.contrib import admin
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
 from django.utils.translation import ugettext_lazy as _
-from reversion.admin import VersionAdmin
+from django.contrib.admin import ModelAdmin
 
 from common.admin import BaseRegionalAdminMixin
 from mails.utils import send_mail
@@ -43,7 +43,7 @@ class ProductsInline(BaseRegionalAdminMixin, admin.TabularInline):
 
 
 @admin.register(User)
-class UserAdmin(BaseRegionalAdminMixin, VersionAdmin):
+class UserAdmin(BaseRegionalAdminMixin, ModelAdmin):
     form = UserAdminForm
     fieldsets = (
         (None, {"fields": tuple(User.REQUIRED_FIELDS) + ("email",)}),

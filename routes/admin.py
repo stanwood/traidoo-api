@@ -1,12 +1,12 @@
 from django.contrib import admin
+from django.contrib.admin import ModelAdmin
 from django_better_admin_arrayfield.admin.mixins import DynamicArrayMixin
-from reversion.admin import VersionAdmin
 
 from .models import Route
 
 
 @admin.register(Route)
-class RouteAdmin(VersionAdmin, DynamicArrayMixin):
+class RouteAdmin(ModelAdmin, DynamicArrayMixin):
     ordering = ("id",)
     list_display = (
         "id",

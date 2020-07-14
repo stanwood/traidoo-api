@@ -290,8 +290,6 @@ class DeliveryOverviewBuyerFactory(DocumentFactory):
                 company_name = product["seller"]["company_name"]
 
                 if order_item.product.third_party_delivery:
-                    logger.debug("Third party delivery.")
-
                     try:
                         job = Job.objects.get(order_item=order_item, user__isnull=False)
                     except Job.DoesNotExist:
@@ -306,8 +304,6 @@ class DeliveryOverviewBuyerFactory(DocumentFactory):
                 company_name = (
                     order_item.product.region.setting.logistics_company.company_name
                 )
-
-            logger.debug(f"Delivery company name: {company_name}.")
             return company_name
 
         return [

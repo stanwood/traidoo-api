@@ -3,11 +3,12 @@ from decimal import Decimal
 from unittest import mock
 
 import pytest
+from anymail.exceptions import AnymailError
 from django.urls import reverse
 from django.test import override_settings
 from model_bakery import baker
 
-from documents.models import Document
+from documents.models import Document, DocumentSendLog
 from Traidoo import errors
 
 pytestmark = pytest.mark.django_db
@@ -217,7 +218,8 @@ def test_documents_sent_to_all_user_emails(
 
     assert len(mailoutbox) == 7
 
-    assert set(itertools.chain(*[mail.to for mail in mailoutbox])) == {
+    all_receivers_emails = set(itertools.chain(*[mail.to for mail in mailoutbox]))
+    assert all_receivers_emails == {
         buyer.email,
         buyer.invoice_email,
         seller.email,
@@ -226,6 +228,61 @@ def test_documents_sent_to_all_user_emails(
         platform_user.email,
         logistics_user.email,
     }
+
+
+def test_track_sending_emails(
+    mailoutbox,
+    buyer,
+    seller,
+    client,
+    order,
+    order_items,
+    central_platform_user,
+    platform_user,
+    logistics_user,
+):
+    client.post(reverse("task", kwargs={"order_id": order.id, "document_set": "all"}))
+
+    for mail in mailoutbox:
+        assert DocumentSendLog.objects.get(email=mail.to[0])
+
+
+def test_do_not_resend_documents_at_rerun(
+    mailoutbox,
+    buyer,
+    seller,
+    client,
+    order,
+    order_items,
+    central_platform_user,
+    platform_user,
+    logistics_user,
+):
+    DocumentSendLog.objects.create(email=buyer.email, order=order)
+    client.post(reverse("task", kwargs={"order_id": order.id, "document_set": "all"}))
+    all_receivers_emails = set(itertools.chain(*[mail.to for mail in mailoutbox]))
+    assert buyer.email not in all_receivers_emails
+
+
+@mock.patch("documents.tasks.documents.send_mail")
+def test_keep_email_send_log_after_exception(
+    send_mail,
+    buyer,
+    seller,
+    client,
+    order,
+    order_items,
+    central_platform_user,
+    platform_user,
+    logistics_user,
+):
+
+    send_mail.side_effect = [True, True, AnymailError("Boom")]
+    with pytest.raises(AnymailError):
+        client.post(
+            reverse("task", kwargs={"order_id": order.id, "document_set": "all"})
+        )
+    assert DocumentSendLog.objects.count() == 2
 
 
 def test_use_mangopay_iban_alias_in_order_confirmation(client, order, order_items):

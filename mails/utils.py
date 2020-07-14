@@ -1,11 +1,7 @@
-from smtplib import SMTPException
-
-from anymail.exceptions import AnymailError
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
-from loguru import logger
 
 
 def get_admin_emails():
@@ -57,7 +53,4 @@ def send_mail(
     )
 
     email.content_subtype = "html"
-    try:
-        email.send()
-    except (SMTPException, AnymailError) as email_error:
-        logger.exception(email_error)
+    email.send()

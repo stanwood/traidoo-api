@@ -1,5 +1,5 @@
 from django.contrib import admin
-from reversion.admin import VersionAdmin
+from django.contrib.admin import ModelAdmin
 
 from .models import Region
 
@@ -76,7 +76,7 @@ class BaseRegionalAdminMixin:
 
 
 @admin.register(Region)
-class RegionAdmin(BaseRegionalAdminMixin, VersionAdmin):
+class RegionAdmin(BaseRegionalAdminMixin, ModelAdmin):
     list_display = ("id", "name", "slug", "website_slogan")
 
     def has_add_permission(self, request):

@@ -18,7 +18,6 @@ INSTALLED_APPS = [
     "taggit",
     "taggit_serializer",
     "corsheaders",
-    "reversion",
     "tinymce",
     "common",
     "categories",

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from reversion.admin import VersionAdmin
+from django.contrib.admin import ModelAdmin
 
 from common.admin import BaseRegionalAdminMixin
 from items.models import Item
@@ -12,7 +12,7 @@ class ItemsInline(BaseRegionalAdminMixin, admin.TabularInline):
 
 
 @admin.register(Product)
-class ProductAdmin(BaseRegionalAdminMixin, VersionAdmin):
+class ProductAdmin(BaseRegionalAdminMixin, ModelAdmin):
     list_display = (
         "id",
         "name",
