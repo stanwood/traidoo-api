@@ -4,6 +4,7 @@ import pytest
 from model_bakery import baker
 
 from carts.models import CartItem
+from items.models import Item
 
 
 @pytest.mark.django_db
@@ -79,4 +80,25 @@ def test_add_product_to_cart_with_disabled_central_logistic(
     assert (
         CartItem.objects.first().delivery_option.id
         == product_item.product.first_available_delivery_option().id
+    )
+
+
+@pytest.mark.django_db
+def test_add_product_to_cart_and_remove_product_item(client_buyer, traidoo_region):
+    product_item = baker.make_recipe("items.item", quantity=1)
+
+    response = client_buyer.post(
+        "/cart", {"productId": product_item.product.id, "quantity": 1}
+    )
+
+    assert response.status_code == 200
+    assert response.json() == {"notAvailable": 0}
+
+    with pytest.raises(Item.DoesNotExist):
+        product_item.refresh_from_db()
+
+    assert CartItem.objects.count() == 1
+    assert (
+        CartItem.objects.first().delivery_option.id
+        == product_item.product.delivery_options.first().id
     )

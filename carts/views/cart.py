@@ -48,7 +48,11 @@ class CartView(APIView):
                 cart_item.save()
 
             product_item.quantity -= item_quantity
-            product_item.save()
+
+            if product_item.quantity == 0:
+                product_item.delete()
+            else:
+                product_item.save()
 
             quantity -= item_quantity
 
