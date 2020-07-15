@@ -72,10 +72,12 @@ def test_increase_product_quantity_from_multiple_product_items(
     assert response.status_code == 200
     assert response.json() == {"notAvailable": 0}
 
-    product_item_1.refresh_from_db()
-    assert product_item_1.quantity == 0
-    product_item_3.refresh_from_db()
-    assert product_item_3.quantity == 0
+    with pytest.raises(Item.DoesNotExist):
+        product_item_1.refresh_from_db()
+
+    with pytest.raises(Item.DoesNotExist):
+        product_item_3.refresh_from_db()
+
     product_item_2.refresh_from_db()
     assert product_item_2.quantity == 1
 
