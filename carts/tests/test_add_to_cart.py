@@ -50,7 +50,7 @@ def test_add_product_to_cart_from_multiple_product_items(client_buyer, traidoo_r
     assert response.json() == {"notAvailable": 0}
 
     with pytest.raises(Item.DoesNotExist):
-        assert product_item_2.quantity == 0
+        product_item_2.refresh_from_db()
 
     product_item_1.refresh_from_db()
     assert product_item_1.quantity == 1
