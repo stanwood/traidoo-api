@@ -183,6 +183,7 @@ class DocumentsTask(MangopayMixin, StorageMixin, views.APIView):
     @transaction.atomic
     def send_documents_to_email(order, email, attachments):
         if not DocumentSendLog.documents_sent(email, order.id):
+            logger.debug(f"Sending docs for order #{order.id} to {email}")
             send_mail(
                 region=order.region,
                 subject=f"Bestellbestätigung für #{order.id}",
@@ -204,6 +205,7 @@ class DocumentsTask(MangopayMixin, StorageMixin, views.APIView):
                 ],
             )
             DocumentSendLog.objects.create(email=email, order=order)
+            logger.debug(f"Sent docs for order #{order.id} to {email}")
 
     @classmethod
     def send_documents_to_everyone(cls, documents, stored_blobs, order):
