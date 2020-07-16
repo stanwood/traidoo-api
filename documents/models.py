@@ -210,6 +210,9 @@ class Document(OrderCalculatorMixin, BaseAbstractModel):
     def is_invoice(self):
         return "Invoice" in self.document_type
 
+    def __str__(self):
+        return f"{self.document_type} #{self.order_id}"
+
 
 class DocumentSendLog(BaseAbstractModel):
     """

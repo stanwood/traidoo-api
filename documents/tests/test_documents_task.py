@@ -71,6 +71,13 @@ def test_documents_stored_in_storage(bucket, client, order, order_items, buyer):
     upload_from_string.assert_called_with("PDF", "application/pdf")
 
 
+def test_do_not_duplicate_documents(bucket, client, order, order_items, buyer):
+    client.post(reverse("task", kwargs={"order_id": order.id, "document_set": "all"}))
+    client.post(reverse("task", kwargs={"order_id": order.id, "document_set": "all"}))
+    documents = Document.objects.filter(order=order)
+    assert documents.count() == 7
+
+
 @override_settings(FEATURES={"routes": True})
 def test_documents_stored_in_storage_with_third_party_delivery(
     bucket,

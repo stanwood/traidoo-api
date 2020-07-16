@@ -106,7 +106,7 @@ def logistics_user(traidoo_region):
 
 
 @pytest.fixture
-def platform_user(traidoo_region, admin_group):
+def platform_user(traidoo_region, admin_group, faker):
     yield baker.make(
         "users.user",
         region=traidoo_region,
@@ -116,6 +116,10 @@ def platform_user(traidoo_region, admin_group):
         is_email_verified=True,
         groups=[admin_group],
         is_staff=True,
+        street=faker.street_address(),
+        city=faker.city(),
+        zip=faker.zipcode(),
+        phone=faker.phone_number(),
     )
 
 

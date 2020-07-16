@@ -166,8 +166,8 @@ class DocumentFactory(abc.ABC):
             document = Document.objects.get(
                 order_id=self._order.id,
                 document_type=document_type,
-                buyer=self.buyer,
-                seller=self.seller,
+                buyer__user_id=self.buyer["user_id"],
+                seller__user_id=self.seller["user_id"],
             )
             logger.info(f"{document_type} already exist for order {self._order.id}")
             return document
