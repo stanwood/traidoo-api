@@ -155,9 +155,9 @@ class Product(BaseAbstractModel):
     )
 
     def create_snapshot(self):
-        from products.serializers import SimpleProductSerializer
+        from products.serializers import ProductSnapshotSerializer
 
-        return json.loads(JSONRenderer().render(SimpleProductSerializer(self).data))
+        return json.loads(JSONRenderer().render(ProductSnapshotSerializer(self).data))
 
     def first_available_delivery_option(self):
         if self.region.settings.first().central_logistics_company:
