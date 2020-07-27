@@ -46,13 +46,6 @@ def render_pdf():
         yield render
 
 
-@pytest.fixture(autouse=True)
-def bucket(bucket):
-    bucket.return_value.blob.return_value.download_as_string.return_value = "data"
-    bucket.return_value.blob.return_value.content_type = "text/plain"
-    yield bucket
-
-
 def test_documents_stored_in_storage(bucket, client, order, order_items, buyer):
     buyer.is_cooperative_member = False
     buyer.save()
