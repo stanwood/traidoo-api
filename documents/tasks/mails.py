@@ -5,7 +5,7 @@ from trans import trans
 
 from core.mixins.storage import StorageMixin
 from core.permissions.cron_or_task import IsCronOrTask
-from documents.models import Document
+from documents.models import Document, DocumentSendLog
 from mails.utils import send_mail
 from orders.models import Order
 
@@ -24,25 +24,32 @@ class MailDocumentsTask(StorageMixin, views.APIView):
             self.bucket.blob(document.blob_name) for document in documents_to_send
         ]
 
-        send_mail(
-            region=order.region,
-            subject=f"Bestellbestätigung für #{order.id}",
-            recipient_list=[email],
-            template="mails/generic.html",
-            context={
-                "body": (
-                    f"Ihre Unterlagen für die Bestellung #{order.id} finden "
-                    f"Sie im Anhang dieser E-Mail"
-                )
-            },
-            attachments=[
-                (
-                    trans(blob.name.split("/")[-1]),
-                    blob.download_as_string(),
-                    blob.content_type,
-                )
-                for blob in attachments_as_blobs
-            ],
+        send_log = DocumentSendLog.objects.select_for_update().get(
+            order_id=order_id, email=email
         )
+
+        if not send_log.sent:
+            send_mail(
+                region=order.region,
+                subject=f"Bestellbestätigung für #{order.id}",
+                recipient_list=[email],
+                template="mails/generic.html",
+                context={
+                    "body": (
+                        f"Ihre Unterlagen für die Bestellung #{order.id} finden "
+                        f"Sie im Anhang dieser E-Mail"
+                    )
+                },
+                attachments=[
+                    (
+                        trans(blob.name.split("/")[-1]),
+                        blob.download_as_string(),
+                        blob.content_type,
+                    )
+                    for blob in attachments_as_blobs
+                ],
+            )
+            send_log.sent = True
+            send_log.save(update_fields=["sent"])
 
         return Response()

@@ -1,4 +1,3 @@
-import collections
 import itertools
 from decimal import Decimal
 from typing import List
@@ -6,19 +5,19 @@ from typing import List
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.db import transaction
+from django.urls import reverse
 from django.utils.decorators import method_decorator
 from loguru import logger
 from rest_framework import status, views
 from rest_framework.permissions import AllowAny
 from rest_framework.request import Request
 from rest_framework.response import Response
-from trans import trans
 
 from core.mixins.storage import StorageMixin
+from core.tasks.mixin import TasksMixin
 from delivery_options.models import DeliveryOption
 from documents import factories
 from documents.models import Document, DocumentSendLog
-from mails.utils import send_mail
 from orders.models import Order
 from payments.mixins import MangopayMixin
 from Traidoo import errors
@@ -27,7 +26,7 @@ User = get_user_model()
 
 
 @method_decorator(transaction.non_atomic_requests, name="dispatch")
-class DocumentsTask(MangopayMixin, StorageMixin, views.APIView):
+class DocumentsTask(MangopayMixin, StorageMixin, TasksMixin, views.APIView):
     permission_classes = (AllowAny,)
 
     @staticmethod
@@ -179,43 +178,20 @@ class DocumentsTask(MangopayMixin, StorageMixin, views.APIView):
         [document.save() for document in documents]
         return documents
 
-    @staticmethod
-    @transaction.atomic
-    def send_documents_to_email(order, email, attachments):
-        if not DocumentSendLog.documents_sent(email, order.id):
-            logger.debug(f"Sending docs for order #{order.id} to {email}")
-            send_mail(
-                region=order.region,
-                subject=f"Bestellbestätigung für #{order.id}",
-                recipient_list=[email],
-                template="mails/generic.html",
-                context={
-                    "body": (
-                        f"Ihre Unterlagen für die Bestellung #{order.id} finden "
-                        f"Sie im Anhang dieser E-Mail"
-                    )
-                },
-                attachments=[
-                    (
-                        trans(stored_blob.name.split("/")[-1]),
-                        stored_blob.download_as_string(),
-                        stored_blob.content_type,
-                    )
-                    for stored_blob in attachments
-                ],
-            )
-            DocumentSendLog.objects.create(email=email, order=order)
-            logger.debug(f"Sent docs for order #{order.id} to {email}")
-
-    @classmethod
-    def send_documents_to_everyone(cls, documents, stored_blobs, order):
-        emails_with_list_of_attachments_to_send = collections.defaultdict(list)
-        for document, stored_blob in zip(documents, stored_blobs):
-            for email in document.receivers_emails:
-                emails_with_list_of_attachments_to_send[email].append(stored_blob)
-
-        for email, attachments in emails_with_list_of_attachments_to_send.items():
-            cls.send_documents_to_email(order, email, attachments)
+    def create_document_sending_tasks(self, documents, order):
+        emails = itertools.chain(*[document.receivers_emails for document in documents])
+        emails = set(emails)
+        for email in emails:
+            with transaction.atomic():
+                DocumentSendLog.objects.get_or_create(
+                    email=email, order_id=order.id, sent=False
+                )
+                self.send_task(
+                    reverse(
+                        "mail-documents", kwargs={"order_id": order.id, "email": email}
+                    ),
+                    queue_name="document-emails",
+                )
 
     def render_pdfs(self, documents, order):
         pdfs = [document.render_pdf() for document in documents]
@@ -250,8 +226,8 @@ class DocumentsTask(MangopayMixin, StorageMixin, views.APIView):
             )
 
         documents = self.create_documents(order)
-        stored_blobs = self.render_pdfs(documents, order)
-        self.send_documents_to_everyone(documents, stored_blobs, order)
+        self.render_pdfs(documents, order)
+        self.create_document_sending_tasks(documents, order)
 
         order.processed = True
         order.save()
