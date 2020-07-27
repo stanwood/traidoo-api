@@ -7,7 +7,7 @@ from orders.serializers.sale import SaleSerializer
 
 class SalesViewSet(viewsets.ModelViewSet):
     serializer_class = SaleSerializer
-    permission_classes = [IsSellerUser] 
+    permission_classes = [IsSellerUser]
     http_method_names = ["get"]
 
     def get_queryset(self):

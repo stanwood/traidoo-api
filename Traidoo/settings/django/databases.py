@@ -12,6 +12,6 @@ DATABASES = {
         "NAME": env("POSTGRESQL_NAME"),
         "HOST": env("POSTGRESQL_HOST"),
         "ATOMIC_REQUESTS": True,
-        'CONN_MAX_AGE': 60
+        "CONN_MAX_AGE": 60,
     }
 }
