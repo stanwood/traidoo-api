@@ -46,13 +46,6 @@ def render_pdf():
         yield render
 
 
-@pytest.fixture(autouse=True)
-def bucket(bucket):
-    bucket.return_value.blob.return_value.download_as_string.return_value = "data"
-    bucket.return_value.blob.return_value.content_type = "text/plain"
-    yield bucket
-
-
 def test_documents_stored_in_storage(bucket, client, order, order_items, buyer):
     buyer.is_cooperative_member = False
     buyer.save()
@@ -179,34 +172,8 @@ def test_do_not_render_credit_note_when_local_platform_share_zero(
     )
 
 
-def test_documents_sent_to_email(
-    mailoutbox,
-    client,
-    order,
-    order_items,
-    buyer,
-    seller,
-    central_platform_user,
-    platform_user,
-    logistics_user,
-):
-    client.post(reverse("task", kwargs={"order_id": order.id, "document_set": "all"}))
-
-    assert len(mailoutbox) == 5
-
-    unique_list_of_receivers = set(itertools.chain(*[mail.to for mail in mailoutbox]))
-
-    assert unique_list_of_receivers == {
-        buyer.email,
-        seller.email,
-        central_platform_user.email,
-        platform_user.email,
-        logistics_user.email,
-    }
-
-
-def test_documents_sent_to_all_user_emails(
-    mailoutbox,
+def test_documents_sent_to_user_emails_and_invoice_emails(
+    send_task,
     buyer,
     seller,
     client,
@@ -223,10 +190,9 @@ def test_documents_sent_to_all_user_emails(
 
     client.post(reverse("task", kwargs={"order_id": order.id, "document_set": "all"}))
 
-    assert len(mailoutbox) == 7
+    assert send_task.call_count == 7
 
-    all_receivers_emails = set(itertools.chain(*[mail.to for mail in mailoutbox]))
-    assert all_receivers_emails == {
+    for email in {
         buyer.email,
         buyer.invoice_email,
         seller.email,
@@ -234,46 +200,23 @@ def test_documents_sent_to_all_user_emails(
         central_platform_user.email,
         platform_user.email,
         logistics_user.email,
-    }
+    }:
+        assert (
+            mock.call(
+                reverse(
+                    "mail-documents", kwargs={"order_id": order.id, "email": email}
+                ),
+                queue_name="document-emails",
+            )
+            in send_task.mock_calls
+        )
+        assert DocumentSendLog.objects.filter(
+            email=email, order_id=order.id, sent=False
+        ).exists()
 
 
-def test_track_sending_emails(
-    mailoutbox,
-    buyer,
-    seller,
-    client,
-    order,
-    order_items,
-    central_platform_user,
-    platform_user,
-    logistics_user,
-):
-    client.post(reverse("task", kwargs={"order_id": order.id, "document_set": "all"}))
-
-    for mail in mailoutbox:
-        assert DocumentSendLog.objects.get(email=mail.to[0])
-
-
-def test_do_not_resend_documents_at_rerun(
-    mailoutbox,
-    buyer,
-    seller,
-    client,
-    order,
-    order_items,
-    central_platform_user,
-    platform_user,
-    logistics_user,
-):
-    DocumentSendLog.objects.create(email=buyer.email, order=order)
-    client.post(reverse("task", kwargs={"order_id": order.id, "document_set": "all"}))
-    all_receivers_emails = set(itertools.chain(*[mail.to for mail in mailoutbox]))
-    assert buyer.email not in all_receivers_emails
-
-
-@mock.patch("documents.tasks.documents.send_mail")
 def test_keep_email_send_log_after_exception(
-    send_mail,
+    send_task,
     buyer,
     seller,
     client,
@@ -284,7 +227,7 @@ def test_keep_email_send_log_after_exception(
     logistics_user,
 ):
 
-    send_mail.side_effect = [True, True, AnymailError("Boom")]
+    send_task.side_effect = [True, True, AnymailError("Boom")]
     with pytest.raises(AnymailError):
         client.post(
             reverse("task", kwargs={"order_id": order.id, "document_set": "all"})
@@ -354,7 +297,7 @@ def test_create_logistics_invoice_for_neighbouring_logistic_company(
 
 
 def test_send_delivery_documents_to_both_logistics_companies_for_cross_region_orders(
-    order_with_neighbour_product, buyer, other_region_product, client, mailoutbox
+    order_with_neighbour_product, buyer, other_region_product, client, send_task
 ):
 
     logistics_company_from_producer_region = (
@@ -371,11 +314,23 @@ def test_send_delivery_documents_to_both_logistics_companies_for_cross_region_or
         )
     )
 
-    mail_receivers = set(itertools.chain(*[mail.to for mail in mailoutbox]))
-    # these are not specific enough assertions since other docs like invoices might
-    # have been sent to these mails
-    assert logistics_company_from_producer_region.email in mail_receivers
-    assert logistics_company_of_buyer.email in mail_receivers
+    for email in [
+        logistics_company_from_producer_region.email,
+        logistics_company_of_buyer.email,
+    ]:
+        assert (
+            mock.call(
+                reverse(
+                    "mail-documents",
+                    kwargs={
+                        "order_id": order_with_neighbour_product.id,
+                        "email": email,
+                    },
+                ),
+                queue_name="document-emails",
+            )
+            in send_task.mock_calls
+        )
 
 
 def test_create_buyer_delivery_overview_only_for_buyer_logistics_company(

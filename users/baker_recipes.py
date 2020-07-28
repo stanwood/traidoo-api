@@ -1,6 +1,5 @@
-from django.contrib.auth.models import Group
 from faker import Faker
-from model_bakery.recipe import Recipe, seq
+from model_bakery.recipe import Recipe
 
 from .models import User
 

@@ -38,11 +38,11 @@ def test_get_seller_orders(
 
     result = json_response["results"][0]
     assert result["id"] == order.id
-    assert result['buyer'] == {
-        'id': order.buyer.id,
-        'firstName': order.buyer.first_name,
-        'lastName': order.buyer.last_name,
-        'companyName': order.buyer.company_name,
+    assert result["buyer"] == {
+        "id": order.buyer.id,
+        "firstName": order.buyer.first_name,
+        "lastName": order.buyer.last_name,
+        "companyName": order.buyer.company_name,
     }
     assert result["totalPrice"] == 50.35
     assert result["createdAt"] == order.created_at.isoformat().replace("+00:00", "Z")

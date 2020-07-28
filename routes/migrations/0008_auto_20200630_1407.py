@@ -8,18 +8,39 @@ import routes.models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('routes', '0007_auto_20200520_1539'),
+        ("routes", "0007_auto_20200520_1539"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='route',
-            name='frequency',
-            field=django_better_admin_arrayfield.models.fields.ArrayField(base_field=models.PositiveIntegerField(choices=[(1, routes.models.Days(1)), (2, routes.models.Days(2)), (3, routes.models.Days(3)), (4, routes.models.Days(4)), (5, routes.models.Days(5)), (6, routes.models.Days(6)), (7, routes.models.Days(7))]), help_text='1 - Monday, 2 - Tuesday etc.', size=7, verbose_name='Frequency'),
+            model_name="route",
+            name="frequency",
+            field=django_better_admin_arrayfield.models.fields.ArrayField(
+                base_field=models.PositiveIntegerField(
+                    choices=[
+                        (1, routes.models.Days(1)),
+                        (2, routes.models.Days(2)),
+                        (3, routes.models.Days(3)),
+                        (4, routes.models.Days(4)),
+                        (5, routes.models.Days(5)),
+                        (6, routes.models.Days(6)),
+                        (7, routes.models.Days(7)),
+                    ]
+                ),
+                help_text="1 - Monday, 2 - Tuesday etc.",
+                size=7,
+                verbose_name="Frequency",
+            ),
         ),
         migrations.AlterField(
-            model_name='route',
-            name='waypoints',
-            field=django_better_admin_arrayfield.models.fields.ArrayField(base_field=models.CharField(max_length=255), blank=True, default=list, size=None, verbose_name='Way points'),
+            model_name="route",
+            name="waypoints",
+            field=django_better_admin_arrayfield.models.fields.ArrayField(
+                base_field=models.CharField(max_length=255),
+                blank=True,
+                default=list,
+                size=None,
+                verbose_name="Way points",
+            ),
         ),
     ]

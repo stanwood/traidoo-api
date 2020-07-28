@@ -227,7 +227,4 @@ class DocumentSendLog(BaseAbstractModel):
         related_name="document_send_logs",
         verbose_name=_("Order"),
     )
-
-    @classmethod
-    def documents_sent(cls, email, order_id):
-        return cls.objects.filter(email=email, order_id=order_id).exists()
+    sent = models.BooleanField(default=False)

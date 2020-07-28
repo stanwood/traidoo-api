@@ -6,22 +6,12 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('overlays', '0002_auto_20200623_1210'),
+        ("overlays", "0002_auto_20200623_1210"),
     ]
 
     operations = [
-        migrations.AlterUniqueTogether(
-            name='overlaybutton',
-            unique_together=None,
-        ),
-        migrations.RemoveField(
-            model_name='overlaybutton',
-            name='overlay',
-        ),
-        migrations.DeleteModel(
-            name='Overlay',
-        ),
-        migrations.DeleteModel(
-            name='OverlayButton',
-        ),
+        migrations.AlterUniqueTogether(name="overlaybutton", unique_together=None,),
+        migrations.RemoveField(model_name="overlaybutton", name="overlay",),
+        migrations.DeleteModel(name="Overlay",),
+        migrations.DeleteModel(name="OverlayButton",),
     ]

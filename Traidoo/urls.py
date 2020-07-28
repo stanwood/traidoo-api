@@ -3,7 +3,6 @@ from django.conf.urls.i18n import i18n_patterns
 from django.contrib import admin
 from django.urls import path
 from django.utils.translation import gettext_lazy as _
-from rest_framework.authtoken.models import Token
 from rest_framework.documentation import include_docs_urls
 from rest_framework_nested import routers
 

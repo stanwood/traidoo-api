@@ -54,6 +54,12 @@ def client(traidoo_region):
 
 
 @pytest.fixture
+def client_task(client):
+    client.defaults["HTTP_X_APPENGINE_QUEUENAME"] = "foo"
+    yield client
+
+
+@pytest.fixture
 def api_client(traidoo_region):
     client = APIClient(**{"HTTP_REGION": traidoo_region.slug})
     yield client

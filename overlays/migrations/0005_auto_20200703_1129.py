@@ -6,12 +6,9 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('overlays', '0004_overlay_overlaybutton'),
+        ("overlays", "0004_overlay_overlaybutton"),
     ]
 
     operations = [
-        migrations.AlterUniqueTogether(
-            name='overlaybutton',
-            unique_together=set(),
-        ),
+        migrations.AlterUniqueTogether(name="overlaybutton", unique_together=set(),),
     ]

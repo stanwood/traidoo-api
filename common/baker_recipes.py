@@ -1,10 +1,7 @@
-from model_bakery.recipe import Recipe, foreign_key, related
+from model_bakery.recipe import Recipe, related
 
 from settings.baker_recipes import setting
-from users.baker_recipes import user
 
 from .models import Region
 
-region = Recipe(
-    Region, users=related(user), settings=related(setting)
-)
+region = Recipe(Region, settings=related(setting))
