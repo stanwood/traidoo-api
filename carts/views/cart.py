@@ -3,7 +3,6 @@ import datetime
 from django.db.models import F, Sum, Window
 from django.db.models.functions import Coalesce
 from rest_framework import status
-from rest_framework.exceptions import NotFound
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -103,7 +102,11 @@ class CartView(APIView):
             return Response(status=status.HTTP_404_NOT_FOUND)
 
         items = (
-            cart.items.annotate(total_quantity=Window(expression=Sum("quantity")))
+            cart.items.annotate(
+                total_quantity=Window(
+                    partition_by=[F("product")], expression=Sum("quantity"),
+                )
+            )
             .order_by("product", "created_at")
             .distinct("product")
         )
