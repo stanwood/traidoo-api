@@ -190,7 +190,7 @@ class DocumentsTask(MangopayMixin, StorageMixin, TasksMixin, views.APIView):
                     reverse(
                         "mail-documents", kwargs={"order_id": order.id, "email": email}
                     ),
-                    queue_name="document-emails",
+                    queue_name="documents-emails",
                 )
 
     def render_pdfs(self, documents, order):
