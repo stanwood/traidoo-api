@@ -206,7 +206,7 @@ def test_documents_sent_to_user_emails_and_invoice_emails(
                 reverse(
                     "mail-documents", kwargs={"order_id": order.id, "email": email}
                 ),
-                queue_name="document-emails",
+                queue_name="documents-emails",
             )
             in send_task.mock_calls
         )
@@ -327,7 +327,7 @@ def test_send_delivery_documents_to_both_logistics_companies_for_cross_region_or
                         "email": email,
                     },
                 ),
-                queue_name="document-emails",
+                queue_name="documents-emails",
             )
             in send_task.mock_calls
         )
