@@ -23,7 +23,7 @@ django-webtest = "*"
 model-bakery = "*"
 
 [packages]
-django = "==2.2.13"
+django = "==3.0.8"
 django-filter = "*"
 djangorestframework = "==3.11.0"
 markdown = "*"
