@@ -111,11 +111,11 @@
         },
         "django-cacheops": {
             "hashes": [
-                "sha256:0f3e28c16d172b513980f604e026e356db559a4e511d2a12d06f3d34d5c9ca58",
-                "sha256:f7f657fd8c5a79a2739e781d25f06492725aa1fce0032c25fa7b06e057d8be49"
+                "sha256:be48a8278abf124a4b3753d545f087bb67e221a5501ec758fc8cd1c4e915d9a0",
+                "sha256:f6a389fdfcdc98c735a775dde235a6192ed87e0309110129484c518974a328a4"
             ],
             "index": "pypi",
-            "version": "==5.0"
+            "version": "==5.0.1"
         },
         "django-cors-headers": {
             "hashes": [
