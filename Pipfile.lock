@@ -103,11 +103,11 @@
         },
         "django-better-admin-arrayfield": {
             "hashes": [
-                "sha256:5e04a703ab165c25b09788e5864eb62452d5ad124e8d860cf283c671f59020e6",
-                "sha256:eafa4edeaab559462a06eba0d2fba13072968de18afb267521dc80ab34225603"
+                "sha256:0264b56b067fe2f1d7a9aa4f3187ea3dcb4aa51d83c526b15f40e5bf2f49ba5c",
+                "sha256:ad26eb7a4db8d4406bf7bd3750780b32b8056bb49490f626347a524ed5d73b86"
             ],
             "index": "pypi",
-            "version": "==1.1.0"
+            "version": "==1.3.0"
         },
         "django-cacheops": {
             "hashes": [
