@@ -275,11 +275,11 @@
         },
         "google-cloud-datastore": {
             "hashes": [
-                "sha256:4728893641b26f734bd48810903b3dd590a523448da5ba8101f9b78619c138fa",
-                "sha256:c98690833ee2e6341a4b802f278ba17d582ce58eb2e73152516ebc77522d82d7"
+                "sha256:085f2f07212235ef3f1052263f46bdb715ac2357b20805abf9d6f00f194a14b8",
+                "sha256:30e6254bc7ac4933582509d898baf2a495596f3a9a3b457f47b4fb992900efc3"
             ],
             "index": "pypi",
-            "version": "==1.12.0"
+            "version": "==1.13.2"
         },
         "google-cloud-logging": {
             "hashes": [
