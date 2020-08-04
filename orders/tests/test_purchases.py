@@ -17,7 +17,7 @@ def test_get_buyer_orders_as_seller(api_client, seller_group):
     seller = baker.make("users.user", groups=[seller_group])
     api_client.force_authenticate(user=seller)
     response = api_client.get("/orders/purchases")
-    assert response.status_code == 403
+    assert response.status_code == 200
 
 
 @pytest.mark.django_db
