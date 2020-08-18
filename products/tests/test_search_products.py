@@ -8,13 +8,13 @@ from categories.models import Category
 from items.models import Item
 from products.models import Product
 
-pytestmark = pytest.mark.django_db()
+pytestmark = pytest.mark.django_db
 
 
 @freeze_time("2019-01-01")
 def test_items_available_calculation(client_buyer, product, delivery_options):
-    category_1 = baker.make(Category, name="Foo")
-    category_2 = baker.make(Category, name="Foo", parent=category_1)
+    category_1 = baker.make_recipe("categories.category", name="Foo")
+    category_2 = baker.make_recipe("categories.category", name="Foo", parent=category_1)
 
     product.name = "Foo"
     product.description = "Foo"

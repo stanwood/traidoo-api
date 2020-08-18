@@ -21,6 +21,7 @@ pytest-icdiff = "*"
 dj-inmemorystorage = "*"
 django-webtest = "*"
 model-bakery = "*"
+django-test-migrations = "*"
 
 [packages]
 django = "==2.2.13"

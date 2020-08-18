@@ -4,7 +4,6 @@ import pytest
 from model_bakery import baker
 from taggit.models import Tag
 
-from categories.models import Category
 from containers.models import Container
 from delivery_options.models import DeliveryOption
 
@@ -101,7 +100,7 @@ def test_add_product_permissions(
     client_user.groups.set(groups.get(request_user_groups))
     client_user.save()
 
-    category = baker.make(Category)
+    category = baker.make_recipe("categories.category")
     container = baker.make(Container)
     delivery_option = baker.make(DeliveryOption, id=1)
 
@@ -144,7 +143,7 @@ def test_add_product_seller(
     seller.is_email_verified = True
     seller.save()
 
-    category = baker.make(Category)
+    category = baker.make_recipe("categories.category")
     container = baker.make(Container)
     delivery_option_1 = baker.make(DeliveryOption, id=1)
     delivery_option_2 = baker.make(DeliveryOption, id=2)
@@ -188,7 +187,7 @@ def test_add_product_as_admin_without_seller_id(
     cloud_storage_save,
     traidoo_region,
 ):
-    category = baker.make(Category)
+    category = baker.make_recipe("categories.category")
     container = baker.make(Container)
     delivery_option = baker.make(DeliveryOption, id=1)
 
@@ -227,7 +226,7 @@ def test_add_product_as_admin_and_seller(
     cloud_storage_save,
     traidoo_region,
 ):
-    category = baker.make(Category)
+    category = baker.make_recipe("categories.category")
     container = baker.make(Container)
     delivery_option = baker.make(DeliveryOption, id=1)
 
@@ -265,7 +264,7 @@ def test_admin_can_add_product_for_another_user(
     cloud_storage_save,
     traidoo_region,
 ):
-    category = baker.make(Category)
+    category = baker.make_recipe("categories.category")
     container = baker.make(Container)
     delivery_option = baker.make(DeliveryOption, id=1)
 
@@ -308,7 +307,7 @@ def test_add_product_with_valid_base_unit_options(
     cloud_storage_save,
     traidoo_region,
 ):
-    category = baker.make(Category)
+    category = baker.make_recipe("categories.category")
     container = baker.make(Container)
     delivery_option = baker.make(DeliveryOption, id=1)
     tag = baker.make(Tag)
@@ -351,7 +350,7 @@ def test_add_product_with_invalid_base_unit_options(
     cloud_storage_save,
     traidoo_region,
 ):
-    category = baker.make(Category)
+    category = baker.make_recipe("categories.category")
     container = baker.make(Container)
     delivery_option = baker.make(DeliveryOption, id=1)
 
@@ -402,7 +401,7 @@ def test_add_product_with_container_description(
     seller.is_email_verified = True
     seller.save()
 
-    category = baker.make(Category)
+    category = baker.make_recipe("categories.category")
     container = baker.make(Container)
     delivery_option = baker.make(DeliveryOption, id=1)
 
@@ -446,7 +445,7 @@ def test_add_product_with_grazning_animal_and_gmo_free(
     seller.is_email_verified = True
     seller.save()
 
-    category = baker.make(Category)
+    category = baker.make_recipe("categories.category")
     container = baker.make(Container)
     delivery_option = baker.make(DeliveryOption, id=1)
 
@@ -491,7 +490,7 @@ def test_add_product_with_available_regions(
     seller.is_email_verified = True
     seller.save()
 
-    category = baker.make(Category)
+    category = baker.make_recipe("categories.category")
     container = baker.make(Container)
     delivery_option = baker.make(DeliveryOption, id=1)
 

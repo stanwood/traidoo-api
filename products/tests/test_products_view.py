@@ -3,7 +3,7 @@ from model_bakery import baker
 
 from products.models import Product
 
-pytestmark = pytest.mark.django_db()
+pytestmark = pytest.mark.django_db
 
 
 def test_fallback_to_image_url(client_admin, traidoo_region):
@@ -28,10 +28,9 @@ def test_get_product(
         last_name="Test last name",
     )
 
-    category = baker.make(
+    category = baker.make_recipe(
         "categories.category",
         default_vat=None,
-        icon="Category icon",
         id=123,
         name="Test category",
         ordering=None,
@@ -85,7 +84,11 @@ def test_get_product(
         "amount": 123.45,
         "category": {
             "defaultVat": None,
-            "icon": "Category icon",
+            "icon": {
+                "id": category.icon.id,
+                "iconUrl": category.icon.icon_url,
+                "name": category.icon.name,
+            },
             "id": 123,
             "name": "Test category",
             "ordering": None,
@@ -165,10 +168,9 @@ def test_get_product_no_central_logistic_company(
         last_name="Test last name",
     )
 
-    category = baker.make(
+    category = baker.make_recipe(
         "categories.category",
         default_vat=None,
-        icon="Category icon",
         id=123,
         name="Test category",
         ordering=None,
