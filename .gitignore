@@ -68,8 +68,6 @@ firebase_service_key.json
 
 settings/local.py
 
-static
-
 # Django settings
 Traidoo/settings-local.py
 

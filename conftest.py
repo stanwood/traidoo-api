@@ -1,4 +1,5 @@
 import datetime
+import random
 from decimal import Decimal
 from io import BytesIO
 from unittest import mock
@@ -6,13 +7,13 @@ from unittest import mock
 import pytest
 from django.conf import settings
 from django.contrib.auth.models import Group
+from django.db import connection
 from django.utils import timezone
 from faker import Faker
 from model_bakery import baker, random_gen
 from PIL import Image
 from rest_framework.test import APIClient
 
-from categories.models import Category
 from common.models import Region
 from delivery_addresses.models import DeliveryAddress
 from delivery_options.models import DeliveryOption
@@ -24,6 +25,19 @@ from settings.models import Setting
 @pytest.fixture(scope="session")
 def faker():
     yield Faker()
+
+
+@pytest.fixture(scope="session")
+def django_db_setup(django_db_setup, django_db_blocker):
+    # We create a category icons in DB inside migrations.
+    # Model Bakery tries to create object with ID 1 and it already exist.
+    # This "fix" blocks the use of existing IDs.
+    with django_db_blocker.unblock():
+        cur = connection.cursor()
+        cur.execute(
+            "ALTER SEQUENCE categories_categoryicon_id_seq RESTART WITH %s;",
+            [random.randint(10000, 20000)],
+        )
 
 
 @pytest.fixture
@@ -242,8 +256,12 @@ def seller(seller_group, traidoo_region):
 @pytest.yield_fixture
 def categories():
     yield [
-        baker.make(Category, name="Fruits", ordering=1, default_vat=19),
-        baker.make(Category, name="Vegetables", ordering=2, default_vat=19),
+        baker.make_recipe(
+            "categories.category", name="Fruits", ordering=1, default_vat=19,
+        ),
+        baker.make_recipe(
+            "categories.category", name="Vegetables", ordering=2, default_vat=19,
+        ),
     ]
 
 

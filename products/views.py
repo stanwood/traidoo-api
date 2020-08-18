@@ -17,6 +17,10 @@ from products.serializers import (
     ProductDetailsSerializer,
     ProductSerializer,
 )
+from products.serializers.product_list import (
+    ListProductAnonymousSerializer,
+    ListProductSerializer,
+)
 
 
 class ProductViewSet(GetPermissionsMixin, viewsets.ModelViewSet):
@@ -113,6 +117,13 @@ class ProductViewSet(GetPermissionsMixin, viewsets.ModelViewSet):
         )
 
     def get_serializer_class(self):
+        if self.action == "list":
+            if self.request.user.is_authenticated and self.request.user.approved:
+                return ListProductSerializer
+            return ListProductAnonymousSerializer
+
+        # TODO: Use a separate serializer for product detail and adding/editing a product
+
         if self.request.user.is_authenticated and self.request.user.approved:
             # FIXME: Why ProductDetailsSerializer is only used to retrieve the data?
             if self.action == "retrieve":
