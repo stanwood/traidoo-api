@@ -9,7 +9,9 @@ def create_icons(apps, schema_editor):
     icons = list(map(lambda n: f"ico{n}.svg", range(1, 36)))
     category_icons = [
         CategoryIcon(
-            id=index + 1, name=icon, icon_url=f"{settings.STATIC_URL}/categories/{icon}"
+            id=index + 1,
+            name=icon,
+            icon_url=f"https://storage.googleapis.com/{settings.STATIC_BUCKET}/categories/{icon}",
         )
         for index, icon in enumerate(icons)
     ]
