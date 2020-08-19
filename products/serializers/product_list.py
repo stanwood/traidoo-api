@@ -76,6 +76,7 @@ class ListProductSerializer(ImageFallbackMixin, serializers.ModelSerializer):
             "region",
             "items_available",
             "price",
+            "unit",
         )
         read_only_fields = (
             "id",
@@ -86,6 +87,7 @@ class ListProductSerializer(ImageFallbackMixin, serializers.ModelSerializer):
             "region",
             "items_available",
             "price",
+            "unit",
         )
         image_fallback_fields = [
             ("image", "image_url"),
