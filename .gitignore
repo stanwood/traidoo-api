@@ -84,3 +84,13 @@ yarn.lock
 .env
 !.env.test
 /Traidoo/settings/environments/local.py
+
+# static
+
+static/admin
+static/admin_tools
+static/css
+static/django_tinymce
+static/js
+static/rest_framework
+static/tinymce
