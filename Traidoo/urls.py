@@ -21,7 +21,6 @@ from orders.views.find_unsold_items import FindUnsoldItemsView
 from products.views import ProductViewSet
 from routes.tasks.calculate_route_length import CalculateRouteLengthView
 from routes.views import RoutesViewSet
-from settings.views import SettingViewSet
 from tags.views import TagViewSet
 from trucks.views import TruckViewSet
 from users.views.delete_not_verified_users import DeleteNotVerifiedUsersView
@@ -45,7 +44,6 @@ router.register(r"container_types", ContainerViewSet)
 router.register(
     r"delivery_addresses", DeliveryAddressViewSet, basename="delivery_address"
 )
-router.register(r"settings", SettingViewSet)
 router.register(r"trucks", TruckViewSet)
 router.register(r"groups", GroupViewSet)
 router.register(r"jobs", JobsViewSet, basename="jobs")
@@ -119,6 +117,7 @@ urlpatterns = [
         r"routes/<int:route_id>/calculate_route_length",
         CalculateRouteLengthView.as_view(),
     ),
+    path(r"", include("settings.urls")),
     path(r"", include("jobs.urls")),
     path(r"", include("features.urls")),
     path(r"", include("orders.urls")),
