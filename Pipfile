@@ -22,6 +22,7 @@ dj-inmemorystorage = "*"
 django-webtest = "*"
 model-bakery = "*"
 django-test-migrations = "*"
+isort = "*"
 
 [packages]
 django = "==2.2.13"

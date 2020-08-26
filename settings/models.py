@@ -2,9 +2,30 @@ from django.conf import settings
 from django.core import validators
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
+from django_better_admin_arrayfield.models.fields import ArrayField
 
 from common.models import Region
 from core.db.base import BaseAbstractModel
+
+
+class GlobalSetting(BaseAbstractModel):
+    product_vat = ArrayField(
+        models.DecimalField(
+            max_digits=10,
+            decimal_places=2,
+            validators=[
+                validators.MaxValueValidator(
+                    100, _("VAT should not be more than 100%")
+                ),
+                validators.MinValueValidator(0, _("VAT should not be negative")),
+            ],
+        ),
+        verbose_name=_("Available product VAT rates"),
+    )
+
+    class Meta:
+        verbose_name = _("Global setting")
+        verbose_name_plural = _("Global settings")
 
 
 class Setting(BaseAbstractModel):
