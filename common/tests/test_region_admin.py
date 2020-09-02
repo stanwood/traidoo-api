@@ -18,7 +18,7 @@ def test_can_edit_own_region(traidoo_region, platform_user, django_app):
         reverse("admin:common_region_change", kwargs={"object_id": traidoo_region.id}),
         user=platform_user,
     )
-    assert len(response.form.fields) == 13
+    assert len(response.form.fields) == 12
 
     response = django_app.get(
         reverse("admin:common_region_change", kwargs={"object_id": other_region.id}),

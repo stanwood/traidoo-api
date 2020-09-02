@@ -4,9 +4,9 @@ from model_bakery import baker
 
 @pytest.mark.django_db
 def test_get_regions(client_buyer, neighbour_region):
-    baker.make("common.region", id=100, name="Test Region 1")
-    baker.make("common.region", id=101, name="Test Region 2")
-    baker.make("common.region", id=102, name="Test Region 3")
+    baker.make("common.region", id=100, name="Test Region 1", slug=None)
+    baker.make("common.region", id=101, name="Test Region 2", slug=None)
+    baker.make("common.region", id=102, name="Test Region 3", slug=None)
 
     response = client_buyer.get("/regions?ordering=name")
 

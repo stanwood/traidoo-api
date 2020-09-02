@@ -78,6 +78,7 @@ class BaseRegionalAdminMixin:
 @admin.register(Region)
 class RegionAdmin(BaseRegionalAdminMixin, ModelAdmin):
     list_display = ("id", "name", "slug", "website_slogan")
+    readonly_fields = ("slug",)
 
     def has_add_permission(self, request):
         return request.user.is_superuser
