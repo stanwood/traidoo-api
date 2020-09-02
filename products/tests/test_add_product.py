@@ -494,9 +494,9 @@ def test_add_product_with_available_regions(
     container = baker.make(Container)
     delivery_option = baker.make(DeliveryOption, id=1)
 
-    region_1 = baker.make("common.region", id=1001, name="Test 1")
-    region_2 = baker.make("common.region", id=1002, name="Test 2")
-    region_3 = baker.make("common.region", id=1003, name="Test 3")
+    region_1 = baker.make("common.region", id=1001, name="Test 1", slug=None)
+    region_2 = baker.make("common.region", id=1002, name="Test 2", slug=None)
+    region_3 = baker.make("common.region", id=1003, name="Test 3", slug=None)
 
     response = client_seller.post(
         "/products",
