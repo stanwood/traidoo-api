@@ -30,7 +30,8 @@ class Region(BaseAbstractModel):
     imprint = HTMLField(blank=True, verbose_name=_("Imprint"))
 
     def save(self, *args, **kwargs):
-        self.slug = slugify(self.name)
+        if not self.slug:
+            self.slug = slugify(self.name)
         super().save(*args, **kwargs)
 
     def __str__(self):
