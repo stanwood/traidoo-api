@@ -38,3 +38,6 @@ inbound_services:
 instance_class: F2
 
 runtime: python37
+
+automatic_scaling:
+    min_instances: 1
