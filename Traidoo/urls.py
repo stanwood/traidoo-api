@@ -125,7 +125,7 @@ urlpatterns = [
     path(r"", include("overlays.urls")),
     path(r"auth/", include("users.urls")),
     url(r"^docs/", include_docs_urls(title="Traidoo Documentation", public=False)),
-    url(r"^warmup", warmup),
+    url(r"^_ah/warmup", warmup),
     url(r"^tinymce/", include("tinymce.urls")),
 ]
 
