@@ -16,8 +16,10 @@ def test_update_detours_for_route(
     calculate_route_length_mock.return_value = default_route_length
 
     seller_1 = baker.make_recipe("users.user")
-    product_1 = baker.make("products.Product", seller=seller_1)
-    order_1 = baker.make("orders.Order")
+    product_1 = baker.make(
+        "products.Product", seller=seller_1, third_party_delivery=True
+    )
+    order_1 = baker.make("orders.Order", processed=False)
     delivery_address_1 = baker.make_recipe("delivery_addresses.delivery_address")
     order_item_1 = baker.make(
         "orders.OrderItem",
