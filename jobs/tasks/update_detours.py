@@ -46,7 +46,11 @@ class UpdateDetoursView(views.APIView):
             logger.error(f"Route {route_id} does not exist")
             return Response(status=status.HTTP_404_NOT_FOUND)
 
-        detours = Detour.objects.filter(route=route)
+        detours = Detour.objects.filter(
+            route=route,
+            job__order_item__product__third_party_delivery=True,
+            job__order_item__order__processed=False,
+        )
 
         for detour in detours:
             detour.length = self._calculate_detour(
