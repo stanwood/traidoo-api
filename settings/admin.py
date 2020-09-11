@@ -1,7 +1,10 @@
 from django.contrib import admin
 from django.contrib.admin import ModelAdmin
+from django.core.validators import EMPTY_VALUES
+from django.forms import ModelForm
 from django.http import HttpResponseRedirect
 from django.urls import reverse
+from django.utils.translation import gettext_lazy as _
 from django_better_admin_arrayfield.admin.mixins import DynamicArrayMixin
 
 from common.admin import BaseRegionalAdminMixin
@@ -32,9 +35,28 @@ class GlobalSettingAdmin(ModelAdmin, DynamicArrayMixin):
         )
 
 
+class SettingAdminForm(ModelForm):
+    class Meta:
+        model = Setting
+        fields = "__all__"
+
+    def clean(self):
+        is_central_logistics_company = self.cleaned_data.get(
+            "central_logistics_company", False
+        )
+        if is_central_logistics_company:
+            logistics_company = self.cleaned_data.get("logistics_company", None)
+            if logistics_company in EMPTY_VALUES:
+                self._errors["logistics_company"] = self.error_class(
+                    [_("This field is required.")]
+                )
+        return self.cleaned_data
+
+
 @admin.register(Setting)
 class SettingAdmin(BaseRegionalAdminMixin, ModelAdmin):
     ordering = ("id",)
+    form = SettingAdminForm
     list_display = (
         "id",
         "charge",
