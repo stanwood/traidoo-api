@@ -27,7 +27,7 @@ isort = "*"
 [packages]
 django = "==2.2.15"
 django-filter = "*"
-djangorestframework = "==3.11.0"
+djangorestframework = "==3.11.1"
 markdown = "*"
 django-anymail = {extras = ["mailgun"],version = "*"}
 django-taggit = "*"
