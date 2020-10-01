@@ -44,6 +44,7 @@ class ListProductAnonymousSerializer(ImageFallbackMixin, serializers.ModelSerial
             "seller",
             "region",
             "items_available",
+            "amount",
         )
         read_only_fields = (
             "id",
@@ -53,6 +54,7 @@ class ListProductAnonymousSerializer(ImageFallbackMixin, serializers.ModelSerial
             "seller",
             "region",
             "items_available",
+            "amount",
         )
         image_fallback_fields = [
             ("image", "image_url"),
@@ -77,6 +79,7 @@ class ListProductSerializer(ImageFallbackMixin, serializers.ModelSerializer):
             "items_available",
             "price",
             "unit",
+            "amount",
         )
         read_only_fields = (
             "id",
@@ -88,6 +91,7 @@ class ListProductSerializer(ImageFallbackMixin, serializers.ModelSerializer):
             "items_available",
             "price",
             "unit",
+            "amount",
         )
         image_fallback_fields = [
             ("image", "image_url"),
