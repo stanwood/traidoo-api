@@ -1,7 +1,17 @@
 import datetime
 from distutils import util
 
-from django.db.models import BooleanField, Case, IntegerField, Q, Sum, Value, When
+from django.db.models import (
+    BooleanField,
+    Case,
+    IntegerField,
+    OuterRef,
+    Q,
+    Subquery,
+    Sum,
+    Value,
+    When,
+)
 from django.db.models.functions import Coalesce
 from rest_framework import viewsets
 from rest_framework.parsers import FormParser, MultiPartParser
@@ -11,6 +21,7 @@ from common.utils import get_region
 from core.permissions.get_permissions import GetPermissionsMixin
 from core.permissions.owner import IsOwnerOrAdmin
 from core.permissions.seller import IsSellerOrAdminUser
+from items.models import Item
 from products.models import Product
 from products.serializers import (
     AnonymousProductSerializer,
@@ -64,21 +75,22 @@ class ProductViewSet(GetPermissionsMixin, viewsets.ModelViewSet):
         utcnow = datetime.datetime.utcnow().date()
         params = self.request.query_params
 
+        subquery_items = (
+            Item.objects.filter(product_id=OuterRef("id")).order_by().values("product")
+        )
+        subquery_quantity = subquery_items.annotate(
+            total=Coalesce(
+                Sum("quantity", filter=Q(latest_delivery_date__gt=utcnow)), Value(0)
+            )
+        ).values("total")
+
         queryset = (
             Product.objects.select_related(
                 "category", "seller", "container_type", "category__parent", "region"
             )
             .prefetch_related("items", "items__product", "tags", "delivery_options")
             .filter(Q(region_id=region.id) | Q(regions__in=[region.id]))
-            .annotate(
-                items_available=Coalesce(
-                    Sum(
-                        "items__quantity",
-                        filter=Q(items__latest_delivery_date__gt=utcnow),
-                    ),
-                    0,
-                )
-            )
+            .annotate(items_available=Subquery(subquery_quantity))
             .annotate(
                 is_available=Case(
                     When(items_available__gt=0, then=Value(1)),
@@ -86,6 +98,7 @@ class ProductViewSet(GetPermissionsMixin, viewsets.ModelViewSet):
                     output_field=BooleanField(),
                 )
             )
+            .distinct()
         )
 
         if "is_available" in params:
