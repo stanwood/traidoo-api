@@ -7,7 +7,7 @@ chmod +x /workspace/cloud_sql_proxy
 /workspace/cloud_sql_proxy -dir=/workspace -instances=$SQL_PROXY_INSTANCE &
 PROXY_PID=$!
 
-secrets=("MAILGUN_API_KEY" "MANGOPAY_PASSWORD" "POSTGRESQL_PASSWORD" "SECRET_KEY")
+secrets=("DISTANCE_MATRIX_API_KEY" "MAILGUN_API_KEY" "MANGOPAY_PASSWORD" "POSTGRESQL_PASSWORD" "SECRET_KEY")
 for secret in ${secrets[@]}; do
     export $secret=$(cat /workspace/.build/secrets/$secret.txt)
 done
