@@ -1,0 +1,22 @@
+steps:
+  - id: postgres
+    name: gcr.io/cloud-builders/docker
+    args:
+      [
+        "run",
+        "-d",
+        "--network=cloudbuild",
+        "--env=POSTGRES_USER=traidoo",
+        "--env=POSTGRES_PASSWORD=traidoo",
+        "--name=postgres",
+        "postgres:9.6-alpine",
+      ]
+  - id: dockerize
+    name: jwilder/dockerize:0.6.1
+    args: ["dockerize", "-timeout=60s", "-wait=tcp://postgres:5432"]
+  - id: tests
+    name: python:3.7
+    entrypoint: "bash"
+    args: [".build/tests.sh"]
+  - name: gcr.io/cloud-builders/docker
+    args: ["rm", "--force", "postgres"]
