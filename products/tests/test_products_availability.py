@@ -52,8 +52,7 @@ def test_do_not_return_expired_products(client_anonymous, traidoo_region):
 
 @pytest.mark.django_db
 def test_get_only_not_available_products(client_anonymous, traidoo_region):
-    product_1 = baker.make(Product, region=traidoo_region)
-    product_2 = baker.make(Product, region=traidoo_region)
+    product_1, product_2 = baker.make(Product, region=traidoo_region, _quantity=2)
 
     tomorrow = datetime.datetime.utcnow().date() + datetime.timedelta(days=1)
 

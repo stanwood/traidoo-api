@@ -105,7 +105,9 @@ class ProductViewSet(GetPermissionsMixin, viewsets.ModelViewSet):
             if util.strtobool(params["is_available"]):
                 queryset = queryset.filter(items_available__gt=0)
             else:
-                queryset = queryset.filter(items_available=0)
+                queryset = queryset.filter(
+                    Q(items_available=0) | Q(items_available=None)
+                )
 
         if "category__id" in params:
             # TODO: how many subcategories do we want to support?

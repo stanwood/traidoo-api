@@ -119,7 +119,7 @@ def test_get_product(
         "isGrazingAnimal": False,
         "isOrganic": False,
         "isVegan": False,
-        "itemsAvailable": 0,
+        "itemsAvailable": None,
         "name": "Test Product",
         "price": 99.98,
         "region": {
