@@ -14,7 +14,7 @@ class RegionViewSet(viewsets.ReadOnlyModelViewSet):
 
     def get_queryset(self):
         region = get_region(self.request)
-        return Region.objects.exclude(slug=region.slug)
+        return Region.objects.exclude(id=region.id)
 
 
 class StaticViewSet(viewsets.ReadOnlyModelViewSet):

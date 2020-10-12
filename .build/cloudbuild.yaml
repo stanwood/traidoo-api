@@ -1,0 +1,62 @@
+steps:
+  - id: postgres
+    name: gcr.io/cloud-builders/docker
+    args:
+      [
+        "run",
+        "-d",
+        "--network=cloudbuild",
+        "--env=POSTGRES_USER=traidoo",
+        "--env=POSTGRES_PASSWORD=traidoo",
+        "--name=postgres",
+        "postgres:9.6-alpine",
+      ]
+  - id: dockerize
+    name: jwilder/dockerize:0.6.1
+    args: ["dockerize", "-timeout=60s", "-wait=tcp://postgres:5432"]
+  - id: tests
+    name: python:3.7
+    entrypoint: "bash"
+    args: [".build/tests.sh"]
+  - name: gcr.io/cloud-builders/docker
+    args: ["rm", "--force", "postgres"]
+  - id: "secrets"
+    name: gcr.io/google.com/cloudsdktool/cloud-sdk:alpine
+    entrypoint: "bash"
+    args: [".build/secrets.sh"]
+  - id: pre-deployment
+    name: python:3.7
+    entrypoint: bash
+    args: [".build/pre-deployment.sh"]
+    waitFor: ["tests", "secrets"]
+    env:
+      - "DEBUG=${_DEBUG}"
+      - "DEFAULT_FROM_EMAIL=${_DEFAULT_FROM_EMAIL}"
+      - "DJANGO_ADMINS=${_DJANGO_ADMINS}"
+      - "FEATURE_DELIVERY_DATE=${_FEATURE_DELIVERY_DATE}"
+      - "FEATURE_ROUTE=${_FEATURE_ROUTE}"
+      - "GOOGLE_CLOUD_PROJECT=${PROJECT_ID}"
+      - "GOOGLE_CLOUD_PROJECT_LOCATION=${_GOOGLE_CLOUD_PROJECT_LOCATION}"
+      - "HTML2PDF_BACKEND=${_HTML2PDF_BACKEND}"
+      - "INTERCOM_EMAIL=${_INTERCOM_EMAIL}"
+      - "LOGISTICS_EMAIL=${_LOGISTICS_EMAIL}"
+      - "MAILGUN_API_URL=${_MAILGUN_API_URL}"
+      - "MAILGUN_SENDER_DOMAIN=${_MAILGUN_SENDER_DOMAIN}"
+      - "MANGOPAY_CLIENT_ID=${_MANGOPAY_CLIENT_ID}"
+      - "MANGOPAY_URL=${_MANGOPAY_URL}"
+      - "PLATFORM_EMAIL=${_PLATFORM_EMAIL}"
+      - "POSTGRESQL_HOST=${_POSTGRESQL_HOST}"
+      - "POSTGRESQL_NAME=${_POSTGRESQL_NAME}"
+      - "POSTGRESQL_PORT=${_POSTGRESQL_PORT}"
+      - "POSTGRESQL_USER=${_POSTGRESQL_USER}"
+      - "REAL_ADMINS=${_REAL_ADMINS}"
+      - "SENTRY_DSN=${_SENTRY_DSN}"
+      - "STATIC_BUCKET=${_STATIC_BUCKET}"
+      - "SQL_PROXY_INSTANCE=${_SQL_PROXY_INSTANCE}"
+  - name: gcr.io/google.com/cloudsdktool/cloud-sdk:alpine
+    entrypoint: bash
+    args: [".build/deployment.sh"]
+    timeout: "1600s"
+    waitFor: ["pre-deployment"]
+    env:
+      - "STATIC_BUCKET=${_STATIC_BUCKET}"
