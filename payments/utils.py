@@ -1,6 +1,5 @@
 from decimal import Decimal
 
-
 NATURAL_USER_TYPES = frozenset({"einzelunternehmer", "einzelunternehmen"})
 COMPANY_TYPE_MAPPING = {
     "gbr": "SOLETRADER",
@@ -8,6 +7,8 @@ COMPANY_TYPE_MAPPING = {
     "landwirtschaftliche gbr": "SOLETRADER",
     "e.v.": "ORGANIZATION",
     "eg": "ORGANIZATION",
+    "genossenschaft": "ORGANIZATION",
+    "verein": "ORGANIZATION",
 }
 
 
