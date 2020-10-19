@@ -8,6 +8,6 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "request_logging.middleware.LoggingMiddleware",
     "core.middleware.region.region_middleware",
+    "core.middleware.validation_errors.validation_errors_middleware",
 ]
