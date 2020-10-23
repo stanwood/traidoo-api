@@ -4,13 +4,14 @@ from decimal import Decimal
 from rest_framework import serializers
 from taggit_serializer.serializers import TaggitSerializer
 
+from carts.models import CartItem, Cart
 from categories.serializers import CategorySerializer
 from common.serializers import RegionSerializer
 from common.utils import get_region
 from containers.serializers import ContainerSerializer
-from core.payments.transport_insurance import calculate_transport_insurance_rate
 from core.serializers.image_fallback_mixin import ImageFallbackMixin
 from core.serializers.regions import CustomRegionsSerializerField
+from delivery_options.models import DeliveryOption
 from products.models import Product
 from products.serializers.base import BaseProductSerializer
 from products.serializers.tag import CustomTagListSerializerField
@@ -71,43 +72,30 @@ class ProductDetailsSerializer(
         depth = 2
         ordering = ["-created"]
 
-    def _transport_insurance(self, obj: Product):
-        return functools.reduce(
-            lambda prev, next: prev * next,
-            [obj.price, obj.amount, calculate_transport_insurance_rate(obj.price)],
-        )
-
-    # fixme: Duplicated calculation of delivery, to refactor
     def get_delivery(self, obj):
         request = self.context.get("request")
         region = get_region(request)
 
-        # Pickup
-        pickup = Decimal("0.0")
-
-        # Seller delivery
-        seller_net = obj.delivery_charge
-        seller_vat_rate = obj.vat
-        seller_gross = (seller_net * seller_vat_rate / Decimal("100")).quantize(
-            Decimal(".01"), "ROUND_HALF_UP"
+        cart = Cart(user=request.user)
+        seller_delivery_cart_item = CartItem(
+            product=obj, quantity=1, delivery_option_id=DeliveryOption.SELLER, cart=cart
         )
 
-        options = {"seller": seller_gross, "pickup": pickup}
+        options = {
+            "seller": seller_delivery_cart_item.seller_delivery_fee.brutto,
+            "pickup": Decimal("0.0"),
+        }
 
         region_settings = get_setting(region.id)
         if region_settings.central_logistics_company:
-            # Logistics company delivery
-            logistics_net = self._transport_insurance(obj)
-
-            container_delivery_fee = obj.container_type.delivery_fee
-            if container_delivery_fee:
-                logistics_net += container_delivery_fee
-
-            logistics_vat_rate = region_settings.mc_swiss_delivery_fee_vat
-            logistics_gross = (
-                logistics_net * logistics_vat_rate / Decimal("100")
-            ).quantize(Decimal(".01"), "ROUND_HALF_UP")
-
-            options["logistics"] = logistics_gross
+            central_logistics_cart_item = CartItem(
+                product=obj,
+                quantity=1,
+                delivery_option_id=DeliveryOption.CENTRAL_LOGISTICS,
+                cart=cart,
+            )
+            options[
+                "logistics"
+            ] = central_logistics_cart_item.central_logistic_delivery_fee.brutto
 
         return options

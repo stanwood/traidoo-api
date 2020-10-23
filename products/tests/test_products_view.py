@@ -104,7 +104,7 @@ def test_get_product(
             "standard": None,
             "volume": 456.78,
         },
-        "delivery": {"logistics": 351.76, "pickup": 0.0, "seller": 0.0},
+        "delivery": {"logistics": 2203.14, "pickup": 0.0, "seller": 0.0},
         "deliveryCharge": 0.0,
         "deliveryOptions": [
             {"id": 0, "name": "traidoo"},
@@ -141,7 +141,13 @@ def test_get_product(
         },
         "unit": None,
         "vat": 19.0,
-        "tags": [{"id": product.tags.first().id, "name": "tag1", "slug": "tag1",}],
+        "tags": [
+            {
+                "id": product.tags.first().id,
+                "name": "tag1",
+                "slug": "tag1",
+            }
+        ],
         "sellersProductIdentifier": "test123",
         "thirdPartyDelivery": False,
         "ean13": "12345678",
