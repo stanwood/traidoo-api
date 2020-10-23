@@ -73,6 +73,6 @@ def test_vat_breakdown(buyer):
     fake_request = mock.MagicMock(headers={"Region": cart_item.product.region.slug})
     serializer = CartSerializer(instance=cart, context={"request": fake_request})
     breakdown, total = serializer._vat_breakdown(cart)
-    assert breakdown[19.0] == 2.83
+    assert breakdown[19.0] == 2.45
     assert breakdown[10.7] == 10.28
-    assert total == 13.11
+    assert total == 12.73

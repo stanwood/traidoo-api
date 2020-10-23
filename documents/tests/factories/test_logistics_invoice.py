@@ -28,7 +28,7 @@ def test_logistics_invoice(
         "count": 1,
         "name": f"Lieferung von {products[0].name}",
         "number": products[0].id,
-        "price": 15.81,
+        "price": 14.31,
         "producer": "Traidoo",
         "seller_user_id": logistics_user.id,
         "unit": "",

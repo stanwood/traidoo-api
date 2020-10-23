@@ -33,9 +33,16 @@ def test_cart_item_delivery_options(db, buyer):
 
 def test_include_price_net(db, buyer):
     product = baker.make_recipe("products.product", price=10, amount=2)
+    region = baker.make_recipe("common.region")
     cart = baker.make_recipe("carts.cart", user=buyer)
+    cart.user.region = region
+    cart.user.save()
     cart_item = baker.make_recipe(
-        "carts.cartitem", cart=cart, quantity=1, product=product
+        "carts.cartitem",
+        cart=cart,
+        quantity=1,
+        product=product,
+        delivery_option=product.delivery_options.first(),
     )
 
     fake_request = mock.MagicMock(headers={"Region": cart_item.product.region.slug})

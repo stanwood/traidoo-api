@@ -35,7 +35,7 @@ def test_create_delivery_overview_buyer(
         "name": products[0].name,
         "number": products[0].id,
         "organic_control_body": products[0].seller.organic_control_body,
-        "price": 15.81,  # this needs to be net value
+        "price": 14.31,  # this needs to be net value
         "producer": buyer.region.setting.logistics_company.company_name,
         "unit": products[0].unit,
         "vat_rate": 19.0,
@@ -108,7 +108,7 @@ def test_create_delivery_overview_buyer_with_3rd_party_delivery(
         "name": products[0].name,
         "number": products[0].id,
         "organic_control_body": products[0].seller.organic_control_body,
-        "price": 15.81,
+        "price": 14.31,
         "producer": buyer.region.setting.logistics_company.company_name,
         "unit": products[0].unit,
         "vat_rate": 19.0,

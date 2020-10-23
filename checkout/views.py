@@ -1,6 +1,6 @@
 from django.conf import settings
 from loguru import logger
-from rest_framework import serializers, status, views
+from rest_framework import status, views
 from rest_framework.response import Response
 
 from carts.models import Cart
@@ -8,12 +8,9 @@ from carts.utils import validate_earliest_delivery_date
 from common.utils import get_region
 from core.permissions.buyer_or_seller import IsBuyerOrSellerUser
 from core.tasks.mixin import TasksMixin
-from delivery_addresses.models import DeliveryAddress
 from delivery_options.models import DeliveryOption
-from documents import factories
 from orders.models import Order, OrderItem
 from orders.serializers.order import OrderSerializer
-from settings.models import Setting
 
 from .serializers import CartSerializer
 
@@ -42,7 +39,8 @@ class CheckoutView(TasksMixin, views.APIView):
         ):
             # TODO: return validation error with a unique code
             return Response(
-                "Delivery address is required.", status=status.HTTP_400_BAD_REQUEST,
+                "Delivery address is required.",
+                status=status.HTTP_400_BAD_REQUEST,
             )
 
         cart_total = cart.total
