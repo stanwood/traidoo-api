@@ -27,11 +27,6 @@ class ItemCalculatorMixin:
 
     @property
     @abc.abstractmethod
-    def container_delivery_fee(self) -> Decimal:
-        pass
-
-    @property
-    @abc.abstractmethod
     def container_deposit_net(self) -> Decimal:
         pass
 
@@ -43,6 +38,11 @@ class ItemCalculatorMixin:
     @property
     @abc.abstractmethod
     def settings(self):
+        pass
+
+    @property
+    @abc.abstractmethod
+    def total_price_central_delivery(self) -> Decimal:
         pass
 
     @property
@@ -96,27 +96,34 @@ class ItemCalculatorMixin:
         """
 
         price_net = Decimal(str(self.price_net))
-        insurance = price_net * calculate_transport_insurance_rate(price_net)
+        insurance = price_net * calculate_transport_insurance_rate(
+            self.total_price_central_delivery
+        )
         return insurance.quantize(Decimal(".01"), "ROUND_HALF_UP")
 
-    def _delivery_fee(self):
+    @property
+    def central_logistic_delivery_fee(self) -> Value:
+        value = self.transport_insurance
+
+        return Value(
+            value.quantize(Decimal(".01"), "ROUND_HALF_UP"),
+            self.settings.mc_swiss_delivery_fee_vat,
+        )
+
+    @property
+    def seller_delivery_fee(self) -> Value:
+        return Value(
+            self.product_delivery_charge,
+            self.settings.mc_swiss_delivery_fee_vat,
+        )
+
+    def _delivery_fee(self) -> Value:
         if self.is_central_logistic_delivery:
-            value = self.transport_insurance
-
-            if self.container_delivery_fee:
-                value += self.container_delivery_fee * Decimal(self.quantity)
-
-            return Value(
-                value.quantize(Decimal(".01"), "ROUND_HALF_UP"),
-                self.settings.mc_swiss_delivery_fee_vat,
-            )
+            return self.central_logistic_delivery_fee
         elif self.is_seller_delivery:
-            return Value(
-                self.product_delivery_charge, self.settings.mc_swiss_delivery_fee_vat
-            )
-
+            return self.seller_delivery_fee
         return Value(0)
 
     @property
-    def container_deposit(self):
+    def container_deposit(self) -> Value:
         return Value(self.container_deposit_net, self.settings.deposit_vat)

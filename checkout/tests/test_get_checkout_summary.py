@@ -59,11 +59,11 @@ def test_get_delivery_options(client_buyer, cart):
     cart_item_0 = CartItem.objects.get(id=items[0]["id"])
     cart_item_1 = CartItem.objects.get(id=items[1]["id"])
 
-    assert cart_item_0.delivery_fee_gross == 26.3
-    assert cart_item_0.delivery_fee_net == 22.1
+    assert cart_item_0.delivery_fee_gross == 21.42
+    assert cart_item_0.delivery_fee_net == 18
     assert cart_item_0._delivery_fee().netto == cart_item_0.delivery_fee_net
-    assert cart_item_1.delivery_fee_gross == 11.31
-    assert cart_item_1.delivery_fee_net == 9.5
+    assert cart_item_1.delivery_fee_gross == 7.14
+    assert cart_item_1.delivery_fee_net == 6.0
     assert cart_item_1._delivery_fee().netto == cart_item_1.delivery_fee_net
 
     assert {"id": DeliveryOption.SELLER, "value": 1.1} in items[0]["deliveryOptions"]

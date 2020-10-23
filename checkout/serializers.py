@@ -78,7 +78,7 @@ class CartItemSerializer(serializers.ModelSerializer):
                 delivery_options.append(
                     {
                         "id": product_delivery_option.id,
-                        "value": obj.seller_delivery.netto,
+                        "value": obj.seller_delivery_fee.netto,
                     }
                 )
 
@@ -89,7 +89,7 @@ class CartItemSerializer(serializers.ModelSerializer):
                 delivery_options.append(
                     {
                         "id": DeliveryOption.CENTRAL_LOGISTICS,
-                        "value": obj.central_logistic_delivery(region).netto,
+                        "value": obj.central_logistic_delivery_fee.netto,
                     }
                 )
 

@@ -74,7 +74,7 @@ def test_order_confirmation_buyer(
         "count": 1,
         "name": f"Lieferung von {products[0].name}",
         "number": products[0].id,
-        "price": 15.81,
+        "price": 14.31,
         "producer": logistics_user.company_name,
         "seller_user_id": logistics_user.id,
         "unit": "",

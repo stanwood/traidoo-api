@@ -37,7 +37,7 @@ def test_create_delivery_overview_producer(
         "name": products[0].name,
         "number": products[0].id,
         "organic_control_body": seller.organic_control_body,
-        "price": 15.81,
+        "price": 14.31,
         "producer": "Traidoo",
         "unit": products[0].unit,
         "vat_rate": products[0].vat,

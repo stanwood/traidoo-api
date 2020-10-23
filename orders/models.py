@@ -86,16 +86,27 @@ class Order(OrderCalculatorMixin, BaseAbstractModel):
             item.save()
 
     @property
+    def total_price_central_delivery(self):
+        prices = []
+        for item in self.items.all():
+            if item.is_central_logistic_delivery:
+                prices.append(item.price.netto)
+
+        return round_float(sum(prices))
+
+    @property
     def total_price_traidoo_delivery_or_third_party_delivery(self):
         prices = []
 
         for item in self.items.all():
-            if item.is_central_logistic_delivery or (
+            if (
                 item.is_seller_delivery
                 and item.product.third_party_delivery
                 and item.is_third_party_delivery
             ):
                 prices.append(item.price.netto)
+
+        prices.append(self.total_price_central_delivery)
 
         return round_float(sum(prices))
 
@@ -264,7 +275,7 @@ class Order(OrderCalculatorMixin, BaseAbstractModel):
         return f"{company_name} {self.total_price}"
 
 
-class OrderItem(ItemCalculatorMixin, BaseAbstractModel):
+class OrderItem(BaseAbstractModel, ItemCalculatorMixin):
     # TODO: Do we need the product? We have the product snapshot.
     product = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True)
     order = models.ForeignKey(Order, related_name="items", on_delete=models.PROTECT)
@@ -292,10 +303,6 @@ class OrderItem(ItemCalculatorMixin, BaseAbstractModel):
         return self.order.buyer
 
     @property
-    def container_delivery_fee(self) -> Decimal:
-        return self.product.container_type.delivery_fee
-
-    @property
     def delivery_address_as_str(self):
         if self.delivery_address and self.delivery_option.id != DeliveryOption.BUYER:
             return self.delivery_address.as_str()
@@ -309,6 +316,10 @@ class OrderItem(ItemCalculatorMixin, BaseAbstractModel):
     @property
     def amount(self) -> Decimal:
         return Decimal(self.product_snapshot["amount"])
+
+    @property
+    def total_price_central_delivery(self) -> Decimal:
+        return self.order.total_price_central_delivery
 
     @property
     def product_vat(self):

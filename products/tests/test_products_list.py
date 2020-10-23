@@ -13,4 +13,3 @@ def test_get_products_list_avilable_items(client_seller, seller, traidoo_region)
     response = client_seller.get("/products?limit=10&ordering=-created_at&my=true")
 
     assert response.json()["results"][0]["itemsAvailable"] == 2
-

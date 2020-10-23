@@ -1,16 +1,13 @@
-import functools
 from decimal import Decimal
 
 from django.conf import settings
 from django.db import models
 from django.db.models import F
 
-from common.models import Region
 from core.calculators.item_calculator import ItemCalculatorMixin
 from core.calculators.order_calculator import OrderCalculatorMixin
-from core.calculators.value import Value
+from core.calculators.utils import round_float
 from core.db.base import BaseAbstractModel
-from core.payments.transport_insurance import calculate_transport_insurance_rate
 from delivery_addresses.models import DeliveryAddress
 from delivery_options.models import DeliveryOption
 from items.models import Item
@@ -49,6 +46,15 @@ class Cart(OrderCalculatorMixin, BaseAbstractModel):
     @property
     def total(self):
         return self.price
+
+    @property
+    def total_price_central_delivery(self) -> Decimal:
+        prices = []
+        for item in self.items.all():
+            if item.is_central_logistic_delivery:
+                prices.append(item.price.netto)
+
+        return round_float(sum(prices))
 
     class Meta:
         verbose_name = _("Cart")
@@ -105,16 +111,16 @@ class CartItem(ItemCalculatorMixin, BaseAbstractModel):
         return self.product.price
 
     @property
+    def total_price_central_delivery(self) -> Decimal:
+        return self.cart.total_price_central_delivery
+
+    @property
     def amount(self) -> Decimal:
         return Decimal(self.product.amount)
 
     @property
     def product_vat(self):
         return self.product.vat
-
-    @property
-    def container_delivery_fee(self) -> Decimal:
-        return self.product.container_type.delivery_fee
 
     @property
     def product_delivery_charge(self) -> Decimal:
@@ -155,24 +161,3 @@ class CartItem(ItemCalculatorMixin, BaseAbstractModel):
     @property
     def container_deposit_net(self) -> Decimal:
         return self.product.container_type.deposit or Decimal("0")
-
-    @property
-    def seller_delivery(self) -> Value:
-        seller_region_settings = self.product.region.setting
-        return Value(
-            self.product_delivery_charge,
-            seller_region_settings.mc_swiss_delivery_fee_vat,
-        )
-
-    def central_logistic_delivery(self, region: Region) -> Value:
-        region_settings = region.settings.first()
-        logistics_net = self.transport_insurance
-
-        container_delivery_fee = self.product.container_type.delivery_fee
-        if container_delivery_fee:
-            logistics_net += container_delivery_fee * Decimal(self.quantity)
-
-        return Value(
-            logistics_net.quantize(Decimal(".01"), "ROUND_HALF_UP"),
-            region_settings.mc_swiss_delivery_fee_vat,
-        )
