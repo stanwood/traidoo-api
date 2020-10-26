@@ -82,7 +82,7 @@ class ProductDetailsSerializer(
         )
 
         options = {
-            "seller": seller_delivery_cart_item.seller_delivery_fee.brutto,
+            "seller": seller_delivery_cart_item.seller_delivery_fee.netto,
             "pickup": Decimal("0.0"),
         }
 
@@ -96,6 +96,6 @@ class ProductDetailsSerializer(
             )
             options[
                 "logistics"
-            ] = central_logistics_cart_item.central_logistic_delivery_fee.brutto
+            ] = central_logistics_cart_item.central_logistic_delivery_fee.netto
 
         return options
