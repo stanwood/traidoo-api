@@ -19,7 +19,7 @@ def region_middleware(get_response):
             admin_request
             or request.path.startswith(reverse("webhook"))
             or request.path.startswith("/_ah/warmup")
-            or request.path == "favicon.ico"
+            or request.path in ("/favicon.ico", "/robots.txt")
             or get_region(request)
         ):
             raise RegionHeaderMissingException()
