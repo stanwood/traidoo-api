@@ -3,6 +3,7 @@ from django.conf.urls.i18n import i18n_patterns
 from django.contrib import admin
 from django.urls import path
 from django.utils.translation import gettext_lazy as _
+from django.views.generic import TemplateView
 from rest_framework.documentation import include_docs_urls
 from rest_framework_nested import routers
 
@@ -127,8 +128,15 @@ urlpatterns = [
     url(r"^docs/", include_docs_urls(title="Traidoo Documentation", public=False)),
     url(r"^_ah/warmup", warmup),
     url(r"^tinymce/", include("tinymce.urls")),
+    path(
+        "robots.txt",
+        TemplateView.as_view(
+            template_name="common/robots.txt", content_type="text/plain"
+        ),
+    ),
 ]
 
 urlpatterns += i18n_patterns(
-    path("admin/", admin.site.urls), url(r"^admin_tools/", include("admin_tools.urls")),
+    path("admin/", admin.site.urls),
+    url(r"^admin_tools/", include("admin_tools.urls")),
 )
