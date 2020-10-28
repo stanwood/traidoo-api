@@ -113,3 +113,35 @@ def test_get_delivery_options_central_logistics_disabled(
         {"id": DeliveryOption.SELLER, "value": 1.1},
         {"id": DeliveryOption.BUYER, "value": 0.0},
     ]
+
+
+def test_get_deposit(client_buyer, cart):
+    response = client_buyer.get("/checkout")
+
+    assert response.status_code == 200
+
+    parsed_response = response.json()
+
+    item_1 = cart.items.all()[0]
+    item_2 = cart.items.all()[1]
+
+    assert parsed_response["deposit"] == [
+        {
+            "count": item_1.quantity,
+            "depositNet": item_1.container_deposit.netto,
+            "depositTotal": item_1.container_deposit.netto * item_1.quantity,
+            "sizeClass": item_1.product.container_type.size_class,
+            "unit": item_1.product.unit,
+            "vat": float(item_1.product.vat),
+            "volume": item_1.product.container_type.volume,
+        },
+        {
+            "count": item_2.quantity,
+            "depositNet": item_2.container_deposit.netto,
+            "depositTotal": item_2.container_deposit.netto * item_1.quantity,
+            "sizeClass": item_2.product.container_type.size_class,
+            "unit": item_2.product.unit,
+            "vat": float(item_2.product.vat),
+            "volume": item_2.product.container_type.volume,
+        },
+    ]
