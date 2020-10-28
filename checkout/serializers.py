@@ -10,7 +10,6 @@ from common.utils import get_region
 from core.calculators.order_calculator import OrderCalculatorMixin
 from core.calculators.utils import round_float
 from core.calculators.value import Value
-
 from delivery_options.models import DeliveryOption
 from delivery_options.serializers import DeliveryOptionSerializer
 from products.serializers import ProductSerializer
@@ -218,8 +217,8 @@ class CartSerializer(OrderCalculatorMixin, serializers.ModelSerializer):
                 {
                     "volume": cart_item.product.container_type.volume,
                     "size_class": cart_item.product.container_type.size_class,
-                    "unit": f"1 {cart_item.product.unit}",
-                    "deposit_per_unit": f"{cart_item.container_deposit_net} / {cart_item.product.unit}",
+                    "unit": cart_item.product.unit,
+                    "deposit_net": cart_item.container_deposit_net,
                     "deposit_total": cart_item.container_deposit_net
                     * cart_item.quantity,
                     "vat": settings.deposit_vat,
