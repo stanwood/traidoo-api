@@ -10,6 +10,13 @@ COMPANY_TYPES = {  # TODO: it would be better to store integers in DB
         ("GmbH & Co. KG", "GmbH & Co. KG"),
         ("UG (haftungsbeschränkt)", "UG (haftungsbeschränkt)"),
         ("OHG", "OHG"),
+        ("Kollektivgesellschaft", "Kollektivgesellschaft"),
+        ("Kommanditgesellschaft", "Kommanditgesellschaft"),
+
     ),
-    "Organisations": (("e.V.", "e.V."),),
+    "Organisations": (
+        ("e.V.", "e.V."),
+        ("Genossenschaft", "Genossenschaft"),
+        ("Verein", "Verein")
+    ),
 }
