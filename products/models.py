@@ -126,7 +126,9 @@ class Product(BaseAbstractModel):
         max_length=255, null=True, blank=True, verbose_name=_("Delivery requirements")
     )
 
-    tags = TaggableManager(through=BigAutoFieldTaggedItem, verbose_name=_("Tags"))
+    tags = TaggableManager(
+        through=BigAutoFieldTaggedItem, blank=True, verbose_name=_("Tags")
+    )
 
     ean8 = models.CharField(max_length=255, null=True, blank=True)
     ean13 = models.CharField(max_length=255, null=True, blank=True)
