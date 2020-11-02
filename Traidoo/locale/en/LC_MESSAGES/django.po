@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-07-09 08:39+0000\n"
+"POT-Creation-Date: 2020-11-02 12:04+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -50,7 +50,7 @@ msgstr ""
 msgid "Containers"
 msgstr ""
 
-#: Traidoo/menu.py:26 categories/models.py:32
+#: Traidoo/menu.py:26 categories/models.py:39
 msgid "Categories"
 msgstr ""
 
@@ -66,24 +66,28 @@ msgstr ""
 msgid "Logistics"
 msgstr ""
 
-#: Traidoo/menu.py:33 routes/models.py:27
+#: Traidoo/menu.py:34 routes/models.py:27
 msgid "Routes"
 msgstr ""
 
-#: Traidoo/menu.py:34 jobs/models.py:27
+#: Traidoo/menu.py:36 jobs/models.py:27
 msgid "Jobs"
 msgstr ""
 
-#: Traidoo/menu.py:35 trucks/models.py:10
+#: Traidoo/menu.py:38 trucks/models.py:10
 msgid "Trucks"
 msgstr ""
 
-#: Traidoo/menu.py:39 Traidoo/menu.py:42 settings/models.py:13
+#: Traidoo/menu.py:43 Traidoo/menu.py:50 settings/models.py:34
 msgid "Settings"
 msgstr ""
 
-#: Traidoo/menu.py:45 common/models.py:44 orders/models.py:76
-#: overlays/models.py:42 overlays/models.py:43 settings/models.py:38
+#: Traidoo/menu.py:46 settings/models.py:28
+msgid "Global settings"
+msgstr ""
+
+#: Traidoo/menu.py:53 common/models.py:45 orders/models.py:76
+#: overlays/models.py:42 overlays/models.py:43 settings/models.py:59
 #: users/models/user.py:44
 msgid "Region"
 msgstr ""
@@ -96,77 +100,81 @@ msgstr ""
 msgid "English"
 msgstr ""
 
-#: Traidoo/urls.py:66
+#: Traidoo/urls.py:64
 msgid "Traidoo"
 msgstr ""
 
-#: Traidoo/urls.py:67 Traidoo/urls.py:68
+#: Traidoo/urls.py:65 Traidoo/urls.py:66
 msgid "Traidoo Administration"
 msgstr ""
 
-#: carts/apps.py:7 carts/models.py:55
+#: carts/apps.py:7 carts/models.py:61
 msgid "Carts"
 msgstr ""
 
-#: carts/models.py:23 delivery_addresses/models.py:14 jobs/models.py:22
+#: carts/models.py:20 delivery_addresses/models.py:14 jobs/models.py:22
 #: routes/models.py:40 users/models/kyc.py:21
 msgid "User"
 msgstr ""
 
-#: carts/models.py:26 orders/models.py:67
+#: carts/models.py:23 orders/models.py:67
 msgid "Earliest delivery date"
 msgstr ""
 
-#: carts/models.py:33 delivery_addresses/models.py:19 documents/models.py:71
+#: carts/models.py:30 delivery_addresses/models.py:19 documents/models.py:71
 msgid "Delivery address"
 msgstr ""
 
-#: carts/models.py:54 carts/models.py:63 orders/models.py:37
+#: carts/models.py:60 carts/models.py:69 orders/models.py:37
 msgid "Cart"
 msgstr ""
 
-#: carts/models.py:60 items/models.py:14 products/models.py:30
+#: carts/models.py:66 items/models.py:14 products/models.py:30
 msgid "Product"
 msgstr ""
 
-#: carts/models.py:65 items/models.py:16
+#: carts/models.py:71 items/models.py:16
 msgid "Latest delivery date"
 msgstr ""
 
-#: carts/models.py:66 items/models.py:17
+#: carts/models.py:72 items/models.py:17
 msgid "Quantity"
 msgstr ""
 
-#: carts/models.py:72 delivery_options/models.py:23
+#: carts/models.py:78 delivery_options/models.py:23
 msgid "Delivery option"
 msgstr ""
 
-#: carts/models.py:78
+#: carts/models.py:84
 msgid "Cart item"
 msgstr ""
 
-#: categories/models.py:8
-msgid "Icon"
-msgstr ""
-
-#: categories/models.py:9 common/models.py:12 delivery_options/models.py:10
-#: products/models.py:33 users/models/kyc.py:26
+#: categories/models.py:8 categories/models.py:13 common/models.py:12
+#: delivery_options/models.py:10 products/models.py:33 users/models/kyc.py:26
 msgid "Name"
 msgstr ""
 
-#: categories/models.py:10
+#: categories/models.py:9
+msgid "Icon URL"
+msgstr ""
+
+#: categories/models.py:15
+msgid "Icon"
+msgstr ""
+
+#: categories/models.py:17
 msgid "Ordering"
 msgstr ""
 
-#: categories/models.py:16
+#: categories/models.py:23
 msgid "Default VAT Rate"
 msgstr ""
 
-#: categories/models.py:24
+#: categories/models.py:31
 msgid "Parent category"
 msgstr ""
 
-#: categories/models.py:31 products/models.py:56
+#: categories/models.py:38 products/models.py:56
 msgid "Category"
 msgstr ""
 
@@ -206,7 +214,7 @@ msgstr ""
 msgid "Imprint"
 msgstr ""
 
-#: common/models.py:45
+#: common/models.py:46
 msgid "Regions"
 msgstr ""
 
@@ -231,7 +239,7 @@ msgid "Container deposit cannot be negative"
 msgstr ""
 
 #: containers/models.py:34
-msgid "Depoisit"
+msgid "Deposit"
 msgstr ""
 
 #: containers/models.py:43
@@ -323,7 +331,8 @@ msgstr ""
 msgid "Invoice lines"
 msgstr ""
 
-#: documents/models.py:78 orders/models.py:33 overlays/models.py:67
+#: documents/models.py:78 documents/models.py:228 orders/models.py:33
+#: overlays/models.py:67
 msgid "Order"
 msgstr ""
 
@@ -535,11 +544,11 @@ msgstr ""
 msgid "VAT rate"
 msgstr ""
 
-#: products/models.py:96
+#: products/models.py:96 settings/models.py:18
 msgid "VAT should not be more than 100%"
 msgstr ""
 
-#: products/models.py:97
+#: products/models.py:97 settings/models.py:20
 msgid "VAT should not be negative"
 msgstr ""
 
@@ -611,51 +620,63 @@ msgstr ""
 msgid "Way points"
 msgstr ""
 
-#: settings/models.py:12
+#: settings/admin.py:51
+msgid "This field is required."
+msgstr ""
+
+#: settings/models.py:23
+msgid "Available product VAT rates"
+msgstr ""
+
+#: settings/models.py:27
+msgid "Global setting"
+msgstr ""
+
+#: settings/models.py:33
 msgid "Setting"
 msgstr ""
 
-#: settings/models.py:16
+#: settings/models.py:37
 msgid "Platform charge rate"
 msgstr ""
 
-#: settings/models.py:19
+#: settings/models.py:40
 msgid "Central delivery fee VAT rate"
 msgstr ""
 
-#: settings/models.py:22
+#: settings/models.py:43
 msgid "Platform fee VAT rate"
 msgstr ""
 
-#: settings/models.py:25
+#: settings/models.py:46
 msgid "Transport insurance rate"
 msgstr ""
 
-#: settings/models.py:28
+#: settings/models.py:49
 msgid "Deposit VAT rate"
 msgstr ""
 
-#: settings/models.py:31
+#: settings/models.py:52
 msgid "Min purchase value"
 msgstr ""
 
-#: settings/models.py:46
+#: settings/models.py:67
 msgid "Platform user account"
 msgstr ""
 
-#: settings/models.py:49
+#: settings/models.py:70
 msgid "Central logistic company available"
 msgstr ""
 
-#: settings/models.py:56
+#: settings/models.py:77
 msgid "Logistics company account"
 msgstr ""
 
-#: settings/models.py:64
+#: settings/models.py:85
 msgid "Enable platform fee share"
 msgstr ""
 
-#: settings/models.py:79
+#: settings/models.py:100
 msgid "Central platform share"
 msgstr ""
 
