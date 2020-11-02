@@ -8,9 +8,9 @@ try:
     from django.urls import reverse
 except ImportError:
     from django.core.urlresolvers import reverse
-from django.utils.translation import ugettext_lazy as _
 
-from admin_tools.menu import items, Menu
+from admin_tools.menu import Menu, items
+from django.utils.translation import ugettext_lazy as _
 
 
 class CustomMenu(Menu):
@@ -42,6 +42,10 @@ class CustomMenu(Menu):
             items.MenuItem(
                 _("Settings"),
                 children=[
+                    items.MenuItem(
+                        _("Global settings"),
+                        reverse("admin:settings_globalsetting_changelist"),
+                    ),
                     items.MenuItem(
                         _("Settings"), reverse("admin:settings_setting_changelist")
                     ),
