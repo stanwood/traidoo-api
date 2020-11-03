@@ -18,6 +18,7 @@ class SellerPublicSerializer(serializers.ModelSerializer, ImageFallbackMixin):
             "id",
             "first_name",
             "last_name",
+            "company_name",
             "description",
             "city",
             "image",

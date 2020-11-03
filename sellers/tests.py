@@ -11,6 +11,7 @@ def test_get_seller(client_anonymous, seller):
         "id": seller.id,
         "firstName": seller.first_name,
         "lastName": seller.last_name,
+        "companyName": seller.company_name,
         "description": seller.description,
         "city": seller.city,
         "image": seller.image,
