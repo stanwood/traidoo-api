@@ -4,11 +4,9 @@ from settings.models import GlobalSetting, Setting
 
 
 class SettingSerializer(serializers.ModelSerializer):
-    id = serializers.ReadOnlyField()
-
     class Meta:
         model = Setting
-        fields = "__all__"
+        fields = ("min_purchase_value",)
 
 
 class GlobalSettingSerializer(serializers.ModelSerializer):
