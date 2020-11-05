@@ -257,10 +257,16 @@ def seller(seller_group, traidoo_region):
 def categories():
     yield [
         baker.make_recipe(
-            "categories.category", name="Fruits", ordering=1, default_vat=19,
+            "categories.category",
+            name="Fruits",
+            ordering=1,
+            default_vat=19,
         ),
         baker.make_recipe(
-            "categories.category", name="Vegetables", ordering=2, default_vat=19,
+            "categories.category",
+            name="Vegetables",
+            ordering=2,
+            default_vat=19,
         ),
     ]
 
