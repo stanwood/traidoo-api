@@ -1,3 +1,5 @@
+from decimal import Decimal
+
 import pytest
 from model_bakery import baker
 
@@ -102,7 +104,7 @@ def test_order_platform_fee_calculation_without_local_platform(
     traidoo_settings.platform_user = None
     traidoo_settings.save()
 
-    assert order.price_gross == 197.06
+    assert order.price_gross == 180.88
 
 
 @pytest.mark.django_db
@@ -119,7 +121,7 @@ def test_get_delivery_company_third_party_withut_created_job(
 
 
 @pytest.mark.django_db
-def test_get_delivery_company_third_party_withut_assigned_job(
+def test_get_delivery_company_third_party_without_assigned_job(
     delivery_options, order_items, settings
 ):
     settings.FEATURES["routes"] = True
@@ -131,3 +133,51 @@ def test_get_delivery_company_third_party_withut_assigned_job(
     baker.make("jobs.Job", order_item=order_item, user=None)
 
     assert order_item.delivery_company == order_item.product.seller
+
+
+def test_order_calc_items_do_not_include_seller_platform_fee_items(
+    db, delivery_options, products
+):
+    buyer = baker.make_recipe("users.user", is_cooperative_member=True)
+    order = baker.make_recipe("orders.order", buyer=buyer)
+    baker.make_recipe(
+        "orders.orderitem",
+        delivery_option=delivery_options[0],
+        product=products[0],
+        order=order,
+    )
+    order.recalculate_items_delivery_fee()
+    assert len(order.calc_items) == 3  # product, container deposit and logistics
+
+
+def test_order_calc_items_include_buyer_platform_fee_item(
+    db, delivery_options, products
+):
+    buyer = baker.make_recipe("users.user", is_cooperative_member=False)
+    order = baker.make_recipe("orders.order", buyer=buyer)
+    baker.make_recipe(
+        "orders.orderitem",
+        delivery_option=delivery_options[0],
+        product=products[0],
+        order=order,
+    )
+    order.recalculate_items_delivery_fee()
+    assert (
+        len(order.calc_items) == 4
+    )  # product, container deposit, logistics and buyer platform fee
+
+
+def test_order_calc_item_with_float_vat_rate(db, delivery_options, products):
+    products[0].vat = 10.7
+    products[0].save()
+    buyer = baker.make_recipe("users.user", is_cooperative_member=True)
+    order = baker.make_recipe("orders.order", buyer=buyer)
+    baker.make_recipe(
+        "orders.orderitem",
+        delivery_option=delivery_options[0],
+        product=products[0],
+        order=order,
+        quantity=10,
+    )
+    order.recalculate_items_delivery_fee()
+    assert order.calc_items[0].vat == Decimal("10.7")
