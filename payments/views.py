@@ -3,7 +3,7 @@ from decimal import Decimal
 from typing import Dict, Optional
 
 from django.contrib.auth import get_user_model
-from django.db import transaction, OperationalError
+from django.db import OperationalError, transaction
 from django.utils.decorators import method_decorator
 from loguru import logger
 from rest_framework import views
@@ -16,10 +16,10 @@ from core.mixins.storage import StorageMixin
 from core.tasks.mixin import TasksMixin
 from documents.models import Document
 from mails.utils import get_admin_emails, send_mail
-from Traidoo.errors import PaymentError
 from orders.models import Order
 from payments.client.exceptions import MangopayError, MangopayTransferError
 from payments.mixins import MangopayMixin
+from Traidoo.errors import PaymentError
 
 User = get_user_model()
 
@@ -678,10 +678,8 @@ class MangopayWebhookHandler(MangopayMixin, StorageMixin, TasksMixin, views.APIV
 
         amount_to_transfer_to_global_platform_owner -= local_platform_fee_due
 
-        amount_to_transfer_to_global_platform_owner = (
-            amount_to_transfer_to_global_platform_owner.quantize(
-                Decimal(".01"), "ROUND_HALF_UP"
-            )
+        amount_to_transfer_to_global_platform_owner = amount_to_transfer_to_global_platform_owner.quantize(
+            Decimal(".01"), "ROUND_HALF_UP"
         )
 
         amount_to_payout_for_global_platform_owner = (
