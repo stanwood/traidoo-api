@@ -82,7 +82,7 @@ class Order(OrderCalculatorMixin, BaseAbstractModel):
 
     def recalculate_items_delivery_fee(self):
         for item in self.items.all():
-            item.delivery_fee = item._delivery_fee().netto
+            item.delivery_fee = Decimal(str(item._delivery_fee().netto))
             item.save()
 
     @property
@@ -112,40 +112,43 @@ class Order(OrderCalculatorMixin, BaseAbstractModel):
 
     @property
     def calc_items(self):
-        return (
-            [  # products
-                OrderCalculatorMixin.Item(
-                    price=item.product_price,
-                    count=item.quantity,
-                    vat=item.product_vat,
-                    amount=item.amount,
-                    seller=item.product_snapshot["seller"]["id"],
-                )
-                for item in self.items.all()
-            ]
-            + [  # container deposits
-                OrderCalculatorMixin.Item(
-                    price=container.deposit,
-                    count=container.count,
-                    vat=float(container.vat),
-                    amount=1,
-                    seller=container.seller_user_id,
-                )
-                for container in self.containers()
-            ]
-            + [  # logistics
-                OrderCalculatorMixin.Item(
-                    price=float(item.delivery_fee),
-                    count=1,
-                    vat=float(self.settings.mc_swiss_delivery_fee_vat),
-                    amount=1,
-                    seller=item.delivery_company_user_id,
-                )
-                for item in self.items.all()
-                if (item.is_central_logistic_delivery or item.is_seller_delivery)
-                and item.delivery_fee > 0
-            ]
-            + [  # platform fee
+        product_items = [
+            OrderCalculatorMixin.Item(
+                price=item.product_price,
+                count=item.quantity,
+                vat=item.product_vat,
+                amount=item.amount,
+                seller=item.product_snapshot["seller"]["id"],
+            )
+            for item in self.items.all()
+        ]
+
+        container_deposits = [
+            OrderCalculatorMixin.Item(
+                price=container.deposit,
+                count=container.count,
+                vat=float(container.vat),
+                amount=1,
+                seller=container.seller_user_id,
+            )
+            for container in self.containers()
+        ]
+
+        logistics_fees = [
+            OrderCalculatorMixin.Item(
+                price=float(item.delivery_fee),
+                count=1,
+                vat=float(self.settings.mc_swiss_delivery_fee_vat),
+                amount=1,
+                seller=item.delivery_company_user_id,
+            )
+            for item in self.items.all()
+            if (item.is_central_logistic_delivery or item.is_seller_delivery)
+            and item.delivery_fee > 0
+        ]
+
+        if not self.buyer.is_cooperative_member:
+            platform_fees = [
                 OrderCalculatorMixin.Item(
                     price=self.sum_of_seller_platform_fees.netto
                     + self.buyer_platform_fee.netto,
@@ -155,7 +158,9 @@ class Order(OrderCalculatorMixin, BaseAbstractModel):
                     seller=User.central_platform_user().id,
                 )
             ]
-        )
+        else:
+            platform_fees = []
+        return product_items + container_deposits + logistics_fees + platform_fees
 
     @property
     def buyer_platform_fee(self) -> Value:
@@ -311,19 +316,19 @@ class OrderItem(BaseAbstractModel, ItemCalculatorMixin):
 
     @property
     def product_price(self) -> Decimal:
-        return Decimal(self.product_snapshot["price"])
+        return Decimal(str(self.product_snapshot["price"]))
 
     @property
     def amount(self) -> Decimal:
-        return Decimal(self.product_snapshot["amount"])
+        return Decimal(str(self.product_snapshot["amount"]))
 
     @property
     def total_price_central_delivery(self) -> Decimal:
         return self.order.total_price_central_delivery
 
     @property
-    def product_vat(self):
-        return int(self.product_snapshot["vat"])
+    def product_vat(self) -> Decimal:
+        return Decimal(str(self.product_snapshot["vat"]))
 
     @property
     def product_name_expanded(self):
