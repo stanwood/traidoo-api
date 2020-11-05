@@ -679,8 +679,10 @@ class MangopayWebhookHandler(MangopayMixin, StorageMixin, TasksMixin, views.APIV
 
         amount_to_transfer_to_global_platform_owner -= local_platform_fee_due
 
-        amount_to_transfer_to_global_platform_owner = amount_to_transfer_to_global_platform_owner.quantize(
-            Decimal(".01"), "ROUND_HALF_UP"
+        amount_to_transfer_to_global_platform_owner = (
+            amount_to_transfer_to_global_platform_owner.quantize(
+                Decimal(".01"), "ROUND_HALF_UP"
+            )
         )
 
         amount_to_payout_for_global_platform_owner = (
