@@ -460,9 +460,9 @@ class MangopayWebhookHandler(MangopayMixin, StorageMixin, TasksMixin, views.APIV
                 pay_in,
                 order_confirmation_document.order.id,
                 order_confirmation_document.order.buyer.mangopay_user_id,
-                order_confirmation_document.order.total_price,
-                global_platform_user_wallet,
-                amount_paid_to_local_platform,
+                total_order_value=order_confirmation_document.price_gross,
+                global_platform_user_wallet=global_platform_user_wallet,
+                amount_paid_to_local_platform=amount_paid_to_local_platform,
             )
 
             self.try_to_set_order_as_paid(order_confirmation_document.order)
@@ -606,8 +606,10 @@ class MangopayWebhookHandler(MangopayMixin, StorageMixin, TasksMixin, views.APIV
 
         amount_to_transfer_to_global_platform_owner -= amount_paid_to_local_platform
 
-        amount_to_transfer_to_global_platform_owner = amount_to_transfer_to_global_platform_owner.quantize(
-            Decimal(".01"), "ROUND_HALF_UP"
+        amount_to_transfer_to_global_platform_owner = (
+            amount_to_transfer_to_global_platform_owner.quantize(
+                Decimal(".01"), "ROUND_HALF_UP"
+            )
         )
 
         amount_to_payout_for_global_platform_owner = (
