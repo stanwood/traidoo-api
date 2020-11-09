@@ -11,6 +11,7 @@ from django.utils.translation import gettext_lazy as _
 from loguru import logger
 
 from core.calculators.order_calculator import OrderCalculatorMixin
+from core.currencies import CURRENT_CURRENCY_SYMBOL
 from core.db.base import BaseAbstractModel
 from documents import jinja2_utils
 from orders.models import Order
@@ -113,6 +114,7 @@ class Document(OrderCalculatorMixin, BaseAbstractModel):
             "document": self,
             "today": localdate().strftime("%Y-%m-%d"),
             "delivery_date_feature_enabled": settings.FEATURES["delivery_date"],
+            "CURRENCY_SYMBOL": CURRENT_CURRENCY_SYMBOL,
         }
 
     @property

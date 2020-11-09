@@ -4,6 +4,7 @@ from unittest import mock
 import pytest
 from model_bakery import baker
 
+from core.currencies import CURRENT_CURRENCY_SYMBOL
 
 from ..models import Detour, Job
 
@@ -115,7 +116,7 @@ def test_send_jobs_notification_email_to_user(
             f"{job.order_item.product.seller.city}, {job.order_item.product.seller.street}, {job.order_item.product.seller.zip}",
             f"{job.order_item.order.buyer.city}, {job.order_item.order.buyer.street}, {job.order_item.order.buyer.zip}",
             str(job.detours.first().length / 1000),
-            f'{format(job.order_item.delivery_fee, ".2f")} €',
+            f'{format(job.order_item.delivery_fee, ".2f")} {CURRENT_CURRENCY_SYMBOL}',
             job.order_item.order.earliest_delivery_date.strftime("%b %d"),
             job.order_item.latest_delivery_date.strftime("%b %d"),
         ):

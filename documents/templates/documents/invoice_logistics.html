@@ -38,7 +38,7 @@
                 <td><strong>{{ line.name }}</strong><br>{{ line.number }}</td>
                 <td>{{ line.producer }}</td>
                 <td class="align-right">{{ line.vat_rate|format_price }}%</td>
-                <td class="align-right">&euro; {{ (line|price_value).netto|format_price }}</td>
+                <td class="align-right">{{ CURRENCY_SYMBOL }} {{ (line|price_value).netto|format_price }}</td>
             </tr>
         {% endfor %}
     {% endfor %}
