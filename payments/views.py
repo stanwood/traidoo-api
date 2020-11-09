@@ -100,6 +100,10 @@ class MangopayWebhookHandler(MangopayMixin, StorageMixin, TasksMixin, views.APIV
         return self.request.query_params.get("RessourceId")
 
     @property
+    def skip_checks(self) -> bool:
+        return self.request.query_params.get("skip_checks") == 'true'
+
+    @property
     def document(self):
         try:
             document = self.mangopay.get_kyc_document(self.resource_id)
@@ -242,7 +246,7 @@ class MangopayWebhookHandler(MangopayMixin, StorageMixin, TasksMixin, views.APIV
             "order_confirmation_buyer"
         ):
             pay_in_amount = pay_in["DebitedFunds"]["Amount"]
-            if pay_in_amount < document.price_gross_cents:
+            if pay_in_amount < document.price_gross_cents and not self.skip_checks:
                 logger.debug(f"Document gross cents: {document.price_gross_cents}")
                 send_mail(
                     region=self.get_region(),
@@ -259,7 +263,7 @@ class MangopayWebhookHandler(MangopayMixin, StorageMixin, TasksMixin, views.APIV
                     },
                 )
                 return Response("Falied")
-            elif pay_in_amount > document.price_gross_cents:
+            elif pay_in_amount > document.price_gross_cents and not self.skip_checks:
                 logger.debug(f"Document gross cents: {document.price_gross_cents}")
 
                 send_mail(
@@ -358,7 +362,7 @@ class MangopayWebhookHandler(MangopayMixin, StorageMixin, TasksMixin, views.APIV
     def handle_successful_pay_in(self):
         pay_in = self.mangopay.get_pay_in(self.resource_id)
 
-        if pay_in["Status"] != "SUCCEEDED":
+        if pay_in["Status"] != "SUCCEEDED" and not self.skip_checks:
 
             send_mail(
                 region=self.get_region(),
@@ -368,7 +372,7 @@ class MangopayWebhookHandler(MangopayMixin, StorageMixin, TasksMixin, views.APIV
                 context={
                     "body": (
                         f"Successfully received {self.resource_id} hook, but "
-                        f"actual status is `failed`. Check with Mangopay details"
+                        f"actual status is `{pay_in['Status']}`. Check with Mangopay details"
                     )
                 },
             )
