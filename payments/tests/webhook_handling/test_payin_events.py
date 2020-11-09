@@ -671,7 +671,7 @@ def test_status_spoofed_in_webhook(mangopay, api_client, mailoutbox):
 
     assert "Fehler bei der Verarbeitung der Zahlung" in mailoutbox[-1].subject
     assert (
-        "Successfully received payin-1 hook, but actual status is `failed`. "
+        "Successfully received payin-1 hook, but actual status is `FAILED`. "
         "Check with Mangopay details"
     ) in mailoutbox[-1].body
 
