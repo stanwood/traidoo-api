@@ -12,6 +12,7 @@ from rest_framework.request import Request
 from rest_framework.response import Response
 
 from common.models import Region
+from core.currencies import CURRENT_CURRENCY_CODE
 from core.mixins.storage import StorageMixin
 from core.tasks.mixin import TasksMixin
 from documents.models import Document
@@ -724,7 +725,7 @@ class MangopayWebhookHandler(MangopayMixin, StorageMixin, TasksMixin, views.APIV
                 subject=f"Zahlung erhalten für Auftrag #{invoice.order_id}",
                 template="mails/payments/successful_payin.html",
                 context={
-                    "currency": "EUR",
+                    "currency": CURRENT_CURRENCY_CODE,
                     "amount": f"{invoice.price_gross:.2f}",
                     "buyer_company_name": invoice.buyer["company_name"],
                     "document_name": invoice.__class__.__name__,
@@ -823,7 +824,7 @@ class MangopayWebhookHandler(MangopayMixin, StorageMixin, TasksMixin, views.APIV
             subject=f"Zahlung erhalten für Auftrag #{invoice.order_id}",
             template="mails/payments/successful_payin.html",
             context={
-                "currency": "EUR",
+                "currency": CURRENT_CURRENCY_CODE,
                 "amount": f"{amount:.2f}",
                 "buyer_company_name": invoice.buyer["company_name"],
                 "document_name": invoice.__class__.__name__,

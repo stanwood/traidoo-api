@@ -3,13 +3,14 @@ import datetime
 import itertools
 from decimal import Decimal
 
-import pytz
 import pytest
+import pytz
 from bs4 import BeautifulSoup
 from django.conf import settings
 from django.utils import timezone
 from freezegun import freeze_time
 
+from core.currencies import CURRENT_CURRENCY_SYMBOL
 from documents import factories
 from documents.models import Document
 
@@ -197,15 +198,29 @@ def test_include_deposit_cost_in_order_confirmation_buyer(
         )
 
     assert deposit_lines == {
-        ("Greenbox", "€ 3,20 / Stück", "2", "€ 6,40", "19,00%"),
-        ("Isolierbox", "€ 3,20 / Stück", "3", "€ 9,60", "19,00%"),
+        (
+            "Greenbox",
+            f"{CURRENT_CURRENCY_SYMBOL} 3,20 / Stück",
+            "2",
+            f"{CURRENT_CURRENCY_SYMBOL} 6,40",
+            "19,00%",
+        ),
+        (
+            "Isolierbox",
+            f"{CURRENT_CURRENCY_SYMBOL} 3,20 / Stück",
+            "3",
+            f"{CURRENT_CURRENCY_SYMBOL} 9,60",
+            "19,00%",
+        ),
     }
 
     deposits_total = html.find("div", text="Summe Pfand Netto").find_next_sibling().text
-    assert deposits_total == "€ 16,00"
+    assert deposits_total == f"{CURRENT_CURRENCY_SYMBOL} 16,00"
 
     price_total = html.find("div", text="Gesamt (Brutto)").find_next_sibling().text
-    assert price_total == "€ 180,88"  # deposit cost should be included in total
+    assert (
+        price_total == f"{CURRENT_CURRENCY_SYMBOL} 180,88"
+    )  # deposit cost should be included in total
 
 
 def test_added_deposit_costs(
@@ -237,19 +252,21 @@ def test_added_deposit_costs(
     )
     assert deposit_line == (
         "Isolierbox",
-        "\u20ac 3,20 / Stück",
+        f"{CURRENT_CURRENCY_SYMBOL} 3,20 / Stück",
         "5",
-        "\u20ac 16,00",
+        f"{CURRENT_CURRENCY_SYMBOL} 16,00",
         "19,00%",
     )
 
     deposits_total = html.find("div", text="Summe Pfand Netto").find_next_sibling().text
-    assert deposits_total == "€ 16,00"
+    assert deposits_total == f"{CURRENT_CURRENCY_SYMBOL} 16,00"
 
     price_total = (
         html.find("strong", text="Endsumme").parent.find_next_sibling().text.strip()
     )
-    assert price_total == "€ 180,88"  # deposit cost should be included in total
+    assert (
+        price_total == f"{CURRENT_CURRENCY_SYMBOL} 180,88"
+    )  # deposit cost should be included in total
 
 
 def test_add_delivery_fee_if_producer_delivers_items(
@@ -546,13 +563,23 @@ def test_include_deposit_cost_in_order_confirmation_buyer_and_merge_containers(
             )
         )
 
-    assert deposit_lines == {("Isolierbox", "€ 3,20 / Stück", "5", "€ 16,00", "19,00%")}
+    assert deposit_lines == {
+        (
+            "Isolierbox",
+            f"{CURRENT_CURRENCY_SYMBOL} 3,20 / Stück",
+            "5",
+            f"{CURRENT_CURRENCY_SYMBOL} 16,00",
+            "19,00%",
+        )
+    }
 
     deposits_total = html.find("div", text="Summe Pfand Netto").find_next_sibling().text
-    assert deposits_total == "€ 16,00"
+    assert deposits_total == f"{CURRENT_CURRENCY_SYMBOL} 16,00"
 
     price_total = html.find("div", text="Gesamt (Brutto)").find_next_sibling().text
-    assert price_total == "€ 180,88"  # deposit cost should be included in total
+    assert (
+        price_total == f"{CURRENT_CURRENCY_SYMBOL} 180,88"
+    )  # deposit cost should be included in total
 
 
 def test_delivery_address_included_in_delivery_documents(

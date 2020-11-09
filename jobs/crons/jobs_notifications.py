@@ -11,6 +11,7 @@ from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
 from common.utils import get_region
+from core.currencies import CURRENT_CURRENCY_SYMBOL
 from core.decorators.feature import require_feature
 from core.permissions.cron_or_task import IsCronOrTask
 from core.tasks.mixin import TasksMixin
@@ -63,7 +64,7 @@ class JobsNotificationsView(TasksMixin, views.APIView):
             subject="Routes",
             recipient_list=[user.email],
             template="mails/jobs/notification_email.html",
-            context={"jobs": jobs_queryset},
+            context={"jobs": jobs_queryset, "CURRENCY_SYMBOL": CURRENT_CURRENCY_SYMBOL},
         )
 
         return Response(status=status.HTTP_204_NO_CONTENT)

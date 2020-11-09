@@ -1,13 +1,8 @@
-import datetime
-import time
 from unittest import mock
 
 import pytest
-from django.utils import timezone
-from model_bakery import baker
 
-from carts.models import Cart, CartItem
-from delivery_addresses.models import DeliveryAddress
+from core.currencies import CURRENT_CURRENCY_CODE
 from orders.models import Order
 
 pytestmark = pytest.mark.django_db
@@ -24,7 +19,7 @@ def test_order_value_below_min(client_buyer, cart, buyer, products):
 
     assert (
         response.data
-        == f"Order must exceed 50.00 EUR. This cart net value is {cart.total}"
+        == f"Order must exceed 50.00 {CURRENT_CURRENCY_CODE}. This cart net value is {cart.total}"
     )
 
 
@@ -42,7 +37,7 @@ def test_order_value_below_min_seller(client_seller, cart, seller, products):
 
     assert (
         response.data
-        == f"Order must exceed 50.00 EUR. This cart net value is {cart.total}"
+        == f"Order must exceed 50.00 {CURRENT_CURRENCY_CODE}. This cart net value is {cart.total}"
     )
 
 
