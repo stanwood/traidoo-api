@@ -53,6 +53,7 @@ steps:
       - "SENTRY_DSN=${_SENTRY_DSN}"
       - "STATIC_BUCKET=${_STATIC_BUCKET}"
       - "SQL_PROXY_INSTANCE=${_SQL_PROXY_INSTANCE}"
+      - "CURRENCY=${_CURRENCY}"
   - name: gcr.io/google.com/cloudsdktool/cloud-sdk:alpine
     entrypoint: bash
     args: [".build/deployment.sh"]
