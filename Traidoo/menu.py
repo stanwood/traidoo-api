@@ -39,25 +39,38 @@ class CustomMenu(Menu):
                     ),
                 ],
             ),
-            items.MenuItem(
-                _("Settings"),
-                children=[
-                    items.MenuItem(
-                        _("Global settings"),
-                        reverse("admin:settings_globalsetting_changelist"),
-                    ),
-                    items.MenuItem(
-                        _("Settings"), reverse("admin:settings_setting_changelist")
-                    ),
-                    items.MenuItem(
-                        _("Region"), reverse("admin:common_region_changelist")
-                    ),
-                ],
-            ),
         ]
 
     def init_with_context(self, context):
         """
         Use this method if you need to access the request context.
         """
+
+        settings_menu = [
+            items.MenuItem(
+                _("Overlays"), reverse("admin:overlays_overlay_changelist")
+            ),
+            items.MenuItem(
+                _("Region"), reverse("admin:common_region_changelist")
+            ),
+            items.MenuItem(
+                _("Settings"), reverse("admin:settings_setting_changelist")
+            ),
+        ]
+
+        if context.request.user.is_superuser:
+            settings_menu += [
+                items.MenuItem(
+                    _("Global settings"),
+                    reverse("admin:settings_globalsetting_changelist"),
+                ),
+            ]
+
+        self.children += [
+            items.MenuItem(
+                _("Settings"),
+                children=settings_menu,
+            ),
+        ]
+
         return super(CustomMenu, self).init_with_context(context)
