@@ -27,7 +27,7 @@
         <td>
           {{ job.detour | divide:1000 }} KM
           <br>
-          {{ job.order_item.delivery_fee }} €
+          {{ job.order_item.delivery_fee }} {{ CURRENCY_SYMBOL }}
         </td>
         <td>
           {{ job.order_item.order.earliest_delivery_date | date:"M d" }}

@@ -12,14 +12,15 @@ from rest_framework.request import Request
 from rest_framework.response import Response
 
 from common.models import Region
+from core.currencies import CURRENT_CURRENCY_CODE
 from core.mixins.storage import StorageMixin
 from core.tasks.mixin import TasksMixin
 from documents.models import Document
 from mails.utils import get_admin_emails, send_mail
-from Traidoo.errors import PaymentError
 from orders.models import Order
 from payments.client.exceptions import MangopayError, MangopayTransferError
 from payments.mixins import MangopayMixin
+from Traidoo.errors import PaymentError
 
 User = get_user_model()
 
@@ -606,10 +607,8 @@ class MangopayWebhookHandler(MangopayMixin, StorageMixin, TasksMixin, views.APIV
 
         amount_to_transfer_to_global_platform_owner -= amount_paid_to_local_platform
 
-        amount_to_transfer_to_global_platform_owner = (
-            amount_to_transfer_to_global_platform_owner.quantize(
-                Decimal(".01"), "ROUND_HALF_UP"
-            )
+        amount_to_transfer_to_global_platform_owner = amount_to_transfer_to_global_platform_owner.quantize(
+            Decimal(".01"), "ROUND_HALF_UP"
         )
 
         amount_to_payout_for_global_platform_owner = (
@@ -662,7 +661,7 @@ class MangopayWebhookHandler(MangopayMixin, StorageMixin, TasksMixin, views.APIV
                 subject=f"Zahlung erhalten für Auftrag #{invoice.order_id}",
                 template="mails/payments/successful_payin.html",
                 context={
-                    "currency": "EUR",
+                    "currency": CURRENT_CURRENCY_CODE,
                     "amount": f"{invoice.price_gross:.2f}",
                     "buyer_company_name": invoice.buyer["company_name"],
                     "document_name": invoice.__class__.__name__,
@@ -758,7 +757,7 @@ class MangopayWebhookHandler(MangopayMixin, StorageMixin, TasksMixin, views.APIV
             subject=f"Zahlung erhalten für Auftrag #{invoice.order_id}",
             template="mails/payments/successful_payin.html",
             context={
-                "currency": "EUR",
+                "currency": CURRENT_CURRENCY_CODE,
                 "amount": f"{amount:.2f}",
                 "buyer_company_name": invoice.buyer["company_name"],
                 "document_name": invoice.__class__.__name__,
