@@ -3,7 +3,7 @@ from decimal import Decimal
 from typing import Dict, Optional
 
 from django.contrib.auth import get_user_model
-from django.db import transaction
+from django.db import transaction, OperationalError
 from django.utils.decorators import method_decorator
 from loguru import logger
 from rest_framework import views
@@ -31,6 +31,10 @@ MANGOPAY_DOCUMENTS = {
     "SHAREHOLDER_DECLARATION": "Liste der Gesellschafter",
     "ADDRESS_PROOF": "Addressnachweiss",
 }
+
+
+class DuplicateTransferError(Exception):
+    pass
 
 
 def sufficient_wallet_balance_for_order(order_id, buyer_id, wallet):
@@ -86,6 +90,55 @@ def calculate_platform_fee_for_order(order_id: int):
     return sum([invoice.price_gross for invoice in platform_invoices])
 
 
+def pay_for_document(
+    document: Document,
+    author_id: str,
+    source_wallet_id: str,
+    destination_wallet_id: str,
+    amount: float,
+    fees: float = 0,
+    db="default",
+):
+    """
+    Atomic transaction to pay for the document an mark document as paid
+    :param document:
+    :param author_id:
+    :param source_wallet_id:
+    :param destination_wallet_id:
+    :param amount:
+    :param fees:
+    :return:
+    """
+    mangopay = MangopayMixin()
+    with transaction.atomic(using=db):
+        try:
+            document = (
+                Document.objects.using(db)
+                .filter(id=document.id)
+                .select_for_update(nowait=True)
+                .get()
+            )
+        except OperationalError:
+            raise DuplicateTransferError(
+                f"Document {document.id} is being paid by other process"
+            )
+
+        if document.paid:
+            raise DuplicateTransferError(f"Document {document.id} already paid")
+
+        if source_wallet_id != destination_wallet_id and not document.paid:
+            mangopay.mangopay.transfer(
+                author_id,
+                source_wallet_id,
+                destination_wallet_id,
+                amount=amount,
+                fees=fees,
+                tag=document.mangopay_tag,
+            )
+        document.paid = True
+        document.save(update_fields=("paid",))
+
+
 @method_decorator(transaction.non_atomic_requests, name="dispatch")
 class MangopayWebhookHandler(MangopayMixin, StorageMixin, TasksMixin, views.APIView):
     permission_classes = (AllowAny,)
@@ -100,7 +153,7 @@ class MangopayWebhookHandler(MangopayMixin, StorageMixin, TasksMixin, views.APIV
 
     @property
     def skip_checks(self) -> bool:
-        return self.request.query_params.get("skip_checks") == 'true'
+        return self.request.query_params.get("skip_checks") == "true"
 
     @property
     def document(self):
@@ -326,38 +379,6 @@ class MangopayWebhookHandler(MangopayMixin, StorageMixin, TasksMixin, views.APIV
                 )
             )
 
-    @transaction.atomic
-    def _pay_for_document(
-        self,
-        document: Document,
-        author_id: str,
-        source_wallet_id: str,
-        destination_wallet_id: str,
-        amount: float,
-        fees: float = 0,
-    ):
-        """
-        Atomic transaction to pay for the document an mark document as paid
-        :param document:
-        :param author_id:
-        :param source_wallet_id:
-        :param destination_wallet_id:
-        :param amount:
-        :param fees:
-        :return:
-        """
-        if source_wallet_id != destination_wallet_id:
-            self.mangopay.transfer(
-                author_id,
-                source_wallet_id,
-                destination_wallet_id,
-                amount=amount,
-                fees=fees,
-                tag=document.mangopay_tag,
-            )
-        document.paid = True
-        document.save()
-
     def handle_successful_pay_in(self):
         pay_in = self.mangopay.get_pay_in(self.resource_id)
 
@@ -400,6 +421,7 @@ class MangopayWebhookHandler(MangopayMixin, StorageMixin, TasksMixin, views.APIV
             )
             .order_by("created_at")
         )
+
         for order_confirmation_document in order_confirmation_documents:
             wallet = self.mangopay.get_wallet(wallet_id)
             if not sufficient_wallet_balance_for_order(
@@ -548,7 +570,7 @@ class MangopayWebhookHandler(MangopayMixin, StorageMixin, TasksMixin, views.APIV
             local_platform_owner.mangopay_user_id
         )
         try:
-            self._pay_for_document(
+            pay_for_document(
                 document=credit_note_for_local_platform_owner,
                 author_id=buyer_mangopay_user_id,
                 source_wallet_id=buyer_mangopay_wallet_id,
@@ -567,6 +589,8 @@ class MangopayWebhookHandler(MangopayMixin, StorageMixin, TasksMixin, views.APIV
                 recipient_list=get_admin_emails(),
                 context={"body": error_message},
             )
+            return Decimal("0")
+        except DuplicateTransferError:
             return Decimal("0")
 
         self.send_task(
@@ -634,7 +658,7 @@ class MangopayWebhookHandler(MangopayMixin, StorageMixin, TasksMixin, views.APIV
         invoice = platform_invoices.first()
 
         try:
-            self._pay_for_document(
+            pay_for_document(
                 document=invoice,
                 author_id=buyer_mangopay_user_id,
                 source_wallet_id=buyer_mangopay_wallet_id,
@@ -655,6 +679,8 @@ class MangopayWebhookHandler(MangopayMixin, StorageMixin, TasksMixin, views.APIV
                 context={"body": error_message},
                 recipient_list=get_admin_emails(),
             )
+            return
+        except DuplicateTransferError:
             return
 
         for invoice in platform_invoices:
@@ -732,7 +758,7 @@ class MangopayWebhookHandler(MangopayMixin, StorageMixin, TasksMixin, views.APIV
         amount = float(amount)
 
         try:
-            self._pay_for_document(
+            pay_for_document(
                 document=invoice,
                 author_id=buyer_profile.mangopay_user_id,
                 source_wallet_id=buyer_mangopay_wallet_id,
@@ -755,6 +781,8 @@ class MangopayWebhookHandler(MangopayMixin, StorageMixin, TasksMixin, views.APIV
                 context={"body": error_message},
                 recipient_list=get_admin_emails(),
             )
+            return
+        except DuplicateTransferError:
             return
 
         send_mail(

@@ -992,3 +992,9 @@ def test_do_not_try_pay_to_the_same_wallet(
         fees=1.08,
         tag=f"v2 Order: {order.id} Document: Platform Invoice Seller: Traidoo Buyer: Best apples",
     )
+
+
+def test_lock_documents_when_processing_payin(
+    mangopay_bank_alias_payin, api_client, order
+):
+    pass
