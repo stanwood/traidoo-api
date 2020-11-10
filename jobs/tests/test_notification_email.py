@@ -84,6 +84,7 @@ def test_send_jobs_notification_email_to_user(
         "orders.order",
         earliest_delivery_date=(datetime.datetime.today() + datetime.timedelta(days=1)),
         buyer=user_1,
+        processed=False,
     )
     order_item_1 = baker.make(
         "orders.orderitem",
