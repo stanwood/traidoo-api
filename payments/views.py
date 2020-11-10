@@ -91,6 +91,20 @@ def calculate_platform_fee_for_order(order_id: int):
     return sum([invoice.price_gross for invoice in platform_invoices])
 
 
+def calculate_local_platform_fee_for_order(
+    order_id: int, global_platform_user_id: int
+) -> Decimal:
+    try:
+        credit_note_for_local_platform_owner = Document.objects.get(
+            order_id=order_id,
+            document_type=Document.TYPES.get_value("credit_note"),
+            seller__user_id=global_platform_user_id,
+        )
+        return Decimal(str(credit_note_for_local_platform_owner.price_gross))
+    except Document.DoesNotExist:
+        return Decimal("0")
+
+
 def pay_for_document(
     document: Document,
     author_id: str,
@@ -353,7 +367,7 @@ class MangopayWebhookHandler(MangopayMixin, StorageMixin, TasksMixin, views.APIV
                 global_platform_user.mangopay_user_id
             )
 
-            amount_paid_to_local_platform = self.pay_local_platform_owner(
+            self.pay_local_platform_owner(
                 order.id,
                 order.buyer.mangopay_user_id,
                 pay_in["CreditedWalletId"],
@@ -362,14 +376,19 @@ class MangopayWebhookHandler(MangopayMixin, StorageMixin, TasksMixin, views.APIV
             )
 
             # Pay combined platform fee in one transfer from buyer wallet
-            self.pay_for_platform(
-                pay_in,
-                order.id,
-                order.buyer.mangopay_user_id,
-                order.total_price,
-                global_platform_user_wallet,
-                amount_paid_to_local_platform,
-            )
+            try:
+                self.pay_for_platform(
+                    pay_in,
+                    order.id,
+                    order.buyer.mangopay_user_id,
+                    order.total_price,
+                    global_platform_user_wallet,
+                    global_platform_user,
+                )
+            except OperationalError as error:
+                logger.warning(
+                    f"Other process is trying to pay for platform: `{error}`"
+                )
 
             self.try_to_set_order_as_paid(order)
 
@@ -474,7 +493,7 @@ class MangopayWebhookHandler(MangopayMixin, StorageMixin, TasksMixin, views.APIV
                 global_platform_user.mangopay_user_id
             )
 
-            amount_paid_to_local_platform = self.pay_local_platform_owner(
+            self.pay_local_platform_owner(
                 order_confirmation_document.order_id,
                 order_confirmation_document.order.buyer.mangopay_user_id,
                 pay_in["CreditedWalletId"],
@@ -483,14 +502,19 @@ class MangopayWebhookHandler(MangopayMixin, StorageMixin, TasksMixin, views.APIV
             )
 
             # Pay combined platform fee in one transfer from buyer wallet
-            self.pay_for_platform(
-                pay_in,
-                order_confirmation_document.order.id,
-                order_confirmation_document.order.buyer.mangopay_user_id,
-                total_order_value=order_confirmation_document.price_gross,
-                global_platform_user_wallet=global_platform_user_wallet,
-                amount_paid_to_local_platform=amount_paid_to_local_platform,
-            )
+            try:
+                self.pay_for_platform(
+                    pay_in,
+                    order_confirmation_document.order.id,
+                    order_confirmation_document.order.buyer.mangopay_user_id,
+                    total_order_value=order_confirmation_document.price_gross,
+                    global_platform_user_wallet=global_platform_user_wallet,
+                    global_platform_user=global_platform_user,
+                )
+            except OperationalError as error:
+                logger.warning(
+                    f"Other process is trying to pay for platform: `{error}`"
+                )
 
             self.try_to_set_order_as_paid(order_confirmation_document.order)
 
@@ -510,6 +534,7 @@ class MangopayWebhookHandler(MangopayMixin, StorageMixin, TasksMixin, views.APIV
             )
             return
 
+    @transaction.atomic
     def pay_local_platform_owner(
         self,
         order_id: int,
@@ -520,6 +545,8 @@ class MangopayWebhookHandler(MangopayMixin, StorageMixin, TasksMixin, views.APIV
     ) -> Decimal:
         """
         Tries to pay local platform owner
+        :param global_platform_user_id:
+        :param global_platform_user_wallet:
         :param buyer_mangopay_wallet_id:
         :param buyer_mangopay_user_id:
         :param order_id:
@@ -609,6 +636,7 @@ class MangopayWebhookHandler(MangopayMixin, StorageMixin, TasksMixin, views.APIV
         )
         return Decimal(str(credit_note_for_local_platform_owner.price_gross))
 
+    @transaction.atomic
     def pay_for_platform(
         self,
         pay_in: Dict,
@@ -616,8 +644,24 @@ class MangopayWebhookHandler(MangopayMixin, StorageMixin, TasksMixin, views.APIV
         buyer_mangopay_user_id: str,
         total_order_value: float,
         global_platform_user_wallet: dict,
-        amount_paid_to_local_platform: Decimal = Decimal("0"),
+        global_platform_user: User,
     ):
+        platform_invoices = Document.objects.select_for_update(nowait=True).filter(
+            order_id=order_id,
+            paid=False,
+            document_type__in=[
+                Document.TYPES.get_value("platform_invoice"),
+                Document.TYPES.get_value("buyer_platform_invoice"),
+            ],
+        )
+
+        invoice = platform_invoices.first()
+        if not invoice:
+            return
+
+        local_platform_fee_due = calculate_local_platform_fee_for_order(
+            order_id, global_platform_user.id
+        )
         buyer_mangopay_wallet_id = pay_in["CreditedWalletId"]
         global_platform_user_mangopay_id = global_platform_user_wallet["Owners"][0]
         total_unpaid_platform_invoices_value = calculate_platform_fee_for_order(
@@ -633,7 +677,7 @@ class MangopayWebhookHandler(MangopayMixin, StorageMixin, TasksMixin, views.APIV
             total_unpaid_platform_invoices_value - mangopay_fees
         )
 
-        amount_to_transfer_to_global_platform_owner -= amount_paid_to_local_platform
+        amount_to_transfer_to_global_platform_owner -= local_platform_fee_due
 
         amount_to_transfer_to_global_platform_owner = (
             amount_to_transfer_to_global_platform_owner.quantize(
@@ -649,23 +693,15 @@ class MangopayWebhookHandler(MangopayMixin, StorageMixin, TasksMixin, views.APIV
             amount_to_transfer_to_global_platform_owner
         )
 
-        platform_invoices = Document.objects.filter(
-            order_id=order_id,
-            document_type__in=[
-                Document.TYPES.get_value("platform_invoice"),
-                Document.TYPES.get_value("buyer_platform_invoice"),
-            ],
-        )
-        invoice = platform_invoices.first()
-
         try:
-            pay_for_document(
-                document=invoice,
-                author_id=buyer_mangopay_user_id,
-                source_wallet_id=buyer_mangopay_wallet_id,
-                destination_wallet_id=global_platform_user_wallet["Id"],
+            # not using `pay_for_document` to avoid nested transactions
+            self.mangopay.transfer(
+                buyer_mangopay_user_id,
+                buyer_mangopay_wallet_id,
+                global_platform_user_wallet["Id"],
                 amount=amount_to_transfer_to_global_platform_owner,
                 fees=float(mangopay_fees),
+                tag=invoice.mangopay_tag,
             )
         except MangopayTransferError as transfer_error:
             error_message = (
@@ -680,8 +716,6 @@ class MangopayWebhookHandler(MangopayMixin, StorageMixin, TasksMixin, views.APIV
                 context={"body": error_message},
                 recipient_list=get_admin_emails(),
             )
-            return
-        except DuplicateTransferError:
             return
 
         for invoice in platform_invoices:
@@ -783,7 +817,8 @@ class MangopayWebhookHandler(MangopayMixin, StorageMixin, TasksMixin, views.APIV
                 recipient_list=get_admin_emails(),
             )
             return
-        except DuplicateTransferError:
+        except DuplicateTransferError as error:
+            logger.exception(error)
             return
 
         send_mail(

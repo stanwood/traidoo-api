@@ -5,7 +5,7 @@ from documents.models import Document
 from payments.views import DuplicateTransferError, pay_for_document
 
 
-def test_document_already_paid(db, producer_invoice, mangopay):
+def test_document_already_paid(transactional_db, producer_invoice, mangopay):
     producer_invoice.paid = True
     producer_invoice.save()
 
