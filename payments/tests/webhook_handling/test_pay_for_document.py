@@ -1,11 +1,12 @@
 import pytest
 from django.db import transaction
+from model_bakery import baker
 
 from documents.models import Document
 from payments.views import DuplicateTransferError, pay_for_document
 
 
-def test_document_already_paid(transactional_db, producer_invoice, mangopay):
+def test_document_already_paid(producer_invoice, mangopay):
     producer_invoice.paid = True
     producer_invoice.save()
 
@@ -22,7 +23,8 @@ def test_document_already_paid(transactional_db, producer_invoice, mangopay):
     mangopay.transfer.assert_not_called()
 
 
-def test_stop_concurrent_payment(transactional_db, producer_invoice, mangopay):
+def test_stop_concurrent_payment(transactional_db, mangopay):
+    producer_invoice = baker.make_recipe("documents.producer_invoice", paid=False)
 
     with transaction.atomic():
         Document.objects.filter(id=producer_invoice.id).select_for_update(
