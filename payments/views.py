@@ -101,7 +101,7 @@ class MangopayWebhookHandler(MangopayMixin, StorageMixin, TasksMixin, views.APIV
 
     @property
     def skip_checks(self) -> bool:
-        return self.request.query_params.get("skip_checks") == 'true'
+        return self.request.query_params.get("skip_checks") == "true"
 
     @property
     def document(self):
