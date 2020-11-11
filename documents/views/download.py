@@ -1,10 +1,6 @@
-import datetime
 import os
 
-import google.cloud.storage
-from django.conf import settings
 from django.contrib.auth import get_user_model
-from loguru import logger
 from rest_framework import status
 from rest_framework.request import Request
 from rest_framework.response import Response
@@ -31,21 +27,11 @@ class DownloadDocument(APIView):
         if not self._check_permissions(document, self.request.user):
             return Response(status=status.HTTP_403_FORBIDDEN)
 
-        storage_client = google.cloud.storage.Client.from_service_account_json(
-            settings.BASE_DIR.joinpath("service_account.json")
-        )
-
-        bucket = storage_client.get_bucket(settings.DEFAULT_BUCKET)
-        blob = bucket.blob(document.blob_name)
-
         filename = os.path.basename(document.blob_name)
 
         return Response(
             {
-                "url": blob.generate_signed_url(
-                    datetime.timedelta(minutes=settings.DOCUMENTS_EXPIRATION_TIME),
-                    response_disposition=f"inline; filename={filename}",
-                ),
+                "url": document.signed_download_url,
                 "filename": filename,
             }
         )
