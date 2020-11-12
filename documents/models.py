@@ -204,11 +204,11 @@ class Document(OrderCalculatorMixin, BaseAbstractModel):
 
     @property
     def seller_company_name(self):
-        return self.seller["company_name"]
+        return self.seller.get("company_name")
 
     @property
     def buyer_company_name(self):
-        return self.buyer["company_name"]
+        return self.buyer.get("company_name")
 
     @property
     def is_invoice(self):
