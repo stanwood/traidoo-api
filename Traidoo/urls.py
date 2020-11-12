@@ -14,6 +14,7 @@ from common.views import RegionViewSet, StaticViewSet
 from containers.views import ContainerViewSet
 from delivery_addresses.views import DeliveryAddressViewSet
 from delivery_options.views import DeliveryOptionViewSet
+from documents.views.download import DownloadDocumentAdminView
 from groups.views import GroupViewSet
 from items.views.items import ItemViewSet, ProductsItemViewSet
 from items.views.stats import ItemsStatsView
@@ -139,4 +140,9 @@ urlpatterns = [
 urlpatterns += i18n_patterns(
     path("admin/", admin.site.urls),
     url(r"^admin_tools/", include("admin_tools.urls")),
+    path(
+        "admin/documents/<int:document_id>/downlolad",
+        DownloadDocumentAdminView.as_view(),
+        name="admin-document-download",
+    ),
 )

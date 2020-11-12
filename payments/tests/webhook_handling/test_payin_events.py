@@ -155,7 +155,7 @@ def test_transfer_related_document_not_found(
 
 
 def test_transfers_after_successful_processing(
-    transactional_db, mangopay_bank_alias_payin, api_client, order
+    mangopay_bank_alias_payin, api_client, order
 ):
     api_client.get(
         reverse("webhook"),
@@ -200,7 +200,6 @@ def test_transfers_after_successful_processing(
 
 
 def test_pay_oldest_order_first(
-    transactional_db,
     mangopay_bank_alias_payin,
     order,
     api_client,
@@ -280,7 +279,6 @@ def test_pay_oldest_order_first(
 
 
 def test_transfer_to_global_platform_owner_if_local_does_not_have_mangopay_account(
-    transactional_db,
     mangopay_bank_alias_payin,
     api_client,
     order,
@@ -342,7 +340,6 @@ def test_transfer_to_global_platform_owner_if_local_does_not_have_mangopay_accou
 
 
 def test_mark_documents_and_invoice_as_paid_after_processing_payin(
-    transactional_db,
     mangopay_bank_alias_payin,
     api_client,
     order,
@@ -375,7 +372,7 @@ def test_mark_documents_and_invoice_as_paid_after_processing_payin(
 
 
 def test_create_payouts_tasks_after_paying_invoices(
-    transactional_db, mangopay_bank_alias_payin, send_task, api_client, order
+    mangopay_bank_alias_payin, send_task, api_client, order
 ):
     api_client.get(
         reverse("webhook"),
@@ -419,7 +416,6 @@ def test_create_payouts_tasks_after_paying_invoices(
 
 
 def test_pay_in_for_order_confirmation_bankwire_pay_in_to_wallet(
-    transactional_db,
     mangopay_wire_reference_payin,
     api_client,
     order,
@@ -530,7 +526,6 @@ def test_pay_in_for_order_confirmation_bankwire_pay_in_to_wallet(
 
 
 def test_paid_too_much_bankwire_pay_in_to_wallet(
-    transactional_db,
     mangopay_wire_reference_payin,
     order,
     order_items,
@@ -575,7 +570,6 @@ def test_paid_too_much_bankwire_pay_in_to_wallet(
 
 
 def test_seller_does_not_have_mangopay_user(
-    transactional_db,
     mangopay_bank_alias_payin,
     api_client,
     mailoutbox,
@@ -743,7 +737,6 @@ def test_payin_failed_webhook(mangopay, api_client, mailoutbox):
 
 
 def test_paid_too_much_with_bank_alias(
-    transactional_db,
     mangopay_bank_alias_payin,
     api_client,
     order,
@@ -839,7 +832,6 @@ def test_payout_failed(mangopay, api_client, mailoutbox, platform_user):
 
 
 def test_unexpected_exception_after_paying_for_producer(
-    transactional_db,
     mangopay_bank_alias_payin,
     api_client,
     order,
@@ -871,7 +863,6 @@ def test_unexpected_exception_after_paying_for_producer(
 
 
 def test_exception_after_paying_for_logistics(
-    transactional_db,
     mangopay_bank_alias_payin,
     api_client,
     order,
@@ -906,7 +897,6 @@ def test_exception_after_paying_for_logistics(
 
 
 def test_exception_after_paying_for_credit_note_for_local_platform_owner(
-    transactional_db,
     mangopay_bank_alias_payin,
     api_client,
     order,
@@ -942,7 +932,6 @@ def test_exception_after_paying_for_credit_note_for_local_platform_owner(
 
 
 def test_do_not_try_pay_to_the_same_wallet(
-    transactional_db,
     mangopay_bank_alias_payin,
     api_client,
     order,

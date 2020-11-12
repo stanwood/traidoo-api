@@ -1,5 +1,6 @@
 from django.contrib import admin
 from django.contrib.admin import ModelAdmin
+from django.urls import reverse
 from django.utils.safestring import mark_safe
 
 from common.admin import BaseRegionalAdminMixin
@@ -74,9 +75,18 @@ class DocumentsInline(StorageMixin, admin.TabularInline):
         return False
 
     def pdf_file(self, obj):
-        return mark_safe(
-            f"<a target='_blank' href='{obj.signed_download_url}'>{obj.document_type}</a>"
+        download_link = reverse(
+            "admin-document-download", kwargs={"document_id": obj.id}
         )
+        return mark_safe(
+            f"<a target='_blank' href='{download_link}'>{obj.document_type}</a>"
+        )
+
+    def price_gross(self, obj):
+        try:
+            return obj.price_gross
+        except KeyError:
+            return ""
 
 
 @admin.register(Order)
