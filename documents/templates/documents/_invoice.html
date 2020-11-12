@@ -27,7 +27,7 @@
                                     {% for category in document.lines|groupby('category')|reverse %}
                                         <div class="child-div lastest">
                                             <div class="child" style="width: 50%">Summe {{ category.grouper|capitalize }} Netto</div>
-                                            <div class="child" style="width: 50%">&euro; {{ category.list|sum_lines_net_price|format_price }}</div>
+                                            <div class="child" style="width: 50%">{{ CURRENCY_SYMBOL }} {{ category.list|sum_lines_net_price|format_price }}</div>
                                         </div>
                                     {% endfor %}
 
@@ -37,13 +37,13 @@
                                             <div class="child" style="width: 50%">
                                             <!-- sub of prices with vat -->
                                                 <span class="label sum-net">
-                                                    {{ group.grouper|format_price }}% USt. auf &euro;
+                                                    {{ group.grouper|format_price }}% USt. auf {{ CURRENCY_SYMBOL }}
                                                     {{ group.list|sum_lines_net_price|format_price }}
                                                 </span>
                                             </div>
                                             <!-- sum of vat value for all items -->
                                             <div class="child sum-vat-amount" style="width: 50%">
-                                                <span class="label">&euro;
+                                                <span class="label">{{ CURRENCY_SYMBOL }}
                                                     {{ group.list|sum_lines_vat|format_price }}
                                                 </span>
                                             </div>
@@ -55,7 +55,7 @@
                                             <strong>Endsumme</strong>
                                         </div>
                                         <div class="child" style="width: 50%">
-                                            <strong>&euro; {{ document.price_gross|format_price }}</strong>
+                                            <strong>{{ CURRENCY_SYMBOL }} {{ document.price_gross|format_price }}</strong>
                                         </div>
                                     </div>
                                 </td>

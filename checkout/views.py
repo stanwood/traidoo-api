@@ -6,6 +6,7 @@ from rest_framework.response import Response
 from carts.models import Cart
 from carts.utils import validate_earliest_delivery_date
 from common.utils import get_region
+from core.currencies import CURRENT_CURRENCY_CODE
 from core.permissions.buyer_or_seller import IsBuyerOrSellerUser
 from core.tasks.mixin import TasksMixin
 from delivery_options.models import DeliveryOption
@@ -49,7 +50,7 @@ class CheckoutView(TasksMixin, views.APIView):
         if cart_total < min_purchase_value:
             # TODO: return validation error with a unique code
             return Response(
-                f"Order must exceed {min_purchase_value} EUR. This cart net "
+                f"Order must exceed {min_purchase_value} {CURRENT_CURRENCY_CODE}. This cart net "
                 f"value is {cart_total}",
                 status=status.HTTP_400_BAD_REQUEST,
             )

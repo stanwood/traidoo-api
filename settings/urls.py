@@ -1,11 +1,8 @@
 from django.urls import path
-from rest_framework import routers
 
-from settings.views import GlobalSettingView, SettingViewSet
-
-router = routers.DefaultRouter(trailing_slash=False)
-router.register(r"settings", SettingViewSet)
+from settings.views import GlobalSettingView, SettingView
 
 urlpatterns = [
     path(r"global_settings", GlobalSettingView.as_view()),
-] + router.urls
+    path(r"settings", SettingView.as_view()),
+]

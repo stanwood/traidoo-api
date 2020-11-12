@@ -1,24 +1,20 @@
-from rest_framework import generics, viewsets
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from core.permissions.admin import IsAdminUser
-from core.permissions.get_permissions import GetPermissionsMixin
+from common.utils import get_region
 from settings.models import GlobalSetting, Setting
 from settings.serializers import GlobalSettingSerializer, SettingSerializer
 
 
-class SettingViewSet(GetPermissionsMixin, viewsets.ModelViewSet):
-    queryset = Setting.objects.all()
-    serializer_class = SettingSerializer
-    pagination_class = None
+class SettingView(APIView):
+    permission_classes = (AllowAny,)
 
-    permission_classes_by_action = {
-        "list": [AllowAny],
-        "retrieve": [AllowAny],
-        "default": [IsAdminUser],
-    }
+    def get(self, request, format=None):
+        region = get_region(self.request)
+        return Response(
+            SettingSerializer(Setting.objects.filter(region=region).get()).data
+        )
 
 
 class GlobalSettingView(APIView):

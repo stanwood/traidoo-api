@@ -1,5 +1,7 @@
 from django.contrib import admin
 from django.contrib.admin import ModelAdmin
+from django.urls import reverse
+from django.utils.safestring import mark_safe
 
 from common.admin import BaseRegionalAdminMixin
 from core.mixins.storage import StorageMixin
@@ -47,7 +49,7 @@ class DocumentsInline(StorageMixin, admin.TabularInline):
         "buyer_company_name",
         "payment_reference",
         "mangopay_payin_id",
-        "price",
+        "price_gross",
         "paid",
         "is_invoice",
         "pdf_file",
@@ -55,7 +57,7 @@ class DocumentsInline(StorageMixin, admin.TabularInline):
     readonly_fields = [
         "seller_company_name",
         "buyer_company_name",
-        "price",
+        "price_gross",
         "is_invoice",
         "pdf_file",
     ]
@@ -73,7 +75,18 @@ class DocumentsInline(StorageMixin, admin.TabularInline):
         return False
 
     def pdf_file(self, obj):
-        return self.bucket.blob(obj.blob_name).generate_signed_url(expiration=60)
+        download_link = reverse(
+            "admin-document-download", kwargs={"document_id": obj.id}
+        )
+        return mark_safe(
+            f"<a target='_blank' href='{download_link}'>{obj.document_type}</a>"
+        )
+
+    def price_gross(self, obj):
+        try:
+            return obj.price_gross
+        except KeyError:
+            return ""
 
 
 @admin.register(Order)
@@ -117,6 +130,10 @@ class OrderItemAdmin(ModelAdmin):
         "delivery_option",
     )
     list_display_links = ["product", "order", "delivery_address", "delivery_option"]
+
+    def get_queryset(self, request):
+        queryset = super().get_queryset(request)
+        return queryset.select_related("items", "documents")
 
     def has_change_permission(self, request, obj=None):
         return False

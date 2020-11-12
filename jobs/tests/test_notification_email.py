@@ -2,8 +2,10 @@ import datetime
 from unittest import mock
 
 import pytest
+from django.utils import timezone
 from model_bakery import baker
 
+from core.currencies import CURRENT_CURRENCY_SYMBOL
 
 from ..models import Detour, Job
 
@@ -11,8 +13,9 @@ pytestmark = pytest.mark.django_db
 
 
 def test_send_jobs_notification_email_to_all_users_with_routes(
-    client_anonymous, send_task, settings, traidoo_region
+    client_anonymous, send_task, settings, traidoo_region, seller_group
 ):
+    future_date = (timezone.now() + datetime.timedelta(days=2)).date()
     settings.FEATURES["routes"] = True
 
     user_1, user_2 = baker.make_recipe(
@@ -20,9 +23,23 @@ def test_send_jobs_notification_email_to_all_users_with_routes(
         is_email_verified=True,
         is_active=True,
         region=traidoo_region,
+        groups=[seller_group],
         _quantity=2,
     )
+
     baker.make_recipe("routes.route", user=user_1)
+
+    product = baker.make_recipe(
+        "products.product", third_party_delivery=False, region=traidoo_region
+    )
+    order = baker.make_recipe("orders.order", processed=False)
+    order_item = baker.make_recipe(
+        "orders.orderitem",
+        order=order,
+        product=product,
+        latest_delivery_date=future_date,
+    )
+    baker.make(Job, order_item=order_item, user=user_1)
 
     response = client_anonymous.get(
         "/jobs/cron/notifications", **{"HTTP_X_APPENGINE_CRON": True}
@@ -67,6 +84,7 @@ def test_send_jobs_notification_email_to_user(
         "orders.order",
         earliest_delivery_date=(datetime.datetime.today() + datetime.timedelta(days=1)),
         buyer=user_1,
+        processed=False,
     )
     order_item_1 = baker.make(
         "orders.orderitem",
@@ -115,7 +133,7 @@ def test_send_jobs_notification_email_to_user(
             f"{job.order_item.product.seller.city}, {job.order_item.product.seller.street}, {job.order_item.product.seller.zip}",
             f"{job.order_item.order.buyer.city}, {job.order_item.order.buyer.street}, {job.order_item.order.buyer.zip}",
             str(job.detours.first().length / 1000),
-            f'{format(job.order_item.delivery_fee, ".2f")} €',
+            f'{format(job.order_item.delivery_fee, ".2f")} {CURRENT_CURRENCY_SYMBOL}',
             job.order_item.order.earliest_delivery_date.strftime("%b %d"),
             job.order_item.latest_delivery_date.strftime("%b %d"),
         ):

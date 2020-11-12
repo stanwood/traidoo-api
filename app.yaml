@@ -25,6 +25,7 @@ env_variables:
   SECRET_KEY: ''
   SENTRY_DSN: ''
   STATIC_BUCKET: ''
+  CURRENCY: ''
 
 handlers:
 - static_dir: static/

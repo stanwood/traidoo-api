@@ -1,4 +1,6 @@
+import datetime
 import os
+import google.cloud.storage
 from enum import Enum
 from typing import List
 
@@ -11,6 +13,7 @@ from django.utils.translation import gettext_lazy as _
 from loguru import logger
 
 from core.calculators.order_calculator import OrderCalculatorMixin
+from core.currencies import CURRENT_CURRENCY_SYMBOL
 from core.db.base import BaseAbstractModel
 from documents import jinja2_utils
 from orders.models import Order
@@ -113,6 +116,7 @@ class Document(OrderCalculatorMixin, BaseAbstractModel):
             "document": self,
             "today": localdate().strftime("%Y-%m-%d"),
             "delivery_date_feature_enabled": settings.FEATURES["delivery_date"],
+            "CURRENCY_SYMBOL": CURRENT_CURRENCY_SYMBOL,
         }
 
     @property
@@ -200,15 +204,30 @@ class Document(OrderCalculatorMixin, BaseAbstractModel):
 
     @property
     def seller_company_name(self):
-        return self.seller["company_name"]
+        return self.seller.get("company_name")
 
     @property
     def buyer_company_name(self):
-        return self.buyer["company_name"]
+        return self.buyer.get("company_name")
 
     @property
     def is_invoice(self):
         return "Invoice" in self.document_type
+
+    @property
+    def signed_download_url(self):
+        storage_client = google.cloud.storage.Client.from_service_account_json(
+            settings.BASE_DIR.joinpath("service_account.json")
+        )
+
+        bucket = storage_client.get_bucket(settings.DEFAULT_BUCKET)
+        blob = bucket.blob(self.blob_name)
+
+        filename = os.path.basename(self.blob_name)
+        return blob.generate_signed_url(
+            datetime.timedelta(minutes=settings.DOCUMENTS_EXPIRATION_TIME),
+            response_disposition=f"inline; filename={filename}",
+        )
 
     def __str__(self):
         return f"{self.document_type} #{self.order_id}"

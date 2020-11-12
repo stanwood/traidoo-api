@@ -1,15 +1,14 @@
-import datetime
 import os
 
-import google.cloud.storage
-from django.conf import settings
 from django.contrib.auth import get_user_model
-from loguru import logger
+from django.core.exceptions import PermissionDenied
+from django.http import Http404, HttpResponseRedirect
 from rest_framework import status
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from core.permissions.admin import IsAdminUser
 from documents.models import Document
 
 User = get_user_model()
@@ -20,6 +19,8 @@ class DownloadDocument(APIView):
         return (
             document.seller["user_id"] == user.id
             or document.buyer["user_id"] == user.id
+            or user.is_admin
+            or user.is_superuser
         )
 
     def get(self, request: Request, document_id: int = None, format: str = None):
@@ -31,21 +32,29 @@ class DownloadDocument(APIView):
         if not self._check_permissions(document, self.request.user):
             return Response(status=status.HTTP_403_FORBIDDEN)
 
-        storage_client = google.cloud.storage.Client.from_service_account_json(
-            settings.BASE_DIR.joinpath("service_account.json")
-        )
-
-        bucket = storage_client.get_bucket(settings.DEFAULT_BUCKET)
-        blob = bucket.blob(document.blob_name)
-
         filename = os.path.basename(document.blob_name)
 
         return Response(
             {
-                "url": blob.generate_signed_url(
-                    datetime.timedelta(minutes=settings.DOCUMENTS_EXPIRATION_TIME),
-                    response_disposition=f"inline; filename={filename}",
-                ),
+                "url": document.signed_download_url,
                 "filename": filename,
             }
         )
+
+
+class DownloadDocumentAdminView(APIView):
+    permission_classes = [IsAdminUser]
+
+    def get(self, request: Request, document_id: int):
+        try:
+            document = Document.objects.get(id=document_id)
+        except Document.DoesNotExist:
+            raise Http404("Document not found")
+
+        if not request.user.is_superuser and request.user.region not in (
+            document.seller.get("region_id"),
+            document.buyer.get("region_id"),
+        ):
+            raise PermissionDenied("You are not admin of the document region")
+
+        return HttpResponseRedirect(document.signed_download_url)
