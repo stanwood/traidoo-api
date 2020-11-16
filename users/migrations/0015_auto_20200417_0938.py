@@ -3,13 +3,7 @@
 from django.db import migrations, models
 
 
-def replace_null_with_blank(apps, schema_editor):
-    User = apps.get_model("users", "User")
-    User.objects.filter(invoice_email=None).update(invoice_email="")
-
-
 class Migration(migrations.Migration):
-
     dependencies = [("users", "0014_auto_20200410_1013")]
 
     operations = [
@@ -18,7 +12,6 @@ class Migration(migrations.Migration):
             name="invoice_email",
             field=models.EmailField(blank=True, null=True, max_length=255),
         ),
-        migrations.RunPython(replace_null_with_blank, reverse_code=lambda: True),
         migrations.AlterField(
             model_name="user",
             name="invoice_email",
