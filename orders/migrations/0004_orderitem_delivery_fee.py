@@ -3,22 +3,15 @@
 from django.db import migrations, models
 
 
-def calculate_delivery_fee(apps, schema_editor):
-    OrderItem = apps.get_model('orders', 'OrderItem')
-    for order_item in OrderItem.objects.all():
-        order_item.save()
-
-
 class Migration(migrations.Migration):
 
-    dependencies = [('orders', '0003_order_processed')]
+    dependencies = [("orders", "0003_order_processed")]
 
     operations = [
         migrations.AddField(
-            model_name='orderitem',
-            name='delivery_fee',
+            model_name="orderitem",
+            name="delivery_fee",
             field=models.DecimalField(decimal_places=2, default=0, max_digits=10),
             preserve_default=False,
         ),
-        migrations.RunPython(calculate_delivery_fee),
     ]
