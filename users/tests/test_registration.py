@@ -97,7 +97,10 @@ def test_register_user(client_anonymous, send_task, user_data, mailoutbox):
         http_method="POST",
         queue_name="mangopay-create-account",
         schedule_time=10,
-        headers={"Region": user.region.slug, "Content-Type": "application/json",},
+        headers={
+            "Region": user.region.slug,
+            "Content-Type": "application/json",
+        },
     )
     assert mailoutbox[-2].subject == "Bitte bestätigen Sie Ihre E-Mail-Adresse"
     assert mailoutbox[-2].to == [user.email]
@@ -126,9 +129,6 @@ def test_registration_missing_values(client_anonymous, send_task, mailoutbox):
         "zip": [{"message": "This field is required.", "code": "required"}],
         "companyName": [{"message": "This field is required.", "code": "required"}],
         "companyType": [{"message": "This field is required.", "code": "required"}],
-        "companyRegistrationId": [
-            {"message": "This field is required.", "code": "required"}
-        ],
         "taxId": [{"message": "This field is required.", "code": "required"}],
         "businessLicense": [{"message": "No file was submitted.", "code": "required"}],
     }
@@ -218,6 +218,43 @@ def test_registration_set_a_proper_region(client_anonymous, user_data):
 
     assert response.status_code == 201
     assert User.objects.last().region.name == region.name
+
+
+@pytest.mark.django_db
+def test_registration_company_id_required(client_anonymous, user_data, settings):
+    settings.FEATURES["company_registration_id"] = True
+    del user_data["company_registration_id"]
+
+    region = baker.make_recipe("common.region", name="Test Region")
+    response = client_anonymous.post(
+        "/registration",
+        data=user_data,
+        format="multipart",
+        **{"HTTP_REGION": region.slug},
+    )
+
+    assert response.status_code == 400
+    assert response.json() == {
+        "companyRegistrationId": [
+            {"message": "This field is required.", "code": "required"}
+        ]
+    }
+
+
+@pytest.mark.django_db
+def test_registration_company_id_not_required(client_anonymous, user_data, settings):
+    settings.FEATURES["company_registration_id"] = False
+    del user_data["company_registration_id"]
+
+    region = baker.make_recipe("common.region", name="Test Region")
+    response = client_anonymous.post(
+        "/registration",
+        data=user_data,
+        format="multipart",
+        **{"HTTP_REGION": region.slug},
+    )
+
+    assert response.status_code == 201
 
 
 @pytest.mark.django_db
