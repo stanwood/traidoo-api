@@ -193,7 +193,7 @@ def test_transfers_after_successful_processing(
         "mangopay-buyer-1",
         "buyer-wallet-1",
         "global-platform-1-wallet",
-        amount=5.39,
+        amount=6.47,
         fees=1.08,
         tag=f"v2 Order: {order.id} Document: Platform Invoice Seller: Traidoo Buyer: Best apples",
     )
@@ -325,7 +325,7 @@ def test_transfer_to_global_platform_owner_if_local_does_not_have_mangopay_accou
         "mangopay-buyer-1",
         "buyer-wallet-1",
         "global-platform-1-wallet",
-        amount=5.39,
+        amount=6.47,
         fees=1.08,
         tag=f"v2 Order: {order.id} Document: Platform Invoice Seller: Traidoo Buyer: Best apples",
     )
@@ -409,7 +409,7 @@ def test_create_payouts_tasks_after_paying_invoices(
         http_method="POST",
         payload={
             "order_id": order.id,
-            "amount": 4.31,
+            "amount": 6.47 - 1.08,
         },  # We can payout transfer value - mangopay fees
         headers={"Region": "traidoo", "Content-Type": "application/json"},
     )
@@ -492,7 +492,7 @@ def test_pay_in_for_order_confirmation_bankwire_pay_in_to_wallet(
         mock.call(
             "/mangopay/cron/payouts/50",
             http_method="POST",
-            payload={"order_id": order.id, "amount": 4.31},
+            payload={"order_id": order.id, "amount": 6.47 - 1.08},
             queue_name="mangopay-payouts",
             headers={"Region": traidoo_region.slug, "Content-Type": "application/json"},
         ),
@@ -519,7 +519,7 @@ def test_pay_in_for_order_confirmation_bankwire_pay_in_to_wallet(
         "mangopay-buyer-1",
         "buyer-wallet-1",
         "global-platform-1-wallet",
-        amount=5.39,
+        amount=6.47,
         fees=1.08,
         tag=f"v2 Order: {order.id} Document: Platform Invoice Seller: Traidoo Buyer: Best apples",
     )
@@ -639,7 +639,7 @@ def test_seller_does_not_have_mangopay_user(
         "mangopay-buyer-1",
         "buyer-wallet-1",
         "global-platform-1-wallet",
-        amount=5.39,
+        amount=6.47,
         fees=1.08,
         tag=f"v2 Order: {order.id} Document: Platform Invoice Seller: Traidoo Buyer: Best apples",
     )
@@ -997,7 +997,7 @@ def test_do_not_try_pay_to_the_same_wallet(
         "mangopay-buyer-1",
         "buyer-wallet-1",
         "global-platform-1-wallet",
-        amount=5.39,
+        amount=6.47,
         fees=1.08,
         tag=f"v2 Order: {order.id} Document: Platform Invoice Seller: Traidoo Buyer: Best apples",
     )
