@@ -32,6 +32,7 @@ handlers:
 - static_dir: static/
   url: /static
 - script: auto
+  secure: always
   url: /.*
 
 inbound_services:
