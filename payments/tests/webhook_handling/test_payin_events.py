@@ -519,8 +519,8 @@ def test_pay_in_for_order_confirmation_bankwire_pay_in_to_wallet(
         "mangopay-buyer-1",
         "buyer-wallet-1",
         "global-platform-1-wallet",
-        amount=6.47,
-        fees=1.08,
+        amount=6.47 - 1.08,  # because we already charged fees at payin
+        fees=0,
         tag=f"v2 Order: {order.id} Document: Platform Invoice Seller: Traidoo Buyer: Best apples",
     )
 
