@@ -79,7 +79,7 @@ def get_platform_user_for_order(order_id: int) -> User:
     return User.objects.get(pk=platform_user_id)
 
 
-def calculate_platform_fee_for_order(order_id: int):
+def calculate_platform_fee_for_order(order_id: int) -> Decimal:
     platform_invoices = Document.objects.filter(
         order_id=order_id,
         paid=False,
@@ -88,7 +88,10 @@ def calculate_platform_fee_for_order(order_id: int):
             Document.TYPES.get_value("buyer_platform_invoice"),
         ],
     )
-    return sum([invoice.price_gross for invoice in platform_invoices])
+    platform_fees_cents = sum(
+        [invoice.price_gross_cents for invoice in platform_invoices]
+    )
+    return Decimal(str(platform_fees_cents)) / 100
 
 
 def calculate_local_platform_fee_for_order(
@@ -666,9 +669,6 @@ class MangopayWebhookHandler(MangopayMixin, StorageMixin, TasksMixin, views.APIV
         global_platform_user_mangopay_id = global_platform_user_wallet["Owners"][0]
         total_unpaid_platform_invoices_value = calculate_platform_fee_for_order(
             order_id
-        )
-        total_unpaid_platform_invoices_value = Decimal(
-            str(total_unpaid_platform_invoices_value)
         )
         mangopay_fees = self.mangopay_fees(total_order_value)
         mangopay_fees = Decimal(str(mangopay_fees))
