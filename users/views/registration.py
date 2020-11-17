@@ -21,7 +21,6 @@ User = get_user_model()
 
 class RegistrationViewSet(generics.CreateAPIView, TasksMixin):
     queryset = User.objects.all()
-    serializer_class = RegistrationSerializer
     permission_classes = [AllowAny]
 
     def create(self, request, *args, **kwargs):
@@ -103,7 +102,10 @@ class RegistrationViewSet(generics.CreateAPIView, TasksMixin):
             queue_name="mangopay-create-account",
             http_method="POST",
             schedule_time=10,
-            headers={"Region": region.slug, "Content-Type": "application/json",},
+            headers={
+                "Region": region.slug,
+                "Content-Type": "application/json",
+            },
         )
 
         return response.Response(status=status.HTTP_201_CREATED)

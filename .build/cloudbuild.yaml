@@ -15,7 +15,7 @@ steps:
     name: jwilder/dockerize:0.6.1
     args: ["dockerize", "-timeout=60s", "-wait=tcp://postgres:5432"]
   - id: tests
-    name: python:3.7
+    name: python:3.8
     entrypoint: "bash"
     args: [".build/tests.sh"]
   - name: gcr.io/cloud-builders/docker
@@ -25,7 +25,7 @@ steps:
     entrypoint: "bash"
     args: [".build/secrets.sh"]
   - id: pre-deployment
-    name: python:3.7
+    name: python:3.8
     entrypoint: bash
     args: [".build/pre-deployment.sh"]
     waitFor: ["tests", "secrets"]
@@ -54,6 +54,7 @@ steps:
       - "STATIC_BUCKET=${_STATIC_BUCKET}"
       - "SQL_PROXY_INSTANCE=${_SQL_PROXY_INSTANCE}"
       - "CURRENCY=${_CURRENCY}"
+      - "FEATURE_COMPANY_REGISTRATION_ID=${_FEATURE_COMPANY_REGISTRATION_ID}"
   - name: gcr.io/google.com/cloudsdktool/cloud-sdk:alpine
     entrypoint: bash
     args: [".build/deployment.sh"]
