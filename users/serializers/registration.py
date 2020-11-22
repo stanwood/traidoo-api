@@ -46,7 +46,7 @@ class RegistrationSerializer(serializers.Serializer):
 
     # Documents
 
-    business_license = serializers.FileField()
+    business_license = serializers.FileField(required=False)
     image = serializers.FileField(required=False)
 
     # KYC Documents

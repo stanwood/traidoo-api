@@ -130,7 +130,6 @@ def test_registration_missing_values(client_anonymous, send_task, mailoutbox):
         "companyName": [{"message": "This field is required.", "code": "required"}],
         "companyType": [{"message": "This field is required.", "code": "required"}],
         "taxId": [{"message": "This field is required.", "code": "required"}],
-        "businessLicense": [{"message": "No file was submitted.", "code": "required"}],
     }
 
 
