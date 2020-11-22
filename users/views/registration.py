@@ -32,7 +32,7 @@ class RegistrationViewSet(generics.CreateAPIView, TasksMixin):
         user_data = serializer.validated_data
         user_password = user_data.pop("password")
         user_image = user_data.pop("image", None)
-        user_business_license = user_data.pop("business_license")
+        user_business_license = user_data.pop("business_license", None)
 
         kyc_documents = {
             "identity_proof": KycDocument.Name.IDENTITY_PROOF.name,
@@ -49,7 +49,8 @@ class RegistrationViewSet(generics.CreateAPIView, TasksMixin):
         # Workaround to get instance ID in private_image_upload_to().
         if user_image:
             user.image = user_image
-        user.business_license = user_business_license
+        if user_business_license:
+            user.business_license = user_business_license
         user.save()
 
         DeliveryAddress.objects.create(
