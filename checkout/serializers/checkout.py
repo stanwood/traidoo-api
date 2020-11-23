@@ -1,6 +1,7 @@
 import functools
 import itertools
 from decimal import Decimal
+from payments.calculations.delivery_options import calculate_delivery_options_prices
 from typing import Dict, List, Union
 
 from rest_framework import serializers
@@ -10,7 +11,6 @@ from common.utils import get_region
 from core.calculators.order_calculator import OrderCalculatorMixin
 from core.calculators.utils import round_float
 from core.calculators.value import Value
-from delivery_options.models import DeliveryOption
 from delivery_options.serializers import DeliveryOptionSerializer
 from products.serializers import ProductSerializer
 from settings.utils import get_settings
@@ -58,41 +58,10 @@ class CartItemSerializer(serializers.ModelSerializer):
     def get_delivery_options(
         self, obj: CartItem
     ) -> List[Dict[str, Union[int, Decimal]]]:
-        """
-        Get the list of available delivery options for given item in the cart
-        along with the prices.
-        """
         request = self.context.get("request")
         region = get_region(request)
-        region_settings = region.settings.first()
 
-        delivery_options = []
-
-        for product_delivery_option in obj.product.delivery_options.all():
-            if product_delivery_option.id == DeliveryOption.BUYER:
-                delivery_options.append(
-                    {"id": product_delivery_option.id, "value": Decimal("0.0")}
-                )
-            if product_delivery_option.id == DeliveryOption.SELLER:
-                delivery_options.append(
-                    {
-                        "id": product_delivery_option.id,
-                        "value": obj.seller_delivery_fee.netto,
-                    }
-                )
-
-            if (
-                product_delivery_option.id == DeliveryOption.CENTRAL_LOGISTICS
-                and region_settings.central_logistics_company
-            ):
-                delivery_options.append(
-                    {
-                        "id": DeliveryOption.CENTRAL_LOGISTICS,
-                        "value": obj.central_logistic_delivery_fee.netto,
-                    }
-                )
-
-        return delivery_options
+        return calculate_delivery_options_prices(region, obj)
 
 
 class CartSerializer(OrderCalculatorMixin, serializers.ModelSerializer):

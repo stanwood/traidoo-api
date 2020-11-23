@@ -9,7 +9,6 @@ from rest_framework_nested import routers
 
 from carts.views.delete_inactive_carts import DeleteInactiveCartsView
 from categories.views import CategoryViewSet
-from checkout.views import CheckoutView
 from common.views import RegionViewSet, StaticViewSet
 from containers.views import ContainerViewSet
 from delivery_addresses.views import DeliveryAddressViewSet
@@ -79,7 +78,6 @@ urlpatterns = [
     url(r"^", include(router.urls)),
     url(r"^", include(product_items_router.urls)),
     url(r"^api-auth/", include("rest_framework.urls")),
-    url(r"^checkout", CheckoutView.as_view()),
     path(r"documents/", include("documents.urls")),
     url(r"^mangopay/", include("payments.urls")),
     url(r"^users/cron/delete-not-verified-users", DeleteNotVerifiedUsersView.as_view()),
@@ -119,6 +117,7 @@ urlpatterns = [
         r"routes/<int:route_id>/calculate_route_length",
         CalculateRouteLengthView.as_view(),
     ),
+    path(r"", include("checkout.urls")),
     path(r"", include("settings.urls")),
     path(r"", include("jobs.urls")),
     path(r"", include("features.urls")),
