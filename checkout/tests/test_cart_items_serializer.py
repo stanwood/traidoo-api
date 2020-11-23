@@ -2,7 +2,7 @@ from unittest import mock
 
 from model_bakery import baker
 
-from checkout.serializers import CartItemSerializer
+from checkout.serializers.checkout import CartItemSerializer
 
 
 def test_cart_item_delivery_options(db, buyer):
