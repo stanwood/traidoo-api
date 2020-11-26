@@ -45,19 +45,7 @@ class ProductViewSet(GetPermissionsMixin, viewsets.ModelViewSet):
     }
 
     search_fields = (
-        "id",
         "name",
-        "description",
-        "category__name",
-        "category__parent__name",
-        "seller__first_name",
-        "seller__last_name",
-        "seller__company_name",
-        "amount",
-        "price",
-        "ean8",
-        "ean13",
-        "sellers_product_identifier",
     )
 
     filterset_fields = search_fields + (
