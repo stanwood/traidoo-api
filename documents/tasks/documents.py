@@ -4,7 +4,7 @@ from typing import List
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
-from django.db import transaction
+from django.db import transaction, IntegrityError
 from django.urls import reverse
 from django.utils.decorators import method_decorator
 from loguru import logger
@@ -182,16 +182,22 @@ class DocumentsTask(MangopayMixin, StorageMixin, TasksMixin, views.APIView):
         emails = itertools.chain(*[document.receivers_emails for document in documents])
         emails = set(emails)
         for email in emails:
-            with transaction.atomic():
-                DocumentSendLog.objects.get_or_create(
-                    email=email, order_id=order.id, sent=False
-                )
-                self.send_task(
-                    reverse(
-                        "mail-documents", kwargs={"order_id": order.id, "email": email}
-                    ),
-                    queue_name="documents-emails",
-                )
+            try:
+                with transaction.atomic():
+                    send_log, created = DocumentSendLog.objects.get_or_create(
+                        email=email, order_id=order.id
+                    )
+                    if not send_log.sent and created:
+                        self.send_task(
+                            reverse(
+                                "mail-documents",
+                                kwargs={"order_id": order.id, "email": email},
+                            ),
+                            queue_name="documents-emails",
+                        )
+            except IntegrityError:
+                logger.debug(f"Document task already created for {email} {order.id}")
+                pass
 
     def render_pdfs(self, documents, order):
         pdfs = [document.render_pdf() for document in documents]

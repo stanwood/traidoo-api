@@ -239,6 +239,9 @@ class DocumentSendLog(BaseAbstractModel):
     This way we want to avoid sending duplicate mails.
     """
 
+    class Meta:
+        unique_together = ["email", "order"]
+
     email = models.EmailField()
     order = models.ForeignKey(
         Order,
