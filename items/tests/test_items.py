@@ -127,3 +127,18 @@ def test_update_product_item_does_not_exist(client_seller, seller):
     )
 
     assert response.status_code == 404
+
+
+@pytest.mark.django_db
+def test_delete_product_item(client_seller, seller):
+    product = baker.make_recipe("products.product", seller=seller)
+    item = baker.make_recipe("items.item", product=product)
+
+    response = client_seller.delete(
+        f"/items/{product.id}/{item.id}",
+    )
+
+    assert response.status_code == 204
+
+    with pytest.raises(Item.DoesNotExist):
+        item.refresh_from_db()
