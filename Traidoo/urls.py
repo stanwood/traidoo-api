@@ -5,7 +5,7 @@ from django.urls import path
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import TemplateView
 from rest_framework.documentation import include_docs_urls
-from rest_framework_nested import routers
+from rest_framework import routers
 
 from carts.views.delete_inactive_carts import DeleteInactiveCartsView
 from categories.views import CategoryViewSet
@@ -15,8 +15,6 @@ from delivery_addresses.views import DeliveryAddressViewSet
 from delivery_options.views import DeliveryOptionViewSet
 from documents.views.download import DownloadDocumentAdminView
 from groups.views import GroupViewSet
-from items.views.items import ItemViewSet, ProductsItemViewSet
-from items.views.stats import ItemsStatsView
 from jobs.views import JobsViewSet
 from orders.views.find_unsold_items import FindUnsoldItemsView
 from products.views import ProductViewSet
@@ -56,9 +54,6 @@ router.register(r"regions/static", StaticViewSet, basename="regions-static")
 
 # Products & Items
 router.register(r"products", ProductViewSet, basename="product")
-router.register(r"items", ItemViewSet, basename="item")
-product_items_router = routers.NestedSimpleRouter(router, r"products", lookup="product")
-product_items_router.register(r"items", ProductsItemViewSet, basename="item")
 
 # Admin site translations
 admin.site.index_title = _("Traidoo")
@@ -72,11 +67,9 @@ urlpatterns = [
         FindUnsoldItemsView.as_view(),
     ),
     url(r"^orders/cron/find-unsold-items", FindUnsoldItemsView.as_view()),
-    url(r"^items/stats", ItemsStatsView.as_view()),
     url(r"^carts/cron/delete-inactive-carts", DeleteInactiveCartsView.as_view()),
     url(r"^users/(?P<user_id>.+)/mangopay/create", CreateMangopayAccountView.as_view()),
     url(r"^", include(router.urls)),
-    url(r"^", include(product_items_router.urls)),
     url(r"^api-auth/", include("rest_framework.urls")),
     path(r"documents/", include("documents.urls")),
     url(r"^mangopay/", include("payments.urls")),
@@ -120,6 +113,7 @@ urlpatterns = [
     path(r"", include("checkout.urls")),
     path(r"", include("settings.urls")),
     path(r"", include("jobs.urls")),
+    path(r"", include("items.urls")),
     path(r"", include("features.urls")),
     path(r"", include("orders.urls")),
     path(r"sellers/", include("sellers.urls")),
