@@ -3,7 +3,7 @@ from unittest import mock
 
 from model_bakery import baker
 
-from checkout.serializers import CartSerializer
+from checkout.serializers.checkout import CartSerializer
 from delivery_options.models import DeliveryOption
 
 

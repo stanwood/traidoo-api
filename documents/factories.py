@@ -285,9 +285,12 @@ class DeliveryOverviewBuyerFactory(DocumentFactory):
 
     @property
     def lines(self):
-        def delivery_company(product, order_item):
+        def delivery_company(product, order_item) -> tuple:
             if order_item.is_seller_delivery:  # producer of a product
-                company_name = product["seller"]["company_name"]
+                delivery_company_name, user_id = (
+                    product["seller"]["company_name"],
+                    product["seller"]["id"],
+                )
 
                 if order_item.product.third_party_delivery:
                     try:
@@ -296,15 +299,16 @@ class DeliveryOverviewBuyerFactory(DocumentFactory):
                         pass
                     else:
                         logger.debug(f"Job claimed, ID: {job.id}.")
-                        company_name = job.user.company_name
+                        return job.user.company_name, job.user_id
 
             elif order_item.is_self_collect_delivery:  # buyer of a product
-                company_name = self.buyer["company_name"]
+                return self.buyer["company_name"], self.buyer["user_id"]
             else:  # else 0 and any other value mc swiss delivery
-                company_name = (
-                    order_item.product.region.setting.logistics_company.company_name
+                return (
+                    order_item.product.region.setting.logistics_company.company_name,
+                    order_item.product.region.setting.logistics_company.id,
                 )
-            return company_name
+            return delivery_company_name, user_id
 
         return [
             {
@@ -319,7 +323,8 @@ class DeliveryOverviewBuyerFactory(DocumentFactory):
                 "price": float(item.delivery_fee),
                 "count": item.quantity,
                 "vat_rate": float(self._settings.mc_swiss_delivery_fee_vat),
-                "delivery_company": delivery_company(item.product_snapshot, item),
+                "delivery_company": delivery_company(item.product_snapshot, item)[0],
+                "seller_user_id": delivery_company(item.product_snapshot, item)[1],
                 "organic_control_body": item.product.seller.organic_control_body,
                 "delivery_date": f"{item.delivery_date:%d.%m.%Y}",
                 "pickup_address": item.product.seller.address_as_str,
@@ -365,6 +370,7 @@ class DeliveryOverviewSellerFactory(DocumentFactory):
                 "count": float(item.quantity),
                 "vat_rate": float(self._settings.mc_swiss_delivery_fee_vat),
                 "delivery_company": item.delivery_company.company_name,
+                "seller_user_id": item.delivery_company.id,
                 "organic_control_body": item.product.seller.organic_control_body,
                 "delivery_date": f"{item.delivery_date:%d.%m.%Y}",
                 "pickup_address": item.product.seller.address_as_str,

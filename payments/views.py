@@ -79,7 +79,7 @@ def get_platform_user_for_order(order_id: int) -> User:
     return User.objects.get(pk=platform_user_id)
 
 
-def calculate_platform_fee_for_order(order_id: int):
+def calculate_platform_fee_for_order(order_id: int) -> Decimal:
     platform_invoices = Document.objects.filter(
         order_id=order_id,
         paid=False,
@@ -88,7 +88,10 @@ def calculate_platform_fee_for_order(order_id: int):
             Document.TYPES.get_value("buyer_platform_invoice"),
         ],
     )
-    return sum([invoice.price_gross for invoice in platform_invoices])
+    platform_fees_cents = sum(
+        [invoice.price_gross_cents for invoice in platform_invoices]
+    )
+    return Decimal(str(platform_fees_cents)) / 100
 
 
 def calculate_local_platform_fee_for_order(
@@ -384,6 +387,7 @@ class MangopayWebhookHandler(MangopayMixin, StorageMixin, TasksMixin, views.APIV
                     order.total_price,
                     global_platform_user_wallet,
                     global_platform_user,
+                    fees_charged_at_payin=True,
                 )
             except OperationalError as error:
                 logger.warning(
@@ -645,6 +649,7 @@ class MangopayWebhookHandler(MangopayMixin, StorageMixin, TasksMixin, views.APIV
         total_order_value: float,
         global_platform_user_wallet: dict,
         global_platform_user: User,
+        fees_charged_at_payin=False,
     ):
         platform_invoices = Document.objects.select_for_update(nowait=True).filter(
             order_id=order_id,
@@ -667,26 +672,24 @@ class MangopayWebhookHandler(MangopayMixin, StorageMixin, TasksMixin, views.APIV
         total_unpaid_platform_invoices_value = calculate_platform_fee_for_order(
             order_id
         )
-        total_unpaid_platform_invoices_value = Decimal(
-            str(total_unpaid_platform_invoices_value)
-        )
         mangopay_fees = self.mangopay_fees(total_order_value)
         mangopay_fees = Decimal(str(mangopay_fees))
 
         amount_to_transfer_to_global_platform_owner = (
-            total_unpaid_platform_invoices_value - mangopay_fees
+            total_unpaid_platform_invoices_value - local_platform_fee_due
         )
 
-        amount_to_transfer_to_global_platform_owner -= local_platform_fee_due
+        amount_to_payout_from_global_platform_owner_wallet = (
+            amount_to_transfer_to_global_platform_owner - mangopay_fees
+        )
+
+        if fees_charged_at_payin:
+            amount_to_transfer_to_global_platform_owner -= mangopay_fees
 
         amount_to_transfer_to_global_platform_owner = (
             amount_to_transfer_to_global_platform_owner.quantize(
                 Decimal(".01"), "ROUND_HALF_UP"
             )
-        )
-
-        amount_to_payout_for_global_platform_owner = (
-            amount_to_transfer_to_global_platform_owner - mangopay_fees
         )
 
         amount_to_transfer_to_global_platform_owner = float(
@@ -700,7 +703,7 @@ class MangopayWebhookHandler(MangopayMixin, StorageMixin, TasksMixin, views.APIV
                 buyer_mangopay_wallet_id,
                 global_platform_user_wallet["Id"],
                 amount=amount_to_transfer_to_global_platform_owner,
-                fees=float(mangopay_fees),
+                fees=float(mangopay_fees) if not fees_charged_at_payin else 0,
                 tag=invoice.mangopay_tag,
             )
         except MangopayTransferError as transfer_error:
@@ -742,7 +745,7 @@ class MangopayWebhookHandler(MangopayMixin, StorageMixin, TasksMixin, views.APIV
             http_method="POST",
             payload={
                 "order_id": invoice.order_id,
-                "amount": float(amount_to_payout_for_global_platform_owner),
+                "amount": float(amount_to_payout_from_global_platform_owner_wallet),
             },
             headers={
                 "Region": invoice.order.region.slug,

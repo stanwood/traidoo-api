@@ -1,5 +1,6 @@
 import itertools
 
+from django.conf import settings
 from django.contrib.auth import get_user_model, password_validation
 from django_countries.serializer_fields import CountryField
 from rest_framework import serializers
@@ -36,7 +37,7 @@ class RegistrationSerializer(serializers.Serializer):
         choices=list(itertools.chain(*COMPANY_TYPES.values()))
     )
     iban = serializers.CharField(required=False)
-    company_registration_id = serializers.CharField()
+    company_registration_id = serializers.CharField(required=False)
     vat_id = serializers.CharField(required=False)
     tax_id = serializers.CharField()
     is_certified_organic_producer = serializers.BooleanField(required=False)
@@ -45,7 +46,7 @@ class RegistrationSerializer(serializers.Serializer):
 
     # Documents
 
-    business_license = serializers.FileField()
+    business_license = serializers.FileField(required=False)
     image = serializers.FileField(required=False)
 
     # KYC Documents
@@ -59,3 +60,13 @@ class RegistrationSerializer(serializers.Serializer):
     def validate_password(self, value):
         password_validation.validate_password(value, self.instance)
         return value
+
+    def validate(self, data):
+        if settings.FEATURES["company_registration_id"] and not data.get(
+            "company_registration_id"
+        ):
+            raise serializers.ValidationError(
+                {"company_registration_id": ["This field is required."]},
+                code="required",
+            )
+        return data

@@ -35,7 +35,6 @@ django-taggit-serializer = "*"
 djangorestframework-simplejwt = "*"
 google-cloud-datastore = "*"
 django-cors-headers = "*"
-drf-nested-routers = "*"
 python-dateutil = "*"
 google-cloud-storage = "*"
 retrying = "*"
@@ -65,7 +64,7 @@ model-bakery = "*"
 django-better-admin-arrayfield = "*"
 
 [requires]
-python_version = "3.7"
+python_version = "3.8"
 
 [pipenv]
 allow_prereleases = true

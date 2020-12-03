@@ -15,7 +15,7 @@ steps:
     name: jwilder/dockerize:0.6.1
     args: ["dockerize", "-timeout=60s", "-wait=tcp://postgres:5432"]
   - id: tests
-    name: python:3.7
+    name: python:3.8
     entrypoint: "bash"
     args: [".build/tests.sh"]
   - name: gcr.io/cloud-builders/docker

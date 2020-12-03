@@ -5,6 +5,7 @@ env_variables:
   DJANGO_ADMINS: ''
   FEATURE_DELIVERY_DATE: ''
   FEATURE_ROUTE: ''
+  FEATURE_COMPANY_REGISTRATION_ID: ''
   GOOGLE_CLOUD_PROJECT_LOCATION: ''
   HTML2PDF_BACKEND: ''
   INTERCOM_EMAIL: ''
@@ -31,6 +32,7 @@ handlers:
 - static_dir: static/
   url: /static
 - script: auto
+  secure: always
   url: /.*
 
 inbound_services:
@@ -38,7 +40,7 @@ inbound_services:
 
 instance_class: F2
 
-runtime: python37
+runtime: python38
 
 automatic_scaling:
     min_instances: 1

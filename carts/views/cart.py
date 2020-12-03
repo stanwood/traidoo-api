@@ -104,7 +104,8 @@ class CartView(APIView):
         items = (
             cart.items.annotate(
                 total_quantity=Window(
-                    partition_by=[F("product")], expression=Sum("quantity"),
+                    partition_by=[F("product")],
+                    expression=Sum("quantity"),
                 )
             )
             .order_by("product", "created_at")
@@ -255,7 +256,7 @@ class CartItemDevelieryOptionView(APIView):
         except Cart.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
-        cart_item = CartItem.objects.filter(cart=cart, product=product).update(
+        CartItem.objects.filter(cart=cart, product=product).update(
             delivery_option_id=serializer.validated_data["delivery_option"]
         )
 

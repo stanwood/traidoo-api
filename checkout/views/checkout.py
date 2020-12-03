@@ -13,7 +13,7 @@ from delivery_options.models import DeliveryOption
 from orders.models import Order, OrderItem
 from orders.serializers.order import OrderSerializer
 
-from .serializers import CartSerializer
+from ..serializers.checkout import CartSerializer
 
 
 class CheckoutView(TasksMixin, views.APIView):
