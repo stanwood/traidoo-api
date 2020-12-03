@@ -20,6 +20,7 @@ INSTALLED_APPS = [
     "corsheaders",
     "tinymce",
     "common",
+    "cacheops",
     "categories",
     "containers",
     "delivery_addresses",

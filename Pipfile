@@ -62,6 +62,7 @@ django-admin-tools = "*"
 django-admirarchy = "*"
 model-bakery = "*"
 django-better-admin-arrayfield = "*"
+django-cacheops = "*"
 
 [requires]
 python_version = "3.8"

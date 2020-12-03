@@ -55,6 +55,10 @@ steps:
       - "SQL_PROXY_INSTANCE=${_SQL_PROXY_INSTANCE}"
       - "CURRENCY=${_CURRENCY}"
       - "FEATURE_COMPANY_REGISTRATION_ID=${_FEATURE_COMPANY_REGISTRATION_ID}"
+      - "REDIS_HOST=${_REDIS_HOST}"
+      - "REDIS_PORT=${_REDIS_PORT}"
+      - "REDIS_PASSWORD=${_REDIS_PASSWORD}"
+      - "REDIS_CONNECTOR=${_REDIS_CONNECTOR}"
   - name: gcr.io/google.com/cloudsdktool/cloud-sdk:alpine
     entrypoint: bash
     args: [".build/deployment.sh"]

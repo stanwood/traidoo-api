@@ -27,6 +27,9 @@ env_variables:
   SENTRY_DSN: ''
   STATIC_BUCKET: ''
   CURRENCY: ''
+  REDIS_HOST: ''
+  REDIS_PORT: ''
+  REDIS_PASSWORD: ''
 
 handlers:
 - static_dir: static/
@@ -44,3 +47,6 @@ runtime: python38
 
 automatic_scaling:
     min_instances: 1
+
+vpc_access_connector:
+  name: ""
