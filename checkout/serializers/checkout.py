@@ -1,4 +1,3 @@
-import functools
 import itertools
 from decimal import Decimal
 from payments.calculations.delivery_options import calculate_delivery_options_prices
@@ -17,53 +16,16 @@ from settings.utils import get_settings
 
 
 class CartProductSerializer(ProductSerializer):
-    items = None
-    category = None
-
     class Meta:
         model = Product
         depth = 1
         fields = (
             "name",
-            "description",
-            "items",
             "id",
-            "tags",
-            "image_url",
-            "image",
-            "category_id",
-            "seller",
-            "is_organic",
-            "is_vegan",
-            "is_gluten_free",
-            "is_grazing_animal",
-            "is_gmo_free",
             "amount",
             "unit",
             "price",
             "vat",
-            "container_type",
-            "container_type_id",
-            "container_description",
-            "delivery_charge",
-            "delivery_options",
-            "delivery_options_ids",
-            "tags",
-            "ean8",
-            "ean13",
-            "sellers_product_identifier",
-            "items_available",
-            "is_available",
-            "created_at",
-            "updated_at",
-            "seller_id",
-            "delivery_requirements",
-            "third_party_delivery",
-            "base_unit",
-            "item_quantity",
-            "region_id",
-            "region",
-            "regions",
         )
 
 
@@ -117,7 +79,6 @@ class CartItemSerializer(serializers.ModelSerializer):
 
 class CartSerializer(OrderCalculatorMixin, serializers.ModelSerializer):
     id = serializers.ReadOnlyField()
-    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
     items = CartItemSerializer(many=True)
     platform_fee_net = serializers.SerializerMethodField()
     platform_fee_gross = serializers.SerializerMethodField()
@@ -136,7 +97,6 @@ class CartSerializer(OrderCalculatorMixin, serializers.ModelSerializer):
         model = Cart
         fields = (
             "id",
-            "user",
             "items",
             "total_container_deposit",
             "platform_fee_net",
@@ -150,38 +110,29 @@ class CartSerializer(OrderCalculatorMixin, serializers.ModelSerializer):
             "vat_total",
             "gross_total",
             "earliest_delivery_date",
-            "delivery_address",
         )
-
-    @functools.lru_cache(maxsize=None)
-    def _cart_items(self, obj):
-        return obj.items.order_by("created_at").all()
 
     def get_total_container_deposit(self, obj):
         return float(
             sum(
                 [
                     cart_item.container_deposit_net * cart_item.quantity
-                    for cart_item in self._cart_items(obj)
+                    for cart_item in obj.cart_items
                 ]
             )
         )
 
     def get_platform_fee_net(self, obj):
-        return sum([cart_item.platform_fee_net for cart_item in self._cart_items(obj)])
+        return sum([cart_item.platform_fee_net for cart_item in obj.cart_items])
 
     def get_platform_fee_gross(self, obj):
-        return sum(
-            [cart_item.platform_fee_gross for cart_item in self._cart_items(obj)]
-        )
+        return sum([cart_item.platform_fee_gross for cart_item in obj.cart_items])
 
     def get_delivery_fee_net(self, obj):
-        return sum([cart_item.delivery_fee_net for cart_item in self._cart_items(obj)])
+        return sum([cart_item.delivery_fee_net for cart_item in obj.cart_items])
 
     def get_delivery_fee_gross(self, obj):
-        return sum(
-            [cart_item.delivery_fee_gross for cart_item in self._cart_items(obj)]
-        )
+        return sum([cart_item.delivery_fee_gross for cart_item in obj.cart_items])
 
     def get_net_total(self, obj):
         return sum(
@@ -198,7 +149,7 @@ class CartSerializer(OrderCalculatorMixin, serializers.ModelSerializer):
 
     def _vat_breakdown(self, obj):
         items_values = []
-        for cart_item in self._cart_items(obj):
+        for cart_item in obj.cart_items:
             items_values.append(cart_item.price)
             items_values.append(cart_item._delivery_fee())
             items_values.append(cart_item.buyer_platform_fee)
@@ -226,14 +177,14 @@ class CartSerializer(OrderCalculatorMixin, serializers.ModelSerializer):
         return total
 
     def get_product_total(self, obj):
-        return sum([cart_item.price.netto for cart_item in self._cart_items(obj)])
+        return sum([cart_item.price.netto for cart_item in obj.cart_items])
 
     def get_deposit(self, obj):
         values = []
 
         settings = get_settings()
 
-        for cart_item in self._cart_items(obj):
+        for cart_item in obj.cart_items:
             values.append(
                 {
                     "volume": cart_item.product.container_type.volume,

@@ -129,7 +129,11 @@ class CheckoutView(TasksMixin, views.APIView):
 
     def get(self, request, pk: int = None, format=None):
         queryset = (
-            Cart.objects.filter(user=self.request.user).order_by("-created_at").first()
+            Cart.objects.filter(user=self.request.user)
+            .order_by("-created_at")
+            .select_related("user")
+            .prefetch_related("items", "items__delivery_option", "items__product")
+            .first()
         )
         serializer = CartSerializer(queryset, context={"request": request})
         return Response(serializer.data)

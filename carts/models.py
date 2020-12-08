@@ -50,7 +50,21 @@ class Cart(OrderCalculatorMixin, BaseAbstractModel):
 
     @cached_property
     def cart_items(self):
-        return list(self.items.all())
+        return (
+            self.items.order_by("created_at")
+            .select_related(
+                "product",
+                "delivery_option",
+                "product__container_type",
+                "product__region",
+                "product__seller",
+            )
+            .prefetch_related(
+                "product__delivery_options",
+                "product__regions",
+            )
+            .all()
+        )
 
     @cached_property
     def buyer_region_settings(self):
