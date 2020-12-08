@@ -3,7 +3,6 @@ from rest_framework import status, views
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
-from common.utils import get_region
 from core.tasks.mixin import TasksMixin
 from orders.models import OrderItem
 
@@ -12,7 +11,6 @@ class RecalculateDeliveryFeeView(TasksMixin, views.APIView):
     permission_classes = (AllowAny,)
 
     def get(self, request, format=None):
-        region = get_region(request)
 
         if request.GET.get("token") != "12l31jb31283kjhqweb":
             return Response(status=status.HTTP_403_FORBIDDEN)
@@ -20,7 +18,7 @@ class RecalculateDeliveryFeeView(TasksMixin, views.APIView):
         self.send_task(
             f'/order-items/tasks/recalculate-delivery-fee?token={request.GET.get("token")}',
             http_method="POST",
-            headers={"Region": region.slug}
+            headers={"Region": request.region.slug},
         )
 
         return Response(status=status.HTTP_204_NO_CONTENT)

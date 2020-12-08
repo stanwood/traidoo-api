@@ -8,7 +8,6 @@ from django.utils.http import urlsafe_base64_encode
 from rest_framework import generics, response, status
 from rest_framework.permissions import AllowAny
 
-from common.utils import get_region
 from core.tasks.mixin import TasksMixin
 from delivery_addresses.models import DeliveryAddress
 from mails.utils import send_mail
@@ -24,7 +23,6 @@ class RegistrationViewSet(generics.CreateAPIView, TasksMixin):
     permission_classes = [AllowAny]
 
     def create(self, request, *args, **kwargs):
-        region = get_region(request)
 
         serializer = RegistrationSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -44,7 +42,7 @@ class RegistrationViewSet(generics.CreateAPIView, TasksMixin):
 
         documents_data = {key: user_data.pop(key, None) for key in kyc_documents.keys()}
 
-        user = User.objects.create(**user_data, region=region)
+        user = User.objects.create(**user_data, region=request.region)
         user.set_password(user_password)
         # Workaround to get instance ID in private_image_upload_to().
         if user_image:
@@ -74,7 +72,7 @@ class RegistrationViewSet(generics.CreateAPIView, TasksMixin):
         token = default_token_generator.make_token(user)
 
         send_mail(
-            region=region,
+            region=request.region,
             subject="Bitte bestätigen Sie Ihre E-Mail-Adresse",
             recipient_list=[user.email],
             template="mails/users/verify_email.html",
@@ -87,7 +85,7 @@ class RegistrationViewSet(generics.CreateAPIView, TasksMixin):
         location = reverse("admin:users_user_changelist")
 
         send_mail(
-            region=region,
+            region=request.region,
             subject="Neuer Nutzer registriert",
             recipient_list=settings.REAL_ADMINS,
             template="mails/users/new_user_registered.html",
@@ -104,7 +102,7 @@ class RegistrationViewSet(generics.CreateAPIView, TasksMixin):
             http_method="POST",
             schedule_time=10,
             headers={
-                "Region": region.slug,
+                "Region": request.region.slug,
                 "Content-Type": "application/json",
             },
         )

@@ -5,7 +5,6 @@ from rest_framework.response import Response
 
 from carts.models import Cart
 from carts.utils import validate_earliest_delivery_date
-from common.utils import get_region
 from core.currencies import CURRENT_CURRENCY_CODE
 from core.permissions.buyer_or_seller import IsBuyerOrSellerUser
 from core.tasks.mixin import TasksMixin
@@ -20,13 +19,19 @@ class CheckoutView(TasksMixin, views.APIView):
     permission_classes = (IsBuyerOrSellerUser,)
 
     def post(self, request, format=None):
-        region = get_region(request)
-        region_settings = region.settings.first()
+        region_settings = request.region.setting
 
         try:
             cart = (
                 Cart.objects.filter(user=self.request.user)
                 .order_by("-created_at")
+                .select_related("user")
+                .prefetch_related(
+                    "items__product",
+                    "items__product__container_type",
+                    "items__delivery_option",
+                    "items__product__seller",
+                )
                 .first()
             )
         except Cart.DoesNotExist:
@@ -59,7 +64,7 @@ class CheckoutView(TasksMixin, views.APIView):
             earliest_delivery_date=cart.earliest_delivery_date,
             buyer=request.user,
             status=Order.STATUSES.get_value("ordered"),
-            region=region,
+            region=request.region,
         )
 
         third_party_delivery = False
@@ -86,7 +91,7 @@ class CheckoutView(TasksMixin, views.APIView):
                     queue_name="routes",
                     http_method="POST",
                     schedule_time=30,
-                    headers={"Region": region.slug},
+                    headers={"Region": request.region.slug},
                 )
 
         # WARNING: It's required. The changes should be stored in the DB before we run recalculate_items_delivery_fee method.
@@ -98,6 +103,15 @@ class CheckoutView(TasksMixin, views.APIView):
         order.total_price = order.price_gross
         order.save()
 
+        order = Order.objects.prefetch_related(
+            "items__product__seller",
+            "items__product",
+            "items__product__container_type",
+            "items__product__category",
+            "items__delivery_option",
+            "items__product__regions",
+        ).get(id=order.id)
+
         cart.delete()
 
         if not third_party_delivery:
@@ -106,7 +120,7 @@ class CheckoutView(TasksMixin, views.APIView):
                 queue_name="documents",
                 http_method="POST",
                 schedule_time=60,
-                headers={"Region": region.slug},
+                headers={"Region": request.region.slug},
             )
         else:
             logger.debug(f"Third party delivery. Order ID: {order.id}")

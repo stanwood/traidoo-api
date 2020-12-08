@@ -6,7 +6,6 @@ from rest_framework import permissions, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from common.utils import get_region
 from mails.utils import send_mail
 
 
@@ -14,7 +13,6 @@ class ResendEmailVerificationView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request, format=None):
-        region = get_region(request)
         user = self.request.user
 
         if not user.is_email_verified:
@@ -22,7 +20,7 @@ class ResendEmailVerificationView(APIView):
             token = default_token_generator.make_token(user)
 
             send_mail(
-                region=region,
+                region=request.region,
                 subject="Bitte bestätigen Sie Ihre E-Mail-Adresse",
                 recipient_list=[user.email],
                 template="mails/users/verify_email.html",

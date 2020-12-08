@@ -3,6 +3,7 @@ from decimal import Decimal
 from django.conf import settings
 from django.db import models
 from django.db.models import F
+from django.utils.functional import cached_property
 
 from core.calculators.item_calculator import ItemCalculatorMixin
 from core.calculators.order_calculator import OrderCalculatorMixin
@@ -40,17 +41,25 @@ class Cart(OrderCalculatorMixin, BaseAbstractModel):
                 amount=float(cart_item.product.amount),
                 seller=cart_item.product.seller.id,
             )
-            for cart_item in self.items.all()
+            for cart_item in self.cart_items
         ]
 
     @property
     def total(self):
         return self.price
 
+    @cached_property
+    def cart_items(self):
+        return list(self.items.all())
+
+    @cached_property
+    def buyer_region_settings(self):
+        return self.user.region.setting
+
     @property
     def total_price_central_delivery(self) -> Decimal:
         prices = []
-        for item in self.items.all():
+        for item in self.cart_items:
             if item.is_central_logistic_delivery:
                 prices.append(item.price.netto)
 
@@ -98,7 +107,7 @@ class CartItem(ItemCalculatorMixin, BaseAbstractModel):
                 quantity=quantity or self.quantity,
             )
 
-    @property
+    @cached_property
     def settings(self):
         return self.cart.user.region.settings.first()
 
@@ -106,11 +115,11 @@ class CartItem(ItemCalculatorMixin, BaseAbstractModel):
     def buyer(self):
         return self.cart.user
 
-    @property
+    @cached_property
     def product_price(self) -> Decimal:
         return self.product.price
 
-    @property
+    @cached_property
     def total_price_central_delivery(self) -> Decimal:
         return self.cart.total_price_central_delivery
 

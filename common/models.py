@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils.functional import cached_property
 from django.utils.text import slugify
 from django.utils.translation import gettext_lazy as _
 from tinymce.models import HTMLField
@@ -37,7 +38,7 @@ class Region(BaseAbstractModel):
     def __str__(self):
         return self.name
 
-    @property
+    @cached_property
     def setting(self):
         return self.settings.first()
 

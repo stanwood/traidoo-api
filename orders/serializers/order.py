@@ -1,5 +1,6 @@
 from rest_framework import serializers
 
+from items.models import Item
 from orders.models import Order
 from users.serializers import AnonymousUserSerializer
 

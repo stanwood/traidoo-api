@@ -3,7 +3,7 @@ __pycache__
 .git
 .pytest_cache
 docs
-static
+#static
 .coveragerc
 .editorconfig
 .gitignore

@@ -7,19 +7,70 @@ from typing import Dict, List, Union
 from rest_framework import serializers
 
 from carts.models import Cart, CartItem
-from common.utils import get_region
 from core.calculators.order_calculator import OrderCalculatorMixin
 from core.calculators.utils import round_float
 from core.calculators.value import Value
 from delivery_options.serializers import DeliveryOptionSerializer
+from products.models import Product
 from products.serializers import ProductSerializer
 from settings.utils import get_settings
+
+
+class CartProductSerializer(ProductSerializer):
+    items = None
+    category = None
+
+    class Meta:
+        model = Product
+        depth = 1
+        fields = (
+            "name",
+            "description",
+            "items",
+            "id",
+            "tags",
+            "image_url",
+            "image",
+            "category_id",
+            "seller",
+            "is_organic",
+            "is_vegan",
+            "is_gluten_free",
+            "is_grazing_animal",
+            "is_gmo_free",
+            "amount",
+            "unit",
+            "price",
+            "vat",
+            "container_type",
+            "container_type_id",
+            "container_description",
+            "delivery_charge",
+            "delivery_options",
+            "delivery_options_ids",
+            "tags",
+            "ean8",
+            "ean13",
+            "sellers_product_identifier",
+            "items_available",
+            "is_available",
+            "created_at",
+            "updated_at",
+            "seller_id",
+            "delivery_requirements",
+            "third_party_delivery",
+            "base_unit",
+            "item_quantity",
+            "region_id",
+            "region",
+            "regions",
+        )
 
 
 class CartItemSerializer(serializers.ModelSerializer):
     id = serializers.ReadOnlyField()
     product_id = serializers.IntegerField(write_only=True)
-    product = ProductSerializer(read_only=True)
+    product = CartProductSerializer(read_only=True)
     price_gross = serializers.FloatField(read_only=True)
     price_net = serializers.FloatField(read_only=True)
     platform_fee_gross = serializers.FloatField(read_only=True)
@@ -29,6 +80,7 @@ class CartItemSerializer(serializers.ModelSerializer):
     delivery_options = serializers.SerializerMethodField()
 
     class Meta:
+        depth = 0
         model = CartItem
         fields = (
             "id",
@@ -59,9 +111,8 @@ class CartItemSerializer(serializers.ModelSerializer):
         self, obj: CartItem
     ) -> List[Dict[str, Union[int, Decimal]]]:
         request = self.context.get("request")
-        region = get_region(request)
 
-        return calculate_delivery_options_prices(region, obj)
+        return calculate_delivery_options_prices(request.region, obj)
 
 
 class CartSerializer(OrderCalculatorMixin, serializers.ModelSerializer):
@@ -81,6 +132,7 @@ class CartSerializer(OrderCalculatorMixin, serializers.ModelSerializer):
     vat_total = serializers.SerializerMethodField()
 
     class Meta:
+        depth = 1
         model = Cart
         fields = (
             "id",

@@ -39,4 +39,5 @@ INSTALLED_APPS = [
     "jobs",
     "admirarchy",
     "overlays",
+    "debug_toolbar",
 ]

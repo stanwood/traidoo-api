@@ -9,6 +9,7 @@ from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils.encoding import force_bytes
+from django.utils.functional import cached_property
 from django.utils.http import urlsafe_base64_encode
 from django.utils.translation import ugettext_lazy as _
 from django_countries.fields import CountryField
@@ -185,7 +186,7 @@ class User(TasksMixin, AbstractUser, BaseAbstractModel):
     def generate_token(self):
         return default_token_generator.make_token(self)
 
-    @property
+    @cached_property
     def is_seller(self) -> bool:
         return self.groups.filter(name="seller").exists()
 
@@ -193,7 +194,7 @@ class User(TasksMixin, AbstractUser, BaseAbstractModel):
     def is_admin(self) -> bool:
         return self.groups.filter(name="admin").exists()
 
-    @property
+    @cached_property
     def is_buyer(self) -> bool:
         return self.groups.filter(name="buyer").exists()
 
@@ -225,7 +226,7 @@ class User(TasksMixin, AbstractUser, BaseAbstractModel):
 
         return value
 
-    @property
+    @cached_property
     def buyer_platform_fee_rate(self):
         value = Decimal("0.0")
 

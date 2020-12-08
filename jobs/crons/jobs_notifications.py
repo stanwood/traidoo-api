@@ -9,7 +9,6 @@ from rest_framework import status, views
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
-from common.utils import get_region
 from core.currencies import CURRENT_CURRENCY_SYMBOL
 from core.decorators.feature import require_feature
 from core.permissions.cron_or_task import IsCronOrTask
@@ -65,7 +64,7 @@ class JobsNotificationsView(TasksMixin, views.APIView):
             return Response(status=status.HTTP_204_NO_CONTENT)
 
         send_mail(
-            get_region(request),
+            request.region,
             subject="Routes",
             recipient_list=[user.email],
             template="mails/jobs/notification_email.html",
