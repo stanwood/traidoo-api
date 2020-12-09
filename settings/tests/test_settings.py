@@ -13,4 +13,5 @@ def test_get_settings(client_anonymous):
 
     assert response.json() == {
         "minPurchaseValue": float(settings.min_purchase_value),
+        "centralLogisticsCompany": settings.central_logistics_company,
     }
