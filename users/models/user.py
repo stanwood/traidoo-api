@@ -21,7 +21,6 @@ from core.storage.private_storage import private_storage
 from core.storage.utils import private_image_upload_to, public_image_upload_to
 from core.tasks.mixin import TasksMixin
 from mails.utils import send_mail
-from settings.models import get_setting
 from users.constants.company_types import COMPANY_TYPES
 
 from .user_manager import UserManager
@@ -187,6 +186,10 @@ class User(TasksMixin, AbstractUser, BaseAbstractModel):
         return default_token_generator.make_token(self)
 
     @cached_property
+    def is_buyer_or_seller(self):
+        return self.groups.filter(name__in=("seller", "buyer")).exists()
+
+    @cached_property
     def is_seller(self) -> bool:
         return self.groups.filter(name="seller").exists()
 
@@ -216,10 +219,13 @@ class User(TasksMixin, AbstractUser, BaseAbstractModel):
     def address_as_str(self):
         return f"{self.company_name}, {self.street}, {self.zip}, {self.city}"
 
+    @cached_property
+    def setting(self):
+        return self.region.settings.all()[0]
+
     @property
     def seller_platform_fee_rate(self):
-        setting = get_setting(self.region.id)
-        value = setting.charge
+        value = self.setting.charge
 
         if not self.is_cooperative_member:
             value += settings.NON_COOPERATIVE_MEMBERS_PLATFORM_FEE

@@ -37,7 +37,7 @@ class ItemCalculatorMixin:
 
     @property
     @abc.abstractmethod
-    def settings(self):
+    def setting(self):
         pass
 
     @property
@@ -65,7 +65,7 @@ class ItemCalculatorMixin:
             / Decimal("100")
         )
         platform_fee = value.quantize(Decimal(".01"), "ROUND_HALF_UP")
-        return Value(float(platform_fee), self.settings.platform_fee_vat)
+        return Value(float(platform_fee), self.setting.platform_fee_vat)
 
     @property
     def is_central_logistic_delivery(self):
@@ -107,14 +107,14 @@ class ItemCalculatorMixin:
 
         return Value(
             value.quantize(Decimal(".01"), "ROUND_HALF_UP"),
-            self.settings.mc_swiss_delivery_fee_vat,
+            self.setting.mc_swiss_delivery_fee_vat,
         )
 
     @property
     def seller_delivery_fee(self) -> Value:
         return Value(
             self.product_delivery_charge,
-            self.settings.mc_swiss_delivery_fee_vat,
+            self.setting.mc_swiss_delivery_fee_vat,
         )
 
     def _delivery_fee(self) -> Value:
@@ -126,4 +126,4 @@ class ItemCalculatorMixin:
 
     @property
     def container_deposit(self) -> Value:
-        return Value(self.container_deposit_net, self.settings.deposit_vat)
+        return Value(self.container_deposit_net, self.setting.deposit_vat)

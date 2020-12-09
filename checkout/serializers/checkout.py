@@ -93,7 +93,7 @@ class CartSerializer(OrderCalculatorMixin, serializers.ModelSerializer):
     vat_total = serializers.SerializerMethodField()
 
     class Meta:
-        depth = 1
+        depth = 0
         model = Cart
         fields = (
             "id",
@@ -110,6 +110,7 @@ class CartSerializer(OrderCalculatorMixin, serializers.ModelSerializer):
             "vat_total",
             "gross_total",
             "earliest_delivery_date",
+            "delivery_address",
         )
 
     def get_total_container_deposit(self, obj):

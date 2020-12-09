@@ -122,8 +122,8 @@ class CartItem(ItemCalculatorMixin, BaseAbstractModel):
             )
 
     @cached_property
-    def settings(self):
-        return self.cart.user.region.settings.first()
+    def setting(self):
+        return self.cart.user.region.setting
 
     @property
     def buyer(self):
