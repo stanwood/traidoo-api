@@ -1,4 +1,3 @@
-# import debug_toolbar
 from django.conf.urls import include, url
 from django.conf.urls.i18n import i18n_patterns
 from django.contrib import admin
@@ -129,7 +128,6 @@ urlpatterns = [
             template_name="common/robots.txt", content_type="text/plain"
         ),
     ),
-    # path("__debug__/", include(debug_toolbar.urls)),
 ]
 
 urlpatterns += i18n_patterns(
