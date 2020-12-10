@@ -86,7 +86,7 @@ class Order(OrderCalculatorMixin, BaseAbstractModel):
         return list(self.items.all())
 
     def recalculate_items_delivery_fee(self):
-        for item in self.order_items:
+        for item in self.items.all():
             item.delivery_fee = Decimal(str(item._delivery_fee().netto))
             item.save()
 
