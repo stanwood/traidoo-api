@@ -1,9 +1,7 @@
-from django.conf import settings
 from rest_framework import permissions, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from common.utils import get_region
 from mails.utils import send_mail
 from users.serializers import NewPasswordSerializer
 
@@ -21,7 +19,7 @@ class PasswordSetView(APIView):
         user.save()
 
         send_mail(
-            region=get_region(request),
+            region=request.region,
             subject="Ihr Password wurde geändert",
             recipient_list=[user.email],
             template="mails/users/password_change.html",

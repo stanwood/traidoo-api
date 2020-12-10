@@ -1,11 +1,9 @@
-from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.sites.models import Site
 from rest_framework import permissions, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from common.utils import get_region
 from mails.utils import send_mail
 from users.serializers import EmailSerializer
 
@@ -26,7 +24,7 @@ class PasswordResetView(APIView):
             pass
         else:
             send_mail(
-                region=get_region(self.request),
+                region=self.request.region,
                 subject="Password reset",
                 recipient_list=[user.email],
                 template="mails/users/password_reset.html",

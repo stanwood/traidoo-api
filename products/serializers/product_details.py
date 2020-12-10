@@ -1,4 +1,3 @@
-import functools
 from decimal import Decimal
 
 from rest_framework import serializers
@@ -7,7 +6,6 @@ from taggit_serializer.serializers import TaggitSerializer
 from carts.models import CartItem, Cart
 from categories.serializers import CategorySerializer
 from common.serializers import RegionSerializer
-from common.utils import get_region
 from containers.serializers import ContainerSerializer
 from core.serializers.image_fallback_mixin import ImageFallbackMixin
 from core.serializers.regions import CustomRegionsSerializerField
@@ -74,7 +72,6 @@ class ProductDetailsSerializer(
 
     def get_delivery(self, obj):
         request = self.context.get("request")
-        region = get_region(request)
 
         cart = Cart(user=request.user)
         seller_delivery_cart_item = CartItem(
@@ -86,7 +83,7 @@ class ProductDetailsSerializer(
             "pickup": Decimal("0.0"),
         }
 
-        region_settings = get_setting(region.id)
+        region_settings = get_setting(request.region.id)
         if region_settings.central_logistics_company:
             central_logistics_cart_item = CartItem(
                 product=obj,

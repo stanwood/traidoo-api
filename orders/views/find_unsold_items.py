@@ -11,7 +11,6 @@ from rest_framework import views
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
-from common.utils import get_region
 from core.permissions.cron_or_task import IsCronOrTask
 from core.tasks.mixin import TasksMixin
 from items.models import Item
@@ -69,7 +68,7 @@ class FindUnsoldItemsView(TasksMixin, views.APIView):
 
         if unsold_items_by_product:
             send_mail(
-                region=get_region(request),
+                region=request.region,
                 subject="Abgelaufene Produkte",
                 recipient_list=[User.objects.get(id=seller_id).email],
                 template="mails/unsold_items.html",

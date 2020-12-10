@@ -57,7 +57,7 @@ class DocumentFactory(abc.ABC):
         self._order = order
         self._region = region
         self._seller_user = seller
-        self._settings = order.settings
+        self._settings = order.setting
 
     @property
     def _items(self) -> List[OrderItem]:

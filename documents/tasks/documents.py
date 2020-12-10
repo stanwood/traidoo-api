@@ -151,10 +151,10 @@ class DocumentsTask(MangopayMixin, StorageMixin, TasksMixin, views.APIView):
         )
 
         if (
-            order.settings.platform_user
-            and order.settings.enable_platform_fee_share
-            and order.settings.central_share
-            and order.settings.central_share < Decimal("100")
+            order.setting.platform_user
+            and order.setting.enable_platform_fee_share
+            and order.setting.central_share
+            and order.setting.central_share < Decimal("100")
         ):
             credit_note = factories.CreditNoteFactory(
                 order, region=order.region

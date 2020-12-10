@@ -3,7 +3,6 @@ from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
-from common.utils import get_region
 
 from .models import Region
 from .serializers import RegionSerializer
@@ -13,16 +12,14 @@ class RegionViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = RegionSerializer
 
     def get_queryset(self):
-        region = get_region(self.request)
-        return Region.objects.exclude(id=region.id)
+        return Region.objects.exclude(id=self.request.region.id)
 
 
 class StaticViewSet(viewsets.ReadOnlyModelViewSet):
     permission_classes = (AllowAny,)
 
     def get_queryset(self):
-        region = get_region(self.request)
-        return Region.objects.get(slug=region.slug)
+        return Region.objects.get(slug=self.request.region.slug)
 
     @action(detail=False, methods=["get"])
     def terms_of_services(self, request):

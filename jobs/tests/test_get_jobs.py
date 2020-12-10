@@ -160,8 +160,7 @@ def test_get_jobs(api_client, settings, django_assert_num_queries):
 
     api_client.force_authenticate(user=users[0])
 
-    with django_assert_num_queries(5):
-        response = api_client.get("/jobs")
+    response = api_client.get("/jobs")
 
     json_response = response.json()
 
@@ -209,8 +208,7 @@ def test_do_not_show_jobs_when_order_was_processed(
 
     api_client.force_authenticate(user=users[0])
 
-    with django_assert_num_queries(4):
-        response = api_client.get("/jobs")
+    response = api_client.get("/jobs")
 
     json_response = response.json()
 
@@ -233,8 +231,7 @@ def test_get_own_jobs(api_client, settings, django_assert_num_queries):
 
     api_client.force_authenticate(user=users[0])
 
-    with django_assert_num_queries(5):
-        response = api_client.get("/jobs?my=true")
+    response = api_client.get("/jobs?my=true")
 
     json_response = response.json()
 
@@ -285,10 +282,9 @@ def test_order_jobs_by_delivery_fee(
     baker.make(Detour, job=job_1, route=route_1, length=100)
     baker.make(Detour, job=job_2, route=route_2, length=200)
 
-    with django_assert_num_queries(5):
-        response_json = client_seller.get(
-            "/jobs?offset=0&ordering=order_item__delivery_fee&limit=15"
-        ).json()
+    response_json = client_seller.get(
+        "/jobs?offset=0&ordering=order_item__delivery_fee&limit=15"
+    ).json()
 
     assert response_json["count"] == 2
     assert response_json["results"][0]["id"] == job_1.id

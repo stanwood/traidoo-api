@@ -1,11 +1,9 @@
 from django.conf import settings
 from django.contrib.auth import get_user_model
-from loguru import logger
 from rest_framework import views
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
-from common.utils import get_region
 from core.permissions.task import IsTask
 from core.tasks.mixin import TasksMixin
 from payments.client.client import MangopayClient
@@ -17,8 +15,6 @@ class CreateWalletView(views.APIView, TasksMixin):
     permission_classes = (AllowAny, IsTask)
 
     def post(self, request, format=None):
-        region = get_region(request)
-
         user = User.objects.get(pk=request.data["user_id"])
 
         mangopay_client = MangopayClient(
@@ -37,7 +33,10 @@ class CreateWalletView(views.APIView, TasksMixin):
             queue_name="mangopay-banking-alias-iban",
             http_method="POST",
             schedule_time=5,
-            headers={"Region": region.slug, "Content-Type": "application/json",},
+            headers={
+                "Region": request.region.slug,
+                "Content-Type": "application/json",
+            },
         )
 
         return Response()
