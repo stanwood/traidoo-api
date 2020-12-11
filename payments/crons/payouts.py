@@ -6,7 +6,6 @@ from rest_framework.permissions import AllowAny
 from rest_framework.request import Request
 from rest_framework.response import Response
 
-from common.utils import get_region
 from core.permissions.cron import IsCron
 from core.permissions.task import IsTask
 from core.tasks.mixin import TasksMixin
@@ -59,8 +58,6 @@ class MangopayPayoutView(MangopayMixin, TasksMixin, views.APIView):
         return bank_account
 
     def post(self, request: Request, mangopay_user_id: str, format: str = None):
-        region = get_region(request)
-        region_settings = region.settings.first()
         serializer = PayoutSerializer(data=request.data)
         if not serializer.is_valid():
             logger.error(serializer.errors)

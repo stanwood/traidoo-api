@@ -6,7 +6,7 @@ from settings.models import GlobalSetting, Setting
 class SettingSerializer(serializers.ModelSerializer):
     class Meta:
         model = Setting
-        fields = ("min_purchase_value",)
+        fields = ("min_purchase_value", "central_logistics_company")
 
 
 class GlobalSettingSerializer(serializers.ModelSerializer):

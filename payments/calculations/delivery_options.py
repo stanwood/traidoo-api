@@ -13,7 +13,7 @@ def calculate_delivery_options_prices(
     along with the prices.
     """
 
-    region_settings = region.settings.first()
+    region_settings = region.setting
 
     delivery_options = []
 

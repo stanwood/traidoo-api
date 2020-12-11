@@ -17,7 +17,6 @@ from rest_framework import viewsets
 from rest_framework.parsers import FormParser, MultiPartParser
 from rest_framework.permissions import AllowAny
 
-from common.utils import get_region
 from core.permissions.get_permissions import GetPermissionsMixin
 from core.permissions.owner import IsOwnerOrAdmin
 from core.permissions.seller import IsSellerOrAdminUser
@@ -44,9 +43,7 @@ class ProductViewSet(GetPermissionsMixin, viewsets.ModelViewSet):
         "default": [AllowAny],
     }
 
-    search_fields = (
-        "name",
-    )
+    search_fields = ("name",)
 
     filterset_fields = search_fields + (
         "is_organic",
@@ -58,8 +55,6 @@ class ProductViewSet(GetPermissionsMixin, viewsets.ModelViewSet):
     ordering_fields = filterset_fields + ("category__id", "created_at")
 
     def get_queryset(self):
-        region = get_region(self.request)
-
         utcnow = datetime.datetime.utcnow().date()
         params = self.request.query_params
 
@@ -77,7 +72,10 @@ class ProductViewSet(GetPermissionsMixin, viewsets.ModelViewSet):
                 "category", "seller", "container_type", "category__parent", "region"
             )
             .prefetch_related("items", "items__product", "tags", "delivery_options")
-            .filter(Q(region_id=region.id) | Q(regions__in=[region.id]))
+            .filter(
+                Q(region_id=self.request.region.id)
+                | Q(regions__in=[self.request.region.id])
+            )
             .annotate(items_available=Subquery(subquery_quantity))
             .annotate(
                 is_available=Case(
@@ -113,7 +111,7 @@ class ProductViewSet(GetPermissionsMixin, viewsets.ModelViewSet):
 
         return queryset.order_by(
             Case(
-                When(region_id=region.id, then=0),
+                When(region_id=self.request.region.id, then=0),
                 default=1,
                 output_field=IntegerField(),
             )
@@ -135,5 +133,5 @@ class ProductViewSet(GetPermissionsMixin, viewsets.ModelViewSet):
         return AnonymousProductSerializer
 
     def perform_create(self, serializer):
-        serializer.validated_data["region_id"] = get_region(self.request).id
+        serializer.validated_data["region_id"] = self.request.region.id
         serializer.save()

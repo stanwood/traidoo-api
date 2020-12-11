@@ -6,7 +6,6 @@ from typing import Dict, List, Union
 from rest_framework import serializers
 
 from carts.models import Cart, CartItem
-from common.utils import get_region
 from core.calculators.order_calculator import OrderCalculatorMixin
 from delivery_options.models import DeliveryOption
 from products.models import Product
@@ -43,9 +42,8 @@ class CheckoutDeliveryItemSerializer(serializers.ModelSerializer):
         self, obj: CartItem
     ) -> List[Dict[str, Union[int, Decimal]]]:
         request = self.context.get("request")
-        region = get_region(request)
 
-        return calculate_delivery_options_prices(region, obj)
+        return calculate_delivery_options_prices(request.region, obj)
 
 
 class CheckoutDeliverySerializer(OrderCalculatorMixin, serializers.ModelSerializer):

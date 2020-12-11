@@ -24,15 +24,19 @@ def is_task_queue_or_cron(request):
 def region_middleware(get_response):
     def middleware(request):
 
+        region = get_region(request)
+
         if not (
             is_task_queue_or_cron(request)
             or is_admin_request(request)
             or request.path.startswith(reverse("webhook"))
             or request.path.startswith("/_ah/warmup")
             or request.path in ("/favicon.ico", "/robots.txt")
-            or get_region(request)
+            or region
         ):
             raise RegionHeaderMissingException()
+
+        request.region = region
 
         return get_response(request)
 

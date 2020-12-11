@@ -12,6 +12,7 @@ from django.db import models
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
 from django.utils import timezone
+from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
 from loguru import logger
 
@@ -76,9 +77,13 @@ class Order(OrderCalculatorMixin, BaseAbstractModel):
         verbose_name=_("Region"),
     )
 
-    @property
-    def settings(self):
-        return self.region.settings.first()
+    @cached_property
+    def setting(self):
+        return self.region.settings.all()[0]
+
+    @cached_property
+    def order_items(self):
+        return list(self.items.all())
 
     def recalculate_items_delivery_fee(self):
         for item in self.items.all():
@@ -120,7 +125,7 @@ class Order(OrderCalculatorMixin, BaseAbstractModel):
                 amount=item.amount,
                 seller=item.product_snapshot["seller"]["id"],
             )
-            for item in self.items.all()
+            for item in self.order_items
         ]
 
         container_deposits = [
@@ -138,11 +143,11 @@ class Order(OrderCalculatorMixin, BaseAbstractModel):
             OrderCalculatorMixin.Item(
                 price=float(item.delivery_fee),
                 count=1,
-                vat=float(self.settings.mc_swiss_delivery_fee_vat),
+                vat=float(self.setting.mc_swiss_delivery_fee_vat),
                 amount=1,
                 seller=item.delivery_company_user_id,
             )
-            for item in self.items.all()
+            for item in self.order_items
             if (item.is_central_logistic_delivery or item.is_seller_delivery)
             and item.delivery_fee > 0
         ]
@@ -153,7 +158,7 @@ class Order(OrderCalculatorMixin, BaseAbstractModel):
                     price=self.sum_of_seller_platform_fees.netto
                     + self.buyer_platform_fee.netto,
                     count=1,
-                    vat=float(self.settings.platform_fee_vat),
+                    vat=float(self.setting.platform_fee_vat),
                     amount=1,
                     seller=User.central_platform_user().id,
                 )
@@ -198,7 +203,7 @@ class Order(OrderCalculatorMixin, BaseAbstractModel):
         sum_of_seller_fees = sum(
             seller_fee for seller_fee in self.seller_platform_fees.values()
         )
-        return Value(sum_of_seller_fees, self.settings.platform_fee_vat)
+        return Value(sum_of_seller_fees, self.setting.platform_fee_vat)
 
     @property
     def total_platform_fees(self) -> Value:
@@ -208,12 +213,12 @@ class Order(OrderCalculatorMixin, BaseAbstractModel):
     def local_platform_owner_platform_fee(self) -> Value:
         total_platform_fees = Decimal(str(self.total_platform_fees.netto))
         local_platform_fee_share = total_platform_fees * (
-            Decimal("1") - self.settings.central_share / Decimal("100")
+            Decimal("1") - self.setting.central_share / Decimal("100")
         )
         local_platform_fee_share = local_platform_fee_share.quantize(
             Decimal(".01"), "ROUND_HALF_UP"
         )
-        return Value(local_platform_fee_share, self.settings.platform_fee_vat)
+        return Value(local_platform_fee_share, self.setting.platform_fee_vat)
 
     @property
     def has_central_logistics_deliveries(self):
@@ -236,7 +241,7 @@ class Order(OrderCalculatorMixin, BaseAbstractModel):
 
     def containers(self, filters=None):
         containers = {}
-
+        deposit_vat = float(self.setting.deposit_vat)
         if filters:
             items_queryset = self.items.filter(**filters)
         else:
@@ -255,7 +260,7 @@ class Order(OrderCalculatorMixin, BaseAbstractModel):
                     id=container["id"],
                     size_class=container["size_class"],
                     deposit=float(container["deposit"] or 0),
-                    vat=float(self.settings.deposit_vat),
+                    vat=deposit_vat,
                     count=item.quantity,
                     seller_user_id=product["seller"]["id"],
                 )
@@ -299,9 +304,9 @@ class OrderItem(BaseAbstractModel, ItemCalculatorMixin):
     def __str__(self):
         return f"{self.product_snapshot['name']} x {self.quantity}"
 
-    @property
-    def settings(self):
-        return self.order.region.settings.first()
+    @cached_property
+    def setting(self):
+        return self.order.region.settings.all()[0]
 
     @property
     def buyer(self):

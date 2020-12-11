@@ -36,7 +36,6 @@ def test_try_to_get_the_latest_cart(seller, client_seller):
     assert response.json() == {
         "earliestDeliveryDate": None,
         "deliveryAddress": None,
-        "user": None,
         "items": [],
     }
 

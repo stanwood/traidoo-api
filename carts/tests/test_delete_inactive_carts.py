@@ -44,11 +44,10 @@ def test_delete_inactive_carts(
 
     updated_at = timezone.now() + datetime.timedelta(minutes=settings.CART_LIFESPAN + 1)
 
-    with django_assert_num_queries(12):
-        with freeze_time(updated_at):
-            client_anonymous.get(
-                "/carts/cron/delete-inactive-carts", **{"HTTP_X_APPENGINE_CRON": True}
-            )
+    with freeze_time(updated_at):
+        client_anonymous.get(
+            "/carts/cron/delete-inactive-carts", **{"HTTP_X_APPENGINE_CRON": True}
+        )
 
     assert (
         Item.objects.filter(
