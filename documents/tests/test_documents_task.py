@@ -353,3 +353,22 @@ def test_create_buyer_delivery_overview_only_for_buyer_logistics_company(
         document.seller["email"]
         == order_with_neighbour_product.region.setting.logistics_company.email
     )
+
+
+def test_do_not_duplicate_send_documents_tasks(client, order, order_items, send_task):
+    DocumentSendLog.objects.create(email=order.buyer.email, order_id=order.id)
+    response = client.post(
+        reverse("task", kwargs={"order_id": order.id, "document_set": "all"})
+    )
+
+    assert response.status_code == 200
+    assert (
+        mock.call(
+            reverse(
+                "mail-documents",
+                kwargs={"order_id": order.id, "email": order.buyer.email},
+            ),
+            queue_name="documents-emails",
+        )
+        not in send_task.mock_calls
+    )

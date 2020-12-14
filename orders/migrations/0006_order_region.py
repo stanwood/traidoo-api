@@ -10,27 +10,38 @@ def apply_region(apps, schema_editor):
     RegionModel = apps.get_model("common", "Region")
     region, _ = RegionModel.objects.using(db_alias).get_or_create(name="mcswiss")
 
-    OrderModel = apps.get_model('orders', 'Order')
+    OrderModel = apps.get_model("orders", "Order")
     OrderModel.objects.using(db_alias).update(region=region)
 
 
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('common', '0001_initial'),
-        ('orders', '0005_auto_20200116_2025'),
+        ("common", "0001_initial"),
+        ("orders", "0005_auto_20200116_2025"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='order',
-            name='region',
-            field=models.ForeignKey(blank=True, help_text='Region in which order took place', null=True, on_delete=django.db.models.deletion.PROTECT, related_name='orders', to='common.Region'),
+            model_name="order",
+            name="region",
+            field=models.ForeignKey(
+                blank=True,
+                help_text="Region in which order took place",
+                null=True,
+                on_delete=django.db.models.deletion.PROTECT,
+                related_name="orders",
+                to="common.Region",
+            ),
         ),
-        migrations.RunPython(apply_region, reverse_code=lambda *args: True),
         migrations.AlterField(
-            model_name='order',
-            name='region',
-            field=models.ForeignKey(help_text='Region in which order took place', on_delete=django.db.models.deletion.PROTECT, related_name='orders', to='common.Region'),
+            model_name="order",
+            name="region",
+            field=models.ForeignKey(
+                help_text="Region in which order took place",
+                on_delete=django.db.models.deletion.PROTECT,
+                related_name="orders",
+                to="common.Region",
+            ),
         ),
     ]
