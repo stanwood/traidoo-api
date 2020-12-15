@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-02 12:04+0000\n"
+"POT-Creation-Date: 2020-12-15 07:18+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -54,11 +54,11 @@ msgstr ""
 msgid "Categories"
 msgstr ""
 
-#: Traidoo/menu.py:28 products/models.py:31
+#: Traidoo/menu.py:28 products/models.py:32
 msgid "Products"
 msgstr ""
 
-#: Traidoo/menu.py:29 orders/models.py:34
+#: Traidoo/menu.py:29 orders/models.py:35
 msgid "Orders"
 msgstr ""
 
@@ -78,18 +78,22 @@ msgstr ""
 msgid "Trucks"
 msgstr ""
 
-#: Traidoo/menu.py:43 Traidoo/menu.py:50 settings/models.py:34
-msgid "Settings"
+#: Traidoo/menu.py:51 overlays/models.py:54
+msgid "Overlays"
 msgstr ""
 
-#: Traidoo/menu.py:46 settings/models.py:28
-msgid "Global settings"
-msgstr ""
-
-#: Traidoo/menu.py:53 common/models.py:45 orders/models.py:76
+#: Traidoo/menu.py:54 common/models.py:46 orders/models.py:77
 #: overlays/models.py:42 overlays/models.py:43 settings/models.py:59
 #: users/models/user.py:44
 msgid "Region"
+msgstr ""
+
+#: Traidoo/menu.py:57 Traidoo/menu.py:71 settings/models.py:34
+msgid "Settings"
+msgstr ""
+
+#: Traidoo/menu.py:64 settings/models.py:28
+msgid "Global settings"
 msgstr ""
 
 #: Traidoo/settings/django/language.py:10
@@ -100,57 +104,57 @@ msgstr ""
 msgid "English"
 msgstr ""
 
-#: Traidoo/urls.py:64
+#: Traidoo/urls.py:59
 msgid "Traidoo"
 msgstr ""
 
-#: Traidoo/urls.py:65 Traidoo/urls.py:66
+#: Traidoo/urls.py:60 Traidoo/urls.py:61
 msgid "Traidoo Administration"
 msgstr ""
 
-#: carts/apps.py:7 carts/models.py:61
+#: carts/apps.py:7 carts/models.py:84
 msgid "Carts"
 msgstr ""
 
-#: carts/models.py:20 delivery_addresses/models.py:14 jobs/models.py:22
+#: carts/models.py:21 delivery_addresses/models.py:14 jobs/models.py:22
 #: routes/models.py:40 users/models/kyc.py:21
 msgid "User"
 msgstr ""
 
-#: carts/models.py:23 orders/models.py:67
+#: carts/models.py:24 orders/models.py:68
 msgid "Earliest delivery date"
 msgstr ""
 
-#: carts/models.py:30 delivery_addresses/models.py:19 documents/models.py:71
+#: carts/models.py:31 delivery_addresses/models.py:19 documents/models.py:74
 msgid "Delivery address"
 msgstr ""
 
-#: carts/models.py:60 carts/models.py:69 orders/models.py:37
+#: carts/models.py:83 carts/models.py:92 orders/models.py:38
 msgid "Cart"
 msgstr ""
 
-#: carts/models.py:66 items/models.py:14 products/models.py:30
+#: carts/models.py:89 items/models.py:14 products/models.py:31
 msgid "Product"
 msgstr ""
 
-#: carts/models.py:71 items/models.py:16
+#: carts/models.py:94 items/models.py:16
 msgid "Latest delivery date"
 msgstr ""
 
-#: carts/models.py:72 items/models.py:17
+#: carts/models.py:95 items/models.py:17
 msgid "Quantity"
 msgstr ""
 
-#: carts/models.py:78 delivery_options/models.py:23
+#: carts/models.py:101 delivery_options/models.py:23
 msgid "Delivery option"
 msgstr ""
 
-#: carts/models.py:84
+#: carts/models.py:107
 msgid "Cart item"
 msgstr ""
 
-#: categories/models.py:8 categories/models.py:13 common/models.py:12
-#: delivery_options/models.py:10 products/models.py:33 users/models/kyc.py:26
+#: categories/models.py:8 categories/models.py:13 common/models.py:13
+#: delivery_options/models.py:10 products/models.py:34 users/models/kyc.py:26
 msgid "Name"
 msgstr ""
 
@@ -174,47 +178,47 @@ msgstr ""
 msgid "Parent category"
 msgstr ""
 
-#: categories/models.py:38 products/models.py:56
+#: categories/models.py:38 products/models.py:57
 msgid "Category"
 msgstr ""
 
-#: common/models.py:14
+#: common/models.py:15
 msgid "Slug"
 msgstr ""
 
-#: common/models.py:16
+#: common/models.py:17
 msgid "Slogan used in emails"
 msgstr ""
 
-#: common/models.py:18
+#: common/models.py:19
 msgid "Mail footer"
 msgstr ""
 
-#: common/models.py:23
+#: common/models.py:24
 msgid "Mail logo"
 msgstr ""
 
-#: common/models.py:26
+#: common/models.py:27
 msgid "Terms of services"
 msgstr ""
 
-#: common/models.py:27
+#: common/models.py:28
 msgid "Privacy policy"
 msgstr ""
 
-#: common/models.py:28
+#: common/models.py:29
 msgid "Prices"
 msgstr ""
 
-#: common/models.py:29
+#: common/models.py:30
 msgid "Contact"
 msgstr ""
 
-#: common/models.py:30
+#: common/models.py:31
 msgid "Imprint"
 msgstr ""
 
-#: common/models.py:46
+#: common/models.py:47
 msgid "Regions"
 msgstr ""
 
@@ -250,11 +254,11 @@ msgstr ""
 msgid "Delivery fee"
 msgstr ""
 
-#: containers/models.py:49 products/models.py:36 users/models/user.py:93
+#: containers/models.py:49 products/models.py:37 users/models/user.py:93
 msgid "Image url"
 msgstr ""
 
-#: containers/models.py:52 overlays/models.py:49 products/models.py:39
+#: containers/models.py:52 overlays/models.py:49 products/models.py:40
 #: users/models/user.py:96
 msgid "Image"
 msgstr ""
@@ -303,56 +307,56 @@ msgstr ""
 msgid "Last update at"
 msgstr ""
 
-#: delivery_options/models.py:24 products/models.py:120
+#: delivery_options/models.py:24 products/models.py:121
 msgid "Delivery options"
 msgstr ""
 
-#: documents/models.py:21
+#: documents/models.py:24
 msgid "Document"
 msgstr ""
 
-#: documents/models.py:22
+#: documents/models.py:25
 msgid "Documents"
 msgstr ""
 
-#: documents/models.py:65
+#: documents/models.py:68
 msgid "Document type"
 msgstr ""
 
-#: documents/models.py:68 orders/models.py:58
+#: documents/models.py:71 orders/models.py:59
 msgid "Buyer"
 msgstr ""
 
-#: documents/models.py:69 products/models.py:59
+#: documents/models.py:72 products/models.py:60
 msgid "Seller"
 msgstr ""
 
-#: documents/models.py:73
+#: documents/models.py:76
 msgid "Invoice lines"
 msgstr ""
 
-#: documents/models.py:78 documents/models.py:228 orders/models.py:33
+#: documents/models.py:81 documents/models.py:250 orders/models.py:34
 #: overlays/models.py:67
 msgid "Order"
 msgstr ""
 
-#: documents/models.py:81
+#: documents/models.py:84
 msgid "Blob name in storage"
 msgstr ""
 
-#: documents/models.py:84
+#: documents/models.py:87
 msgid "Payment reference"
 msgstr ""
 
-#: documents/models.py:87
+#: documents/models.py:90
 msgid "Mangopay payin id"
 msgstr ""
 
-#: documents/models.py:94
+#: documents/models.py:97
 msgid "Bank account owner"
 msgstr ""
 
-#: documents/models.py:96
+#: documents/models.py:99
 msgid "Is paid"
 msgstr ""
 
@@ -392,27 +396,27 @@ msgstr ""
 msgid "Detours"
 msgstr ""
 
-#: orders/models.py:38
+#: orders/models.py:39
 msgid "Paid"
 msgstr ""
 
-#: orders/models.py:39
+#: orders/models.py:40
 msgid "Ordered"
 msgstr ""
 
-#: orders/models.py:61
+#: orders/models.py:62
 msgid "Status"
 msgstr ""
 
-#: orders/models.py:64
+#: orders/models.py:65
 msgid "Total price"
 msgstr ""
 
-#: orders/models.py:69
+#: orders/models.py:70
 msgid "Processed"
 msgstr ""
 
-#: orders/models.py:75
+#: orders/models.py:76
 msgid "Region in which order took place"
 msgstr ""
 
@@ -456,10 +460,6 @@ msgstr ""
 msgid "Overlay"
 msgstr ""
 
-#: overlays/models.py:54
-msgid "Overlays"
-msgstr ""
-
 #: overlays/models.py:66
 msgid "URL"
 msgstr ""
@@ -472,127 +472,163 @@ msgstr ""
 msgid "Overlay buttons"
 msgstr ""
 
-#: products/models.py:19
-msgid "Weight (g) per item"
+#: products/constants.py:4
+msgid "kg"
+msgstr ""
+
+#: products/constants.py:5
+msgid "g"
+msgstr ""
+
+#: products/constants.py:6
+msgid "l"
+msgstr ""
+
+#: products/constants.py:7
+msgid "ml"
+msgstr ""
+
+#: products/constants.py:9
+msgid "Piece"
+msgstr ""
+
+#: products/constants.py:10
+msgid "Glass"
+msgstr ""
+
+#: products/constants.py:11
+msgid "Net"
+msgstr ""
+
+#: products/constants.py:12
+msgid "Bundle"
+msgstr ""
+
+#: products/constants.py:13
+msgid "Bottle"
 msgstr ""
 
 #: products/models.py:20
+msgid "Weight (g) per item"
+msgstr ""
+
+#: products/models.py:21
 msgid "Volume (l) per item"
 msgstr ""
 
-#: products/models.py:25
+#: products/models.py:26
 msgid "Object id"
 msgstr ""
 
-#: products/models.py:34 users/models/user.py:55
+#: products/models.py:35 users/models/user.py:55
 msgid "Description"
 msgstr ""
 
-#: products/models.py:46 products/models.py:47
+#: products/models.py:47 products/models.py:48
 msgid "Region of origin"
 msgstr ""
 
-#: products/models.py:51
+#: products/models.py:52
 msgid "The associated regions the product should be available in"
 msgstr ""
 
-#: products/models.py:52
+#: products/models.py:53
 msgid "Available in regions"
 msgstr ""
 
-#: products/models.py:62
+#: products/models.py:63
 msgid "Is organic"
 msgstr ""
 
-#: products/models.py:63
+#: products/models.py:64
 msgid "Is vegan"
 msgstr ""
 
-#: products/models.py:65
+#: products/models.py:66
 msgid "Is gluten free"
 msgstr ""
 
-#: products/models.py:68
+#: products/models.py:69
 msgid "Is grazing animal"
 msgstr ""
 
-#: products/models.py:70
+#: products/models.py:71
 msgid "Is GMO free"
 msgstr ""
 
-#: products/models.py:75
+#: products/models.py:76
 msgid "Amount in a lot"
 msgstr ""
 
-#: products/models.py:77
+#: products/models.py:78
 msgid "Amount should not be negative"
 msgstr ""
 
-#: products/models.py:81
+#: products/models.py:82
 msgid "Unit"
 msgstr ""
 
-#: products/models.py:86
+#: products/models.py:87
 msgid "Price"
 msgstr ""
 
-#: products/models.py:88
+#: products/models.py:89
 msgid "Price should not be negative"
 msgstr ""
 
-#: products/models.py:94
+#: products/models.py:95
 msgid "VAT rate"
 msgstr ""
 
-#: products/models.py:96 settings/models.py:18
+#: products/models.py:97 settings/models.py:18
 msgid "VAT should not be more than 100%"
 msgstr ""
 
-#: products/models.py:97 settings/models.py:20
+#: products/models.py:98 settings/models.py:20
 msgid "VAT should not be negative"
 msgstr ""
 
-#: products/models.py:102
+#: products/models.py:103
 msgid "Container type"
 msgstr ""
 
-#: products/models.py:105
+#: products/models.py:106
 msgid "Container description"
 msgstr ""
 
-#: products/models.py:114
+#: products/models.py:115
 msgid "Delivery charge should not be negative"
 msgstr ""
 
-#: products/models.py:117
+#: products/models.py:118
 msgid "Delivery charge"
 msgstr ""
 
-#: products/models.py:123
+#: products/models.py:124
 msgid "Third party delivery possible"
 msgstr ""
 
-#: products/models.py:126
+#: products/models.py:127
 msgid "Delivery requirements"
 msgstr ""
 
-#: products/models.py:129
+#: products/models.py:131
 msgid "Tags"
 msgstr ""
 
-#: products/models.py:138
+#: products/models.py:141
 msgid "Sellers product identifier"
 msgstr ""
 
-#: products/models.py:142
+#: products/models.py:145
 msgid "Base unit"
 msgstr ""
 
-#: products/models.py:151
+#: products/models.py:154
 msgid "Items quantity should not be negative"
 msgstr ""
 
-#: products/models.py:154
+#: products/models.py:157
 msgid "Item quantity"
 msgstr ""
 
