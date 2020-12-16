@@ -10,4 +10,5 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "core.middleware.region.region_middleware",
     "core.middleware.validation_errors.validation_errors_middleware",
+    "google.cloud.logging.handlers.middleware.request.RequestMiddleware",
 ]

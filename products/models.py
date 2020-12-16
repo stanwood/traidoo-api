@@ -8,6 +8,7 @@ from rest_framework.renderers import JSONRenderer
 from taggit.managers import TaggableManager
 from taggit.models import CommonGenericTaggedItemBase, TaggedItemBase
 
+from .constants import units
 from categories.models import Category
 from common.models import Region
 from containers.models import Container
@@ -78,7 +79,7 @@ class Product(BaseAbstractModel):
         ],
     )
     unit = models.CharField(
-        max_length=255, null=True, blank=True, verbose_name=_("Unit")
+        max_length=10, choices=units, null=True, blank=True, verbose_name=_("Unit")
     )
     price = models.DecimalField(
         max_digits=10,
