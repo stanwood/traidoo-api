@@ -1,9 +1,12 @@
 import re
 
+from http import HTTPStatus
+
+from django.http.response import JsonResponse
 from django.urls import reverse
 
+
 from common.utils import get_region
-from core.errors.exceptions import RegionHeaderMissingException
 
 ADMIN_REQUEST_RE = re.compile(r"/[a-z]{2}/admin")
 
@@ -34,7 +37,13 @@ def region_middleware(get_response):
             or request.path in ("/favicon.ico", "/robots.txt")
             or region
         ):
-            raise RegionHeaderMissingException()
+            return JsonResponse(
+                {
+                    "message": "Could not satisfy the request Region header.",
+                    "code": "not_acceptable",
+                },
+                status=HTTPStatus.NOT_ACCEPTABLE,
+            )
 
         request.region = region
 
