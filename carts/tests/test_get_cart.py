@@ -66,6 +66,7 @@ def test_get_cart(buyer, client_buyer):
                 "price": float(product_item_1.product.price),
                 "unit": product_item_1.product.unit,
                 "quantity": cart_item_1.quantity + cart_item_2.quantity,
+                "maxQuantity": product_item_1.quantity + product_item_2.quantity,
             },
             {
                 "id": product_item_3.product.id,
@@ -74,6 +75,7 @@ def test_get_cart(buyer, client_buyer):
                 "price": float(product_item_3.product.price),
                 "unit": product_item_3.product.unit,
                 "quantity": cart_item_3.quantity,
+                "maxQuantity": product_item_3.quantity,
             },
         ],
     }
