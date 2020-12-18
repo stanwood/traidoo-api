@@ -91,20 +91,14 @@ class CheckoutView(TasksMixin, views.APIView):
         order_items = OrderItem.objects.bulk_create(order_items)
 
         if settings.FEATURES["routes"]:
-            for order_item in order_items:
-                if (
-                    order_item.product.third_party_delivery
-                    and order_item.delivery_option_id == DeliveryOption.SELLER
-                ):
-                    third_party_delivery = True
 
-                    self.send_task(
-                        f"/jobs/create/{order_item.id}",
-                        queue_name="routes",
-                        http_method="POST",
-                        schedule_time=30,
-                        headers={"Region": request.region.slug},
-                    )
+            self.send_task(
+                f"/jobs/create/{order.id}",
+                queue_name="routes",
+                http_method="POST",
+                schedule_time=30,
+                headers={"Region": request.region.slug},
+            )
 
         # WARNING: It's required. The changes should be stored in the DB before we run recalculate_items_delivery_fee method.
         # FIXME: It should not work like this.

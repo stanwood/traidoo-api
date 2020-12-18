@@ -87,6 +87,12 @@ def _create_test_data():
             datetime.datetime.now() + datetime.timedelta(days=1)
         ),
     )
+
+    job_1 = baker.make(Job, user=None)
+    job_2 = baker.make(Job, user=None)
+    job_3 = baker.make(Job, user=None)
+    job_4 = baker.make(Job, user=user_1)
+
     order_item_1 = baker.make(
         OrderItem,
         delivery_address=delivery_address_1,
@@ -94,6 +100,7 @@ def _create_test_data():
         latest_delivery_date=datetime.date.today() + datetime.timedelta(days=6),
         order=order,
         delivery_option=seller_delivery_option,
+        job=job_1,
     )
     order_item_2 = baker.make(
         OrderItem,
@@ -102,6 +109,7 @@ def _create_test_data():
         latest_delivery_date=datetime.date.today() + datetime.timedelta(days=1),
         order=order,
         delivery_option=seller_delivery_option,
+        job=job_2,
     )
     order_item_3 = baker.make(
         OrderItem,
@@ -110,6 +118,7 @@ def _create_test_data():
         latest_delivery_date=datetime.date.today() + datetime.timedelta(hours=23),
         order=order,
         delivery_option=seller_delivery_option,
+        job=job_3,
     )
     order_item_4 = baker.make(
         OrderItem,
@@ -118,12 +127,8 @@ def _create_test_data():
         latest_delivery_date=datetime.datetime.today() + datetime.timedelta(days=6),
         order=order,
         delivery_option=seller_delivery_option,
+        job=job_4,
     )
-
-    job_1 = baker.make(Job, order_item=order_item_1, user=None)
-    job_2 = baker.make(Job, order_item=order_item_2, user=None)
-    job_3 = baker.make(Job, order_item=order_item_3, user=None)
-    job_4 = baker.make(Job, order_item=order_item_4, user=user_1)
 
     detour_1 = baker.make(Detour, job=job_1, route=route_1, length=100)
     detour_2 = baker.make(Detour, job=job_1, route=route_2, length=200)
@@ -263,21 +268,23 @@ def test_order_jobs_by_delivery_fee(
         "products.product", delivery_options=[seller_delivery_option]
     )
 
-    order_item_1 = baker.make_recipe(
-        "orders.orderitem",
-        latest_delivery_date=datetime.date.today() + datetime.timedelta(days=6),
-        delivery_option=seller_delivery_option,
-        product=product,
-    )
-    order_item_2 = baker.make_recipe(
-        "orders.orderitem",
-        latest_delivery_date=datetime.date.today() + datetime.timedelta(days=6),
-        delivery_option=seller_delivery_option,
-        product=product,
-    )
+    job_1 = baker.make(Job, user=None)
+    job_2 = baker.make(Job, user=None)
 
-    job_1 = baker.make(Job, order_item=order_item_1, user=None)
-    job_2 = baker.make(Job, order_item=order_item_2, user=None)
+    baker.make_recipe(
+        "orders.orderitem",
+        latest_delivery_date=datetime.date.today() + datetime.timedelta(days=6),
+        delivery_option=seller_delivery_option,
+        product=product,
+        job=job_1,
+    )
+    baker.make_recipe(
+        "orders.orderitem",
+        latest_delivery_date=datetime.date.today() + datetime.timedelta(days=6),
+        delivery_option=seller_delivery_option,
+        product=product,
+        job=job_2,
+    )
 
     baker.make(Detour, job=job_1, route=route_1, length=100)
     baker.make(Detour, job=job_2, route=route_2, length=200)

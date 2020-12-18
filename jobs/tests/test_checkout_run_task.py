@@ -117,7 +117,7 @@ def test_job_task_third_party_delivery(
 
     assert (
         mock.call(
-            f"/jobs/create/{order_item_1.id}",
+            f"/jobs/create/{order_item_1.order.id}",
             http_method="POST",
             queue_name="routes",
             schedule_time=30,
@@ -127,13 +127,13 @@ def test_job_task_third_party_delivery(
     )
     assert (
         mock.call(
-            f"/jobs/create/{order_item_2.id}",
+            f"/jobs/create/{order_item_2.order.id}",
             http_method="POST",
             queue_name="routes",
             schedule_time=30,
             headers={"Region": traidoo_region.slug},
         )
-        not in send_task.call_args_list
+        in send_task.call_args_list
     )
 
 
@@ -192,7 +192,7 @@ def test_job_task_seller_delivery(
 
     assert (
         mock.call(
-            f"/jobs/create/{order_item_1.id}",
+            f"/jobs/create/{order_item_1.order.id}",
             http_method="POST",
             queue_name="routes",
             schedule_time=30,
@@ -202,11 +202,11 @@ def test_job_task_seller_delivery(
     )
     assert (
         mock.call(
-            f"/jobs/create/{order_item_2.id}",
+            f"/jobs/create/{order_item_2.order.id}",
             http_method="POST",
             queue_name="routes",
             schedule_time=30,
             headers={"Region": traidoo_region.slug},
         )
-        not in send_task.call_args_list
+        in send_task.call_args_list
     )

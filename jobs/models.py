@@ -3,17 +3,11 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 from core.db.base import BaseAbstractModel
-from orders.models import OrderItem
+
 from routes.models import Route
 
 
 class Job(BaseAbstractModel):
-    order_item = models.OneToOneField(
-        OrderItem,
-        related_name="job",
-        on_delete=models.CASCADE,
-        verbose_name=_("Order item"),
-    )
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,

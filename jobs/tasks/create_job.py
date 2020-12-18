@@ -42,40 +42,46 @@ class CreateJobView(views.APIView):
         return detour
 
     @require_feature("routes")
-    def post(self, request, order_item_id, format=None):
-        try:
-            order_item = OrderItem.objects.get(pk=order_item_id)
-        except OrderItem.DoesNotExist:
-            logger.error(f"CalculateDetour: order item {order_item_id} does not exist")
-            return Response(status=status.HTTP_404_NOT_FOUND)
+    def post(self, request, order_id, format=None):
+        order_items = OrderItem.objects.filter(
+            order_id=order_id, product__third_party_delivery=True
+        )
 
-        if not order_item.product.third_party_delivery:
-            logger.error(
-                f"CalculateDetour: product ({order_item.product.id}) does not support third party delivery (order item: {order_item.id})"
-            )
-            return Response()
+        jobs = {}
 
-        job = Job.objects.create(order_item=order_item)
+        for order_item in order_items:
+            job = jobs.get(order_item.product.seller.id)
+            if not job:
+                job = Job.objects.create()
+
+            order_item.job = job
+            order_item.save()
+
+            if not jobs.get(order_item.product.seller.id):
+                jobs[order_item.product.seller.id] = job
 
         for user in User.objects.filter(
             is_email_verified=True, is_active=True, routes__isnull=False
         ).distinct():
-            logger.debug(f"CalculateDetour: user {user.id}")
+            for _, job in jobs.items():
+                for route in user.routes.all():
+                    logger.debug(
+                        f"CalculateDetour: user: {user.id}, job: {job.id}, route {route.id}"
+                    )
 
-            for route in user.routes.all():
-                logger.debug(f"CalculateDetour: route {route.id}")
+                    order_item = job.order_items.first()
 
-                Detour.objects.create(
-                    route=route,
-                    job=job,
-                    length=self._calculate_detour(
-                        route.length,
-                        route.origin,
-                        route.destination,
-                        route.waypoints,
-                        order_item.product.seller.address_as_str,
-                        order_item.delivery_address_as_str,
-                    ),
-                )
+                    Detour.objects.create(
+                        route=route,
+                        job=job,
+                        length=self._calculate_detour(
+                            route.length,
+                            route.origin,
+                            route.destination,
+                            route.waypoints,
+                            order_item.product.seller.address_as_str,
+                            order_item.delivery_address_as_str,
+                        ),
+                    )
 
         return Response()

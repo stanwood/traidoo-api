@@ -16,22 +16,27 @@ from .serializers import JobSerializer
 class JobsViewSet(viewsets.ModelViewSet):
     serializer_class = JobSerializer
     permission_classes = [IsAuthenticated]
-    ordering_fields = ("detour", "order_item__delivery_fee")
+    ordering_fields = ("detour", "order_items__delivery_fee")
 
     def get_queryset(self):
         tomorrow = (timezone.now() + datetime.timedelta(days=1)).date()
 
-        queryset = Job.objects.select_related(
-            "order_item",
-            "user",
-            "order_item__order",
-            "order_item__delivery_address",
-            "order_item__product",
-            "order_item__product__container_type",
-            "order_item__product__seller",
-        ).filter(
-            detours__route__user=self.request.user,
-            order_item__latest_delivery_date__gte=tomorrow,
+        queryset = (
+            Job.objects.select_related(
+                "user",
+            )
+            .prefetch_related(
+                "order_items",
+                "order_items__order",
+                "order_items__delivery_address",
+                "order_items__product",
+                "order_items__product__container_type",
+                "order_items__product__seller",
+            )
+            .filter(
+                detours__route__user=self.request.user,
+                order_items__latest_delivery_date__gte=tomorrow,
+            )
         )
 
         if self.action == "list":
@@ -41,9 +46,9 @@ class JobsViewSet(viewsets.ModelViewSet):
                 queryset = queryset.filter(user__isnull=True)
 
             queryset = (
-                queryset.filter(~Q(order_item__order__processed=True))
+                queryset.filter(~Q(order_items__order__processed=True))
                 .annotate(detour=Min("detours__length"))
-                .order_by("order_item__latest_delivery_date")
+                .order_by("order_items__latest_delivery_date")
             )
 
         return queryset.distinct()
@@ -90,7 +95,7 @@ class JobsViewSet(viewsets.ModelViewSet):
         if job.user:
             return False
 
-        if job.order_item.order.processed:
+        if job.order_items.first().order.processed:
             return False
 
         job.user = self.request.user

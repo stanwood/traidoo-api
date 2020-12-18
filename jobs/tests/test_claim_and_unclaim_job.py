@@ -18,15 +18,16 @@ def _prepare_test_data():
     region = baker.make_recipe("common.region")
     baker.make_recipe("settings.setting", region=region)
     order = baker.make("orders.Order", region=region)
-    order_item = baker.make(
+    job = baker.make("jobs.Job", user=None)
+    baker.make(
         "orders.OrderItem",
         delivery_address=delivery_address,
         product=product,
         latest_delivery_date=datetime.date.today() + datetime.timedelta(days=6),
         order=order,
         delivery_option=delivery_option_seller,
+        job=job,
     )
-    job = baker.make("jobs.Job", order_item=order_item, user=None)
     baker.make("jobs.Detour", job=job, route=route)
     return user_1, user_2, job, order
 

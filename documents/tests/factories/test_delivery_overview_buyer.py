@@ -79,10 +79,15 @@ def test_create_delivery_overview_buyer_with_3rd_party_delivery(
     products[1].third_party_delivery = True
     products[1].save()
 
-    order.recalculate_items_delivery_fee()
-
     supplier = baker.make_recipe("users.user", email="supplier@example.com")
-    baker.make("jobs.Job", order_item=order_items[1], user=supplier)
+    job = baker.make("jobs.Job", user=supplier)
+
+    order.recalculate_items_delivery_fee()
+    order_items[1].job = job
+    order_items[1].save()
+
+    order_items[1].refresh_from_db()
+    order.refresh_from_db()
 
     factory = factories.DeliveryOverviewBuyerFactory(order, region=traidoo_region)
     document = factory.compose()

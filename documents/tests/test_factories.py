@@ -46,11 +46,13 @@ def test_third_party_logistic_invoice(
     order.recalculate_items_delivery_fee()
     products[0].third_party_delivery = True
     products[0].save()
-    order_items[0].delivery_option_id = DeliveryOption.SELLER
-    order_items[0].save()
 
     user = baker.make_recipe("users.user", region=traidoo_region)
-    baker.make("jobs.Job", user=user, order_item=order_items[0])
+    job = baker.make("jobs.Job", user=user)
+
+    order_items[0].delivery_option_id = DeliveryOption.SELLER
+    order_items[0].job = job
+    order_items[0].save()
 
     order.recalculate_items_delivery_fee()
 

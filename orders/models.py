@@ -2,6 +2,7 @@ from dataclasses import dataclass
 from datetime import timedelta
 from decimal import Decimal
 from enum import Enum
+from jobs.models import Job
 
 import dateutil
 import pytz
@@ -297,6 +298,15 @@ class OrderItem(BaseAbstractModel, ItemCalculatorMixin):
     product_snapshot = JSONField()
     delivery_option = models.ForeignKey(DeliveryOption, on_delete=models.PROTECT)
     delivery_fee = models.DecimalField(decimal_places=2, max_digits=10, default=0)
+
+    job = models.ForeignKey(
+        Job,
+        related_name="order_items",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        verbose_name=_("Job"),
+    )
 
     class Meta:
         unique_together = (("order", "product", "latest_delivery_date"),)

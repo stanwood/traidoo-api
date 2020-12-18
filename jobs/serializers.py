@@ -63,7 +63,7 @@ class JobOrderItemSerializer(serializers.ModelSerializer):
 
 
 class JobSerializer(serializers.ModelSerializer):
-    order_item = JobOrderItemSerializer()
+    order_items = JobOrderItemSerializer(many=True)
     detour = serializers.IntegerField()
 
     class Meta:

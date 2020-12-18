@@ -293,13 +293,8 @@ class DeliveryOverviewBuyerFactory(DocumentFactory):
                 )
 
                 if order_item.product.third_party_delivery:
-                    try:
-                        job = Job.objects.get(order_item=order_item, user__isnull=False)
-                    except Job.DoesNotExist:
-                        pass
-                    else:
-                        logger.debug(f"Job claimed, ID: {job.id}.")
-                        return job.user.company_name, job.user_id
+                    if order_item.job and order_item.job.user:
+                        return order_item.job.user.company_name, order_item.job.user_id
 
             elif order_item.is_self_collect_delivery:  # buyer of a product
                 return self.buyer["company_name"], self.buyer["user_id"]
@@ -497,7 +492,7 @@ class ThirdPartyLogisticsInvoiceFactory(DocumentFactory):
         for item in self._items:
             logger.debug("Third party delivery.")
 
-            job = Job.objects.get(order_item=item)
+            job = item.job
             logger.debug(f"Job claimed, ID: {job.id}.")
             producer = job.user.company_name
             seller_user_id = job.user.id
@@ -603,14 +598,8 @@ class ProducerInvoiceFactory(DocumentFactory):
 
                 if item.product.third_party_delivery:
                     logger.debug("Third party delivery.")
-
-                    try:
-                        job = Job.objects.get(order_item=item)
-                    except Job.DoesNotExist:
-                        pass
-                    else:
-                        if job.user:
-                            continue
+                    if item.job:
+                        continue
 
                 lines.append(
                     {

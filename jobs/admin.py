@@ -7,8 +7,8 @@ from .models import Job, Detour
 @admin.register(Job)
 class JobAdmin(ModelAdmin):
     ordering = ("created_at",)
-    list_display = ("id", "user", "order_item")
-    list_display_links = ["user", "order_item"]
+    list_display = ("id", "user")
+    list_display_links = ["user"]
 
 
 @admin.register(Detour)
