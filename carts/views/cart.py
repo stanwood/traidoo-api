@@ -1,6 +1,6 @@
 import datetime
 
-from django.db.models import F, Sum, Window
+from django.db.models import F, Sum, Window, OuterRef, Value, Subquery, Q
 from django.db.models.functions import Coalesce
 from rest_framework import status
 from rest_framework.request import Request
@@ -101,6 +101,19 @@ class CartView(APIView):
         except Cart.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
+        utcnow = datetime.datetime.utcnow().date()
+
+        subquery_items = (
+            Item.objects.filter(product_id=OuterRef("product_id"))
+            .order_by()
+            .values("product")
+        )
+        subquery_quantity = subquery_items.annotate(
+            total=Coalesce(
+                Sum("quantity", filter=Q(latest_delivery_date__gt=utcnow)), Value(0)
+            )
+        ).values("total")
+
         items = (
             cart.items.annotate(
                 total_quantity=Window(
@@ -108,6 +121,7 @@ class CartView(APIView):
                     expression=Sum("quantity"),
                 )
             )
+            .annotate(items_available=Subquery(subquery_quantity))
             .order_by("product", "created_at")
             .distinct("product")
         )
@@ -121,6 +135,7 @@ class CartView(APIView):
                     "unit": item.product.unit,
                     "amount": item.product.amount,
                     "quantity": item.total_quantity,
+                    "max_quantity": item.items_available,
                 }
                 for item in items
             ],
