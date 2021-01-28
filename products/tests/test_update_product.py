@@ -51,7 +51,9 @@ def test_update_product_with_invalid_base_unit_options(
 @pytest.mark.django_db
 def test_remove_product_regions(seller, admin, client_seller, traidoo_region):
     region = baker.make("common.region")
-    product = baker.make(Product, region=traidoo_region, regions=[region])
+    product = baker.make(
+        Product, region=traidoo_region, regions=[region], seller=seller
+    )
     assert product.regions.count() == 1
 
     response = client_seller.patch(
@@ -59,6 +61,21 @@ def test_remove_product_regions(seller, admin, client_seller, traidoo_region):
         {"regions": "", "name": "test123123"},
         format="multipart",
     )
-
     assert response.status_code == 200
     assert product.regions.count() == 0
+
+
+def test_edit_product_not_owned_by_me(seller, admin, client_seller, traidoo_region):
+    other_seller = baker.make("users.user")
+    product = baker.make(
+        "products.product", region=traidoo_region, seller=other_seller, price=2
+    )
+
+    response = client_seller.patch(
+        f"/products/{product.id}",
+        {"price": 1},
+        format="multipart",
+    )
+    product.refresh_from_db()
+    assert response.status_code == 403
+    assert product.price == 2

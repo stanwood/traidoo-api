@@ -37,8 +37,8 @@ class ProductViewSet(GetPermissionsMixin, viewsets.ModelViewSet):
     parser_classes = (MultiPartParser, FormParser)
     permission_classes_by_action = {
         "create": [IsSellerOrAdminUser],
-        "update": [IsSellerOrAdminUser],
-        "partial_update": [IsSellerOrAdminUser],
+        "update": [IsOwnerOrAdmin],
+        "partial_update": [IsOwnerOrAdmin],
         "destroy": [IsOwnerOrAdmin],
         "default": [AllowAny],
     }
