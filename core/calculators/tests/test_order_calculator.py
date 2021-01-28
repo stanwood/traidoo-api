@@ -35,3 +35,21 @@ def test_total_calculation_error():
         gross += OrderCalculatorMixin.calculate_gross_value_of_items(items)
 
     assert float(gross) == float(Decimal("37.52"))
+
+
+def test_total_calculation_sort_by_vat_rate():
+
+    items = [
+        OrderCalculatorMixin.Item(
+            vat=7, price=13.5, amount=1, count=1, seller="traidoo"
+        ),
+        OrderCalculatorMixin.Item(
+            vat=19, price=19.3, amount=1, count=1, seller="traidoo"
+        ),
+        OrderCalculatorMixin.Item(
+            vat=7, price=119.7, amount=1, count=1, seller="traidoo"
+        ),
+    ]
+
+    mixin = OrderCalculatorMixin()
+    assert mixin.calculate_gross_value_of_items(items) == Decimal("165.49")

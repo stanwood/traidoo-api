@@ -34,7 +34,7 @@ class OrderCalculatorMixin:
     @staticmethod
     def calculate_gross_value_of_items(calc_items):
         items_values = [item.value for item in calc_items]
-        items_values = sorted(items_values, key=lambda item: item.vat)
+        items_values = sorted(items_values, key=lambda item: item.vat_rate)
         gross = Decimal("0")
         for vat_rate, lines_by_vat_rate in itertools.groupby(
             items_values, lambda item_value: item_value.vat_rate
