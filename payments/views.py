@@ -154,7 +154,7 @@ def pay_for_document(
                 tag=document.mangopay_tag,
             )
         document.paid = True
-        document.save(update_fields=("paid",))
+        document.save(update_fields=("paid", "updated_at"))
 
 
 @method_decorator(transaction.non_atomic_requests, name="dispatch")
@@ -209,7 +209,7 @@ class MangopayWebhookHandler(MangopayMixin, StorageMixin, TasksMixin, views.APIV
     @staticmethod
     def store_validation_level(user: User):
         user.mangopay_validation_level = "regular"
-        user.save(update_fields=["mangopay_validation_level"])
+        user.save(update_fields=["mangopay_validation_level", "updated_at"])
 
     @staticmethod
     def get_user_by_mangopay_id(mangopay_user_id: str) -> User:
@@ -723,7 +723,7 @@ class MangopayWebhookHandler(MangopayMixin, StorageMixin, TasksMixin, views.APIV
 
         for invoice in platform_invoices:
             invoice.paid = True
-            invoice.save(update_fields=["paid"])
+            invoice.save(update_fields=["paid", "updated_at"])
 
             send_mail(
                 region=self.get_region(),
@@ -859,7 +859,7 @@ class MangopayWebhookHandler(MangopayMixin, StorageMixin, TasksMixin, views.APIV
             logger.info("All invoices paid. Setting order as paid")
 
             order.set_paid()
-            order.save(update_fields=["status"])
+            order.save(update_fields=["status", "updated_at"])
 
             try:
                 order_confirmation = order.documents.get(
@@ -873,7 +873,7 @@ class MangopayWebhookHandler(MangopayMixin, StorageMixin, TasksMixin, views.APIV
                 )
             else:
                 order_confirmation.paid = True
-                order_confirmation.save(update_fields=["paid"])
+                order_confirmation.save(update_fields=["paid", "updated_at"])
 
     def handle_failed_payin(self):
         payin = self.mangopay.get_pay_in(self.resource_id)

@@ -50,6 +50,6 @@ class MailDocumentsTask(StorageMixin, views.APIView):
                 ],
             )
             send_log.sent = True
-            send_log.save(update_fields=["sent"])
+            send_log.save(update_fields=["sent", "updated_at"])
 
         return Response()
