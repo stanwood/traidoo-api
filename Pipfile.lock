@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "fa34a379d645c06d8ff535c4b649aa94e7a0ef9b8aa58aeadc93c9af497962d8"
+            "sha256": "8c459a023fd73877689d35243160ce2f7895442f27bed0897b9da3cd7bfd53c6"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -457,10 +457,10 @@
         },
         "mangopaysdk": {
             "hashes": [
-                "sha256:2585fa00c92f391ad0a1572c8e3157a7da9e08630d6b88ad3e7406e8f031e4e1"
+                "sha256:6eb07e3dddf6aaa323fdfbcddbc055e127bce68d0d438f668268a2fec9637d1f"
             ],
             "index": "pypi",
-            "version": "==3.7.0"
+            "version": "==3.9.0"
         },
         "markdown": {
             "hashes": [
