@@ -55,6 +55,7 @@ steps:
       - "SQL_PROXY_INSTANCE=${_SQL_PROXY_INSTANCE}"
       - "CURRENCY=${_CURRENCY}"
       - "FEATURE_COMPANY_REGISTRATION_ID=${_FEATURE_COMPANY_REGISTRATION_ID}"
+      - "NON_COOPERATIVE_MEMBERS_PLATFORM_FEE=${_NON_COOPERATIVE_MEMBERS_PLATFORM_FEE}"
   - name: gcr.io/google.com/cloudsdktool/cloud-sdk:alpine
     entrypoint: bash
     args: [".build/deployment.sh"]
