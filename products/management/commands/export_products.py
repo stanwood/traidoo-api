@@ -71,11 +71,14 @@ def product_description_with_unit_and_amount(product):
     return f"{product['description']} {product['amount']} {unit_translated}"
 
 
-def image_url(image_name):
-    if not image_name:
-        return ""
-    image = default_storage.open(image_name)
-    return image.blob.public_url
+def image_url(product):
+    try:
+        if product["image"]:
+            image = default_storage.open(product["image"])
+            return image.blob.public_url
+    except LookupError:
+        pass
+    return product.get("image_url", "")
 
 
 class Command(ExportCommand):
@@ -131,6 +134,7 @@ class Command(ExportCommand):
             "Variant Tax Code",
             "Cost per item",
             "Status",
+            "Collection",
         ]
 
     def get_output_file_name(self):
@@ -161,6 +165,7 @@ class Command(ExportCommand):
                 "is_gmo_free",
                 "is_grazing_animal",
                 "image",
+                "image_url",
                 "items_count",
                 "seller__is_cooperative_member",
                 "vat",
@@ -189,9 +194,10 @@ class Command(ExportCommand):
         row["Variant Fulfillment Service"] = "manual"
         row["Variant Price"] = obj["price"]
         row["Variant Requires Shipping"] = "TRUE"
-        row["Image Src"] = image_url(obj.get("image", ""))
+        row["Image Src"] = image_url(obj)
         row["Image Position"] = ""
         row["Variant Weight Unit"] = product_weight_unit(obj)
         row["Status"] = "active"
+        row["Collection"] = obj["category__name"]
 
         writer.writerow(row)
