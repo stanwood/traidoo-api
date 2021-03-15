@@ -27,6 +27,7 @@ env_variables:
   SENTRY_DSN: ''
   STATIC_BUCKET: ''
   CURRENCY: ''
+  NON_COOPERATIVE_MEMBERS_PLATFORM_FEE: ''
 
 handlers:
 - static_dir: static/
