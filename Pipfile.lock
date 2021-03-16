@@ -287,11 +287,11 @@
         },
         "google-cloud-logging": {
             "hashes": [
-                "sha256:20c7557fd170891eab1a5e428338ad646203ddc519bc2fc57fd59bef14cd3602",
-                "sha256:cb0d4af9d684eb8a416f14c39d9fa6314be3adf41db2dd8ee8e30db9e8853d90"
+                "sha256:7e630800223315dafdfde5e23073cff2b609d823fba3f9c809f43c3c50db8828",
+                "sha256:b5675ce159db4e9c1d755003b76190460766f426a7c3c1519014cdd5ce66e890"
             ],
             "index": "pypi",
-            "version": "==1.15.1"
+            "version": "==2.3.0"
         },
         "google-cloud-storage": {
             "hashes": [
@@ -563,6 +563,13 @@
             "index": "pypi",
             "version": "==8.1.2"
         },
+        "proto-plus": {
+            "hashes": [
+                "sha256:72283578d6f72801049329652dfbfd7f14f3a0658afcf3adca5ab7609abefcbc",
+                "sha256:ebced9a550a4236ec652a4988bf68e5c7da613b001165405975dd548c844e5cd"
+            ],
+            "version": "==1.17.0"
+        },
         "protobuf": {
             "hashes": [
                 "sha256:03346c1fdaaaece437f2b611f3f784114b109985aea65c7d98050f8d38fe671c",
@@ -795,10 +802,10 @@
         },
         "urllib3": {
             "hashes": [
-                "sha256:1b465e494e3e0d8939b50680403e3aedaa2bc434b7d5af64dfd3c958d7f5ae80",
-                "sha256:de3eedaad74a2683334e282005cd8d7f22f4d55fa690a2a1020a416cb0a47e73"
+                "sha256:2f4da4594db7e1e110a944bb1b551fdf4e6c136ad42e4234131391e21eb5b0df",
+                "sha256:e7b021f7241115872f92f43c6508082facffbd1c048e3c6e2bb9c2a157e28937"
             ],
-            "version": "==1.26.3"
+            "version": "==1.26.4"
         }
     },
     "develop": {
@@ -1146,10 +1153,10 @@
         },
         "prompt-toolkit": {
             "hashes": [
-                "sha256:0fa02fa80363844a4ab4b8d6891f62dd0645ba672723130423ca4037b80c1974",
-                "sha256:62c811e46bd09130fb11ab759012a4ae385ce4fb2073442d1898867a824183bd"
+                "sha256:4cea7d09e46723885cb8bc54678175453e5071e9449821dce6f017b1d1fbfc1a",
+                "sha256:9397a7162cf45449147ad6042fa37983a081b8a73363a5253dd4072666333137"
             ],
-            "version": "==3.0.16"
+            "version": "==3.0.17"
         },
         "ptyprocess": {
             "hashes": [
