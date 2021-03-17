@@ -36,7 +36,7 @@ pexpect==4.8.0 ; sys_platform != 'win32'
 pickleshare==0.7.5
 pluggy==1.0.0.dev0
 pprintpp==0.4.0
-prompt-toolkit==3.0.16
+prompt-toolkit==3.0.17
 ptyprocess==0.7.0
 py==1.10.0
 pycodestyle==2.6.0
