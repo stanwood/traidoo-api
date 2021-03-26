@@ -25,7 +25,7 @@ ipython-genutils==0.2.0
 ipython==7.21.0
 isort==5.6.4
 jedi==0.18.0
-lazy-object-proxy==1.5.2
+lazy-object-proxy==1.6.0
 mccabe==0.6.1
 model-bakery==1.2.0
 mypy-extensions==0.4.3
@@ -36,7 +36,7 @@ pexpect==4.8.0 ; sys_platform != 'win32'
 pickleshare==0.7.5
 pluggy==1.0.0.dev0
 pprintpp==0.4.0
-prompt-toolkit==3.0.17
+prompt-toolkit==3.0.18
 ptyprocess==0.7.0
 py==1.10.0
 pycodestyle==2.6.0
