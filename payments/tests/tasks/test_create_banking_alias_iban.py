@@ -32,7 +32,7 @@ def test_create_banking_alias_iban(
             "/wallets/wallet-1/bankingaliases/iban",
             {
                 "CreditedUserId": str(user.mangopay_user_id),
-                "OwnerName": user.get_full_name(),
+                "OwnerName": user.company_name,
                 "Country": "FR",
             },
         ),
