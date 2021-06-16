@@ -25,7 +25,7 @@ class CreateBankingAliasIbanView(views.APIView):
         mangopay_client.create_banking_alias_iban(
             wallet_id=request.data["wallet_id"],
             user_id=user.mangopay_user_id,
-            name=user.get_full_name(),
+            name=user.company_name or user.get_full_name(),
         )
 
         return Response()
