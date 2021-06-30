@@ -184,7 +184,7 @@ class Command(ExportCommand):
         row["Type"] = obj["category__name"]
         row["Tags"] = ", ".join(product_tags(obj))
         row["Published"] = "TRUE"
-        row["Option1 Name"] = obj["name"]
+        row["Option1 Name"] = "Title"
         row["Option1 Value"] = obj["name"]
         row["Variant SKU"] = obj["id"]
         row["Variant Grams"] = product_weight_in_grams(obj)
