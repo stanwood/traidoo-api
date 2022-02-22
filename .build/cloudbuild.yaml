@@ -1,3 +1,4 @@
+timeout: 1800s
 steps:
   - id: postgres
     name: gcr.io/cloud-builders/docker
