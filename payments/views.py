@@ -783,7 +783,6 @@ class MangopayWebhookHandler(MangopayMixin, StorageMixin, TasksMixin, views.APIV
             # invoice for his sale
             platform_invoice_for_this_producer = Document.objects.get(
                 order_id=invoice.order.id,
-                paid=False,
                 document_type=Document.TYPES.get_value("platform_invoice"),
                 buyer__user_id=seller_id,
             )
