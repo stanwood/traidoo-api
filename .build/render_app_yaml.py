@@ -3,11 +3,12 @@ import os
 import re
 
 import yaml
+from yaml import Loader
 
 
 def render_yaml(file_name):
     with open(file_name) as src:
-        app = yaml.load(src.read())
+        app = yaml.load(src.read(), Loader)
 
     for key in app["env_variables"]:
         environment_value = os.environ.get(key, "")
